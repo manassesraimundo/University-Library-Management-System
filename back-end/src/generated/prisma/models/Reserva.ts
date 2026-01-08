@@ -608,10 +608,6 @@ export type ReservaUncheckedUpdateManyWithoutLivroNestedInput = {
     | Prisma.ReservaScalarWhereInput[];
 };
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean;
-};
-
 export type ReservaCreateWithoutMembroInput = {
   criadaEm?: Date | string;
   ativa?: boolean;

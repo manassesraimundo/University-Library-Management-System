@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { LivrosService } from './livros.service';
 import { CreateLivroDto } from './dto/livro.dto';
 
@@ -9,23 +17,19 @@ export class LivrosController {
   @Get()
   async findAllLivros(
     @Query('status') status?: string,
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('page', ParseIntPipe) page?: number,
+    @Query('limit', ParseIntPipe) limit?: number,
   ) {
     const sta = status ? status : 'DISPONIVEL';
 
-    const result = await this.livrosService.findAllLivros(
-      sta,
-      Number(page),
-      Number(limit),
-    );
+    const result = await this.livrosService.findAllLivros(sta, page, limit);
 
     return result;
   }
 
   @Get(':id')
-  async findLivroById(@Param('id') id: string) {
-    const re = await this.livrosService.findLivroById(Number(id));
+  async findLivroById(@Param('id', ParseIntPipe) id: number) {
+    const re = await this.livrosService.findLivroById(id);
     return re;
   }
 

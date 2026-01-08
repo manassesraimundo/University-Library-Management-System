@@ -23,3 +23,10 @@ export const StatusLivro = {
 } as const;
 
 export type StatusLivro = (typeof StatusLivro)[keyof typeof StatusLivro];
+
+export const TipoMembro = {
+  ESTUDANTE: 'ESTUDANTE',
+  PROFESSOR: 'PROFESSOR',
+} as const;
+
+export type TipoMembro = (typeof TipoMembro)[keyof typeof TipoMembro];

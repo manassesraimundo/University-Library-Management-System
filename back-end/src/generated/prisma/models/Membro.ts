@@ -38,27 +38,27 @@ export type MembroSumAggregateOutputType = {
 
 export type MembroMinAggregateOutputType = {
   id: number | null;
-  nome: string | null;
   matricula: string | null;
-  tipo: string | null;
+  tipo: $Enums.TipoMembro | null;
+  ativo: boolean | null;
   criadoEm: Date | null;
   usuarioId: number | null;
 };
 
 export type MembroMaxAggregateOutputType = {
   id: number | null;
-  nome: string | null;
   matricula: string | null;
-  tipo: string | null;
+  tipo: $Enums.TipoMembro | null;
+  ativo: boolean | null;
   criadoEm: Date | null;
   usuarioId: number | null;
 };
 
 export type MembroCountAggregateOutputType = {
   id: number;
-  nome: number;
   matricula: number;
   tipo: number;
+  ativo: number;
   criadoEm: number;
   usuarioId: number;
   _all: number;
@@ -76,27 +76,27 @@ export type MembroSumAggregateInputType = {
 
 export type MembroMinAggregateInputType = {
   id?: true;
-  nome?: true;
   matricula?: true;
   tipo?: true;
+  ativo?: true;
   criadoEm?: true;
   usuarioId?: true;
 };
 
 export type MembroMaxAggregateInputType = {
   id?: true;
-  nome?: true;
   matricula?: true;
   tipo?: true;
+  ativo?: true;
   criadoEm?: true;
   usuarioId?: true;
 };
 
 export type MembroCountAggregateInputType = {
   id?: true;
-  nome?: true;
   matricula?: true;
   tipo?: true;
+  ativo?: true;
   criadoEm?: true;
   usuarioId?: true;
   _all?: true;
@@ -197,9 +197,9 @@ export type MembroGroupByArgs<
 
 export type MembroGroupByOutputType = {
   id: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo: boolean;
   criadoEm: Date;
   usuarioId: number | null;
   _count: MembroCountAggregateOutputType | null;
@@ -227,9 +227,9 @@ export type MembroWhereInput = {
   OR?: Prisma.MembroWhereInput[];
   NOT?: Prisma.MembroWhereInput | Prisma.MembroWhereInput[];
   id?: Prisma.IntFilter<'Membro'> | number;
-  nome?: Prisma.StringFilter<'Membro'> | string;
   matricula?: Prisma.StringFilter<'Membro'> | string;
-  tipo?: Prisma.StringFilter<'Membro'> | string;
+  tipo?: Prisma.EnumTipoMembroFilter<'Membro'> | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFilter<'Membro'> | boolean;
   criadoEm?: Prisma.DateTimeFilter<'Membro'> | Date | string;
   usuarioId?: Prisma.IntNullableFilter<'Membro'> | number | null;
   usuario?: Prisma.XOR<
@@ -243,9 +243,9 @@ export type MembroWhereInput = {
 
 export type MembroOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
-  nome?: Prisma.SortOrder;
   matricula?: Prisma.SortOrder;
   tipo?: Prisma.SortOrder;
+  ativo?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder;
   usuario?: Prisma.UsuarioOrderByWithRelationInput;
@@ -262,8 +262,8 @@ export type MembroWhereUniqueInput = Prisma.AtLeast<
     AND?: Prisma.MembroWhereInput | Prisma.MembroWhereInput[];
     OR?: Prisma.MembroWhereInput[];
     NOT?: Prisma.MembroWhereInput | Prisma.MembroWhereInput[];
-    nome?: Prisma.StringFilter<'Membro'> | string;
-    tipo?: Prisma.StringFilter<'Membro'> | string;
+    tipo?: Prisma.EnumTipoMembroFilter<'Membro'> | $Enums.TipoMembro;
+    ativo?: Prisma.BoolFilter<'Membro'> | boolean;
     criadoEm?: Prisma.DateTimeFilter<'Membro'> | Date | string;
     usuario?: Prisma.XOR<
       Prisma.UsuarioNullableScalarRelationFilter,
@@ -278,9 +278,9 @@ export type MembroWhereUniqueInput = Prisma.AtLeast<
 
 export type MembroOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
-  nome?: Prisma.SortOrder;
   matricula?: Prisma.SortOrder;
   tipo?: Prisma.SortOrder;
+  ativo?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   usuarioId?: Prisma.SortOrderInput | Prisma.SortOrder;
   _count?: Prisma.MembroCountOrderByAggregateInput;
@@ -299,17 +299,19 @@ export type MembroScalarWhereWithAggregatesInput = {
     | Prisma.MembroScalarWhereWithAggregatesInput
     | Prisma.MembroScalarWhereWithAggregatesInput[];
   id?: Prisma.IntWithAggregatesFilter<'Membro'> | number;
-  nome?: Prisma.StringWithAggregatesFilter<'Membro'> | string;
   matricula?: Prisma.StringWithAggregatesFilter<'Membro'> | string;
-  tipo?: Prisma.StringWithAggregatesFilter<'Membro'> | string;
+  tipo?:
+    | Prisma.EnumTipoMembroWithAggregatesFilter<'Membro'>
+    | $Enums.TipoMembro;
+  ativo?: Prisma.BoolWithAggregatesFilter<'Membro'> | boolean;
   criadoEm?: Prisma.DateTimeWithAggregatesFilter<'Membro'> | Date | string;
   usuarioId?: Prisma.IntNullableWithAggregatesFilter<'Membro'> | number | null;
 };
 
 export type MembroCreateInput = {
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
@@ -319,9 +321,9 @@ export type MembroCreateInput = {
 
 export type MembroUncheckedCreateInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuarioId?: number | null;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
@@ -330,9 +332,9 @@ export type MembroUncheckedCreateInput = {
 };
 
 export type MembroUpdateInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
@@ -342,9 +344,9 @@ export type MembroUpdateInput = {
 
 export type MembroUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
@@ -354,25 +356,25 @@ export type MembroUncheckedUpdateInput = {
 
 export type MembroCreateManyInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuarioId?: number | null;
 };
 
 export type MembroUpdateManyMutationInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
 export type MembroUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
 };
@@ -384,9 +386,9 @@ export type MembroNullableScalarRelationFilter = {
 
 export type MembroCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  nome?: Prisma.SortOrder;
   matricula?: Prisma.SortOrder;
   tipo?: Prisma.SortOrder;
+  ativo?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   usuarioId?: Prisma.SortOrder;
 };
@@ -398,18 +400,18 @@ export type MembroAvgOrderByAggregateInput = {
 
 export type MembroMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  nome?: Prisma.SortOrder;
   matricula?: Prisma.SortOrder;
   tipo?: Prisma.SortOrder;
+  ativo?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   usuarioId?: Prisma.SortOrder;
 };
 
 export type MembroMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  nome?: Prisma.SortOrder;
   matricula?: Prisma.SortOrder;
   tipo?: Prisma.SortOrder;
+  ativo?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   usuarioId?: Prisma.SortOrder;
 };
@@ -478,6 +480,14 @@ export type MembroUncheckedUpdateOneWithoutUsuarioNestedInput = {
     >,
     Prisma.MembroUncheckedUpdateWithoutUsuarioInput
   >;
+};
+
+export type EnumTipoMembroFieldUpdateOperationsInput = {
+  set?: $Enums.TipoMembro;
+};
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean;
 };
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -567,9 +577,9 @@ export type MembroUpdateOneRequiredWithoutHistoricoNestedInput = {
 };
 
 export type MembroCreateWithoutUsuarioInput = {
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
@@ -578,9 +588,9 @@ export type MembroCreateWithoutUsuarioInput = {
 
 export type MembroUncheckedCreateWithoutUsuarioInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
@@ -616,9 +626,9 @@ export type MembroUpdateToOneWithWhereWithoutUsuarioInput = {
 };
 
 export type MembroUpdateWithoutUsuarioInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
@@ -627,9 +637,9 @@ export type MembroUpdateWithoutUsuarioInput = {
 
 export type MembroUncheckedUpdateWithoutUsuarioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
@@ -637,9 +647,9 @@ export type MembroUncheckedUpdateWithoutUsuarioInput = {
 };
 
 export type MembroCreateWithoutEmprestimosInput = {
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
@@ -648,9 +658,9 @@ export type MembroCreateWithoutEmprestimosInput = {
 
 export type MembroUncheckedCreateWithoutEmprestimosInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuarioId?: number | null;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
@@ -686,9 +696,9 @@ export type MembroUpdateToOneWithWhereWithoutEmprestimosInput = {
 };
 
 export type MembroUpdateWithoutEmprestimosInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
@@ -697,9 +707,9 @@ export type MembroUpdateWithoutEmprestimosInput = {
 
 export type MembroUncheckedUpdateWithoutEmprestimosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
@@ -707,9 +717,9 @@ export type MembroUncheckedUpdateWithoutEmprestimosInput = {
 };
 
 export type MembroCreateWithoutReservasInput = {
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
@@ -718,9 +728,9 @@ export type MembroCreateWithoutReservasInput = {
 
 export type MembroUncheckedCreateWithoutReservasInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuarioId?: number | null;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
@@ -756,9 +766,9 @@ export type MembroUpdateToOneWithWhereWithoutReservasInput = {
 };
 
 export type MembroUpdateWithoutReservasInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
@@ -767,9 +777,9 @@ export type MembroUpdateWithoutReservasInput = {
 
 export type MembroUncheckedUpdateWithoutReservasInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
@@ -777,9 +787,9 @@ export type MembroUncheckedUpdateWithoutReservasInput = {
 };
 
 export type MembroCreateWithoutHistoricoInput = {
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
@@ -788,9 +798,9 @@ export type MembroCreateWithoutHistoricoInput = {
 
 export type MembroUncheckedCreateWithoutHistoricoInput = {
   id?: number;
-  nome: string;
   matricula: string;
-  tipo: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
   criadoEm?: Date | string;
   usuarioId?: number | null;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
@@ -826,9 +836,9 @@ export type MembroUpdateToOneWithWhereWithoutHistoricoInput = {
 };
 
 export type MembroUpdateWithoutHistoricoInput = {
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
@@ -837,9 +847,9 @@ export type MembroUpdateWithoutHistoricoInput = {
 
 export type MembroUncheckedUpdateWithoutHistoricoInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
-  nome?: Prisma.StringFieldUpdateOperationsInput | string;
   matricula?: Prisma.StringFieldUpdateOperationsInput | string;
-  tipo?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
@@ -914,9 +924,9 @@ export type MembroSelect<
 > = runtime.Types.Extensions.GetSelect<
   {
     id?: boolean;
-    nome?: boolean;
     matricula?: boolean;
     tipo?: boolean;
+    ativo?: boolean;
     criadoEm?: boolean;
     usuarioId?: boolean;
     usuario?: boolean | Prisma.Membro$usuarioArgs<ExtArgs>;
@@ -934,9 +944,9 @@ export type MembroSelectCreateManyAndReturn<
 > = runtime.Types.Extensions.GetSelect<
   {
     id?: boolean;
-    nome?: boolean;
     matricula?: boolean;
     tipo?: boolean;
+    ativo?: boolean;
     criadoEm?: boolean;
     usuarioId?: boolean;
     usuario?: boolean | Prisma.Membro$usuarioArgs<ExtArgs>;
@@ -950,9 +960,9 @@ export type MembroSelectUpdateManyAndReturn<
 > = runtime.Types.Extensions.GetSelect<
   {
     id?: boolean;
-    nome?: boolean;
     matricula?: boolean;
     tipo?: boolean;
+    ativo?: boolean;
     criadoEm?: boolean;
     usuarioId?: boolean;
     usuario?: boolean | Prisma.Membro$usuarioArgs<ExtArgs>;
@@ -962,9 +972,9 @@ export type MembroSelectUpdateManyAndReturn<
 
 export type MembroSelectScalar = {
   id?: boolean;
-  nome?: boolean;
   matricula?: boolean;
   tipo?: boolean;
+  ativo?: boolean;
   criadoEm?: boolean;
   usuarioId?: boolean;
 };
@@ -973,7 +983,7 @@ export type MembroOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'nome' | 'matricula' | 'tipo' | 'criadoEm' | 'usuarioId',
+  'id' | 'matricula' | 'tipo' | 'ativo' | 'criadoEm' | 'usuarioId',
   ExtArgs['result']['membro']
 >;
 export type MembroInclude<
@@ -1013,9 +1023,9 @@ export type $MembroPayload<
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: number;
-      nome: string;
       matricula: string;
-      tipo: string;
+      tipo: $Enums.TipoMembro;
+      ativo: boolean;
       criadoEm: Date;
       usuarioId: number | null;
     },
@@ -1657,9 +1667,9 @@ export interface Prisma__MembroClient<
  */
 export interface MembroFieldRefs {
   readonly id: Prisma.FieldRef<'Membro', 'Int'>;
-  readonly nome: Prisma.FieldRef<'Membro', 'String'>;
   readonly matricula: Prisma.FieldRef<'Membro', 'String'>;
-  readonly tipo: Prisma.FieldRef<'Membro', 'String'>;
+  readonly tipo: Prisma.FieldRef<'Membro', 'TipoMembro'>;
+  readonly ativo: Prisma.FieldRef<'Membro', 'Boolean'>;
   readonly criadoEm: Prisma.FieldRef<'Membro', 'DateTime'>;
   readonly usuarioId: Prisma.FieldRef<'Membro', 'Int'>;
 }

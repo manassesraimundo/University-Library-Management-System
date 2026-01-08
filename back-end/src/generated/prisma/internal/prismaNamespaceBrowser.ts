@@ -92,9 +92,9 @@ export type UsuarioScalarFieldEnum =
 
 export const MembroScalarFieldEnum = {
   id: 'id',
-  nome: 'nome',
   matricula: 'matricula',
   tipo: 'tipo',
+  ativo: 'ativo',
   criadoEm: 'criadoEm',
   usuarioId: 'usuarioId',
 } as const;
@@ -161,6 +161,7 @@ export const MultaScalarFieldEnum = {
   id: 'id',
   valor: 'valor',
   paga: 'paga',
+  dataPagamento: 'dataPagamento',
   emprestimoId: 'emprestimoId',
 } as const;
 

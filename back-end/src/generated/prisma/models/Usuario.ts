@@ -297,7 +297,7 @@ export type UsuarioCreateInput = {
   nome: string;
   email: string;
   senha: string;
-  role: $Enums.Role;
+  role?: $Enums.Role;
   criadoEm?: Date | string;
   membro?: Prisma.MembroCreateNestedOneWithoutUsuarioInput;
 };
@@ -307,7 +307,7 @@ export type UsuarioUncheckedCreateInput = {
   nome: string;
   email: string;
   senha: string;
-  role: $Enums.Role;
+  role?: $Enums.Role;
   criadoEm?: Date | string;
   membro?: Prisma.MembroUncheckedCreateNestedOneWithoutUsuarioInput;
 };
@@ -336,7 +336,7 @@ export type UsuarioCreateManyInput = {
   nome: string;
   email: string;
   senha: string;
-  role: $Enums.Role;
+  role?: $Enums.Role;
   criadoEm?: Date | string;
 };
 
@@ -449,7 +449,7 @@ export type UsuarioCreateWithoutMembroInput = {
   nome: string;
   email: string;
   senha: string;
-  role: $Enums.Role;
+  role?: $Enums.Role;
   criadoEm?: Date | string;
 };
 
@@ -458,7 +458,7 @@ export type UsuarioUncheckedCreateWithoutMembroInput = {
   nome: string;
   email: string;
   senha: string;
-  role: $Enums.Role;
+  role?: $Enums.Role;
   criadoEm?: Date | string;
 };
 

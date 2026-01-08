@@ -6,12 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-
-export enum StatusLivro {
-  DISPONIVEL = 'DISPONIVEL',
-  EMPRESTADO = 'EMPRESTADO',
-  RESERVADO = 'RESERVADO',
-}
+import { StatusLivro } from 'src/generated/prisma/enums';
 
 export class CreateLivroDto {
   @IsString()

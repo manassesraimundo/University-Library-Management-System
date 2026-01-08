@@ -1189,9 +1189,9 @@ export type UsuarioScalarFieldEnum =
 
 export const MembroScalarFieldEnum = {
   id: 'id',
-  nome: 'nome',
   matricula: 'matricula',
   tipo: 'tipo',
+  ativo: 'ativo',
   criadoEm: 'criadoEm',
   usuarioId: 'usuarioId',
 } as const;
@@ -1258,6 +1258,7 @@ export const MultaScalarFieldEnum = {
   id: 'id',
   valor: 'valor',
   paga: 'paga',
+  dataPagamento: 'dataPagamento',
   emprestimoId: 'emprestimoId',
 } as const;
 
@@ -1325,11 +1326,11 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
- * Reference to a field of type 'StatusLivro'
+ * Reference to a field of type 'TipoMembro'
  */
-export type EnumStatusLivroFieldRefInput<$PrismaModel> = FieldRefInputType<
+export type EnumTipoMembroFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
-  'StatusLivro'
+  'TipoMembro'
 >;
 
 /**
@@ -1338,6 +1339,14 @@ export type EnumStatusLivroFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'Boolean'
+>;
+
+/**
+ * Reference to a field of type 'StatusLivro'
+ */
+export type EnumStatusLivroFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  'StatusLivro'
 >;
 
 /**

@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -26,26 +26,31 @@ enum StatusLivro {
   RESERVADO
 }
 
-model Usuario {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
-  senha     String
-  role      Role
-  criadoEm  DateTime @default(now())
+enum TipoMembro {
+  ESTUDANTE
+  PROFESSOR
+}
 
-  membro    Membro?
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  email    String   @unique
+  senha    String
+  role     Role     @default(MEMBRO)
+  criadoEm DateTime @default(now())
+
+  membro Membro?
 }
 
 model Membro {
-  id          Int      @id @default(autoincrement())
-  nome        String
-  matricula   String   @unique
-  tipo        String   // Estudante | Professor
-  criadoEm    DateTime @default(now())
+  id        Int        @id @default(autoincrement())
+  matricula String     @unique
+  tipo      TipoMembro
+  ativo     Boolean    @default(true)
+  criadoEm  DateTime   @default(now())
 
-  usuarioId   Int? @unique
-  usuario     Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId Int?     @unique
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id])
 
   emprestimos Emprestimo[]
   reservas    Reserva[]
@@ -53,18 +58,18 @@ model Membro {
 }
 
 model Livro {
-  id          Int      @id @default(autoincrement())
-  titulo      String
-  isbn        String?  @unique
-  editora     String?
-  status      StatusLivro @default(DISPONIVEL)
-  criadoEm    DateTime @default(now())
+  id       Int         @id @default(autoincrement())
+  titulo   String
+  isbn     String?     @unique
+  editora  String?
+  status   StatusLivro @default(DISPONIVEL)
+  criadoEm DateTime    @default(now())
 
   autorId     Int
   categoriaId Int
 
-  autor       Autor     @relation(fields: [autorId], references: [id])
-  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+  autor     Autor     @relation(fields: [autorId], references: [id])
+  categoria Categoria @relation(fields: [categoriaId], references: [id])
 
   emprestimos Emprestimo[]
   reservas    Reserva[]
@@ -72,64 +77,65 @@ model Livro {
 }
 
 model Autor {
-  id      Int     @id @default(autoincrement())
-  nome    String
+  id   Int    @id @default(autoincrement())
+  nome String
 
-  livros  Livro[]
+  livros Livro[]
 }
 
 model Categoria {
-  id      Int     @id @default(autoincrement())
-  nome    String  @unique
+  id   Int    @id @default(autoincrement())
+  nome String @unique
 
-  livros  Livro[]
+  livros Livro[]
 }
 
 model Emprestimo {
-  id             Int      @id @default(autoincrement())
-  dataEmprestimo DateTime @default(now())
+  id             Int       @id @default(autoincrement())
+  dataEmprestimo DateTime  @default(now())
   dataPrevista   DateTime
   dataDevolucao  DateTime?
-  renovacoes     Int      @default(0)
+  renovacoes     Int       @default(0)
 
-  membroId       Int
-  livroId        Int
+  membroId Int
+  livroId  Int
 
-  membro         Membro   @relation(fields: [membroId], references: [id])
-  livro          Livro    @relation(fields: [livroId], references: [id])
+  membro Membro @relation(fields: [membroId], references: [id])
+  livro  Livro  @relation(fields: [livroId], references: [id])
 
-  multa          Multa?
+  multa Multa?
 }
 
 model Reserva {
-  id        Int      @id @default(autoincrement())
-  criadaEm  DateTime @default(now())
-  ativa     Boolean  @default(true)
-  posicao   Int
+  id       Int      @id @default(autoincrement())
+  criadaEm DateTime @default(now())
+  ativa    Boolean  @default(true)
+  posicao  Int
 
-  membroId  Int
-  livroId   Int
+  membroId Int
+  livroId  Int
 
-  membro    Membro   @relation(fields: [membroId], references: [id])
-  livro     Livro    @relation(fields: [livroId], references: [id])
+  membro Membro @relation(fields: [membroId], references: [id])
+  livro  Livro  @relation(fields: [livroId], references: [id])
 }
 
 model Multa {
-  id           Int      @id @default(autoincrement())
-  valor        Float
-  paga         Boolean  @default(false)
+  id            Int       @id @default(autoincrement())
+  valor         Float
+  paga          Boolean   @default(false)
+  dataPagamento DateTime?
 
-  emprestimoId Int      @unique
+  emprestimoId Int        @unique
   emprestimo   Emprestimo @relation(fields: [emprestimoId], references: [id])
 }
 
 model HistoricoLeitura {
-  id        Int      @id @default(autoincrement())
-  data      DateTime @default(now())
+  id   Int      @id @default(autoincrement())
+  data DateTime @default(now())
 
-  membroId  Int
-  livroId   Int
+  membroId Int
+  livroId  Int
 
-  membro    Membro   @relation(fields: [membroId], references: [id])
-  livro     Livro    @relation(fields: [livroId], references: [id])
+  membro Membro @relation(fields: [membroId], references: [id])
+  livro  Livro  @relation(fields: [livroId], references: [id])
 }

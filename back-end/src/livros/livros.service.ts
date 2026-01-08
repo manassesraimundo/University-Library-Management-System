@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateLivroDto, StatusLivro } from './dto/livro.dto';
-import { Livro } from 'src/generated/prisma/browser';
+import { CreateLivroDto } from './dto/livro.dto';
+import { Livro, StatusLivro } from 'src/generated/prisma/client';
 
 @Injectable()
 export class LivrosService {
@@ -20,7 +20,11 @@ export class LivrosService {
     return { skip, take };
   }
 
-  async findAllLivros(status: string, page = 1, limit = 10): Promise<Livro[]> {
+  async findAllLivros(
+    status: string,
+    page = 1,
+    limit = 10,
+  ): Promise<Omit<Livro, 'criadoEm'>[]> {
     const { skip, take } = this.getPage(page, limit);
 
     try {

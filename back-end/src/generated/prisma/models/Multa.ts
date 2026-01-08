@@ -42,6 +42,7 @@ export type MultaMinAggregateOutputType = {
   id: number | null;
   valor: number | null;
   paga: boolean | null;
+  dataPagamento: Date | null;
   emprestimoId: number | null;
 };
 
@@ -49,6 +50,7 @@ export type MultaMaxAggregateOutputType = {
   id: number | null;
   valor: number | null;
   paga: boolean | null;
+  dataPagamento: Date | null;
   emprestimoId: number | null;
 };
 
@@ -56,6 +58,7 @@ export type MultaCountAggregateOutputType = {
   id: number;
   valor: number;
   paga: number;
+  dataPagamento: number;
   emprestimoId: number;
   _all: number;
 };
@@ -76,6 +79,7 @@ export type MultaMinAggregateInputType = {
   id?: true;
   valor?: true;
   paga?: true;
+  dataPagamento?: true;
   emprestimoId?: true;
 };
 
@@ -83,6 +87,7 @@ export type MultaMaxAggregateInputType = {
   id?: true;
   valor?: true;
   paga?: true;
+  dataPagamento?: true;
   emprestimoId?: true;
 };
 
@@ -90,6 +95,7 @@ export type MultaCountAggregateInputType = {
   id?: true;
   valor?: true;
   paga?: true;
+  dataPagamento?: true;
   emprestimoId?: true;
   _all?: true;
 };
@@ -191,6 +197,7 @@ export type MultaGroupByOutputType = {
   id: number;
   valor: number;
   paga: boolean;
+  dataPagamento: Date | null;
   emprestimoId: number;
   _count: MultaCountAggregateOutputType | null;
   _avg: MultaAvgAggregateOutputType | null;
@@ -218,6 +225,7 @@ export type MultaWhereInput = {
   id?: Prisma.IntFilter<'Multa'> | number;
   valor?: Prisma.FloatFilter<'Multa'> | number;
   paga?: Prisma.BoolFilter<'Multa'> | boolean;
+  dataPagamento?: Prisma.DateTimeNullableFilter<'Multa'> | Date | string | null;
   emprestimoId?: Prisma.IntFilter<'Multa'> | number;
   emprestimo?: Prisma.XOR<
     Prisma.EmprestimoScalarRelationFilter,
@@ -229,6 +237,7 @@ export type MultaOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   valor?: Prisma.SortOrder;
   paga?: Prisma.SortOrder;
+  dataPagamento?: Prisma.SortOrderInput | Prisma.SortOrder;
   emprestimoId?: Prisma.SortOrder;
   emprestimo?: Prisma.EmprestimoOrderByWithRelationInput;
 };
@@ -242,6 +251,11 @@ export type MultaWhereUniqueInput = Prisma.AtLeast<
     NOT?: Prisma.MultaWhereInput | Prisma.MultaWhereInput[];
     valor?: Prisma.FloatFilter<'Multa'> | number;
     paga?: Prisma.BoolFilter<'Multa'> | boolean;
+    dataPagamento?:
+      | Prisma.DateTimeNullableFilter<'Multa'>
+      | Date
+      | string
+      | null;
     emprestimo?: Prisma.XOR<
       Prisma.EmprestimoScalarRelationFilter,
       Prisma.EmprestimoWhereInput
@@ -254,6 +268,7 @@ export type MultaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   valor?: Prisma.SortOrder;
   paga?: Prisma.SortOrder;
+  dataPagamento?: Prisma.SortOrderInput | Prisma.SortOrder;
   emprestimoId?: Prisma.SortOrder;
   _count?: Prisma.MultaCountOrderByAggregateInput;
   _avg?: Prisma.MultaAvgOrderByAggregateInput;
@@ -273,12 +288,18 @@ export type MultaScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<'Multa'> | number;
   valor?: Prisma.FloatWithAggregatesFilter<'Multa'> | number;
   paga?: Prisma.BoolWithAggregatesFilter<'Multa'> | boolean;
+  dataPagamento?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'Multa'>
+    | Date
+    | string
+    | null;
   emprestimoId?: Prisma.IntWithAggregatesFilter<'Multa'> | number;
 };
 
 export type MultaCreateInput = {
   valor: number;
   paga?: boolean;
+  dataPagamento?: Date | string | null;
   emprestimo: Prisma.EmprestimoCreateNestedOneWithoutMultaInput;
 };
 
@@ -286,12 +307,18 @@ export type MultaUncheckedCreateInput = {
   id?: number;
   valor: number;
   paga?: boolean;
+  dataPagamento?: Date | string | null;
   emprestimoId: number;
 };
 
 export type MultaUpdateInput = {
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   emprestimo?: Prisma.EmprestimoUpdateOneRequiredWithoutMultaNestedInput;
 };
 
@@ -299,6 +326,11 @@ export type MultaUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   emprestimoId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -306,18 +338,29 @@ export type MultaCreateManyInput = {
   id?: number;
   valor: number;
   paga?: boolean;
+  dataPagamento?: Date | string | null;
   emprestimoId: number;
 };
 
 export type MultaUpdateManyMutationInput = {
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type MultaUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
   emprestimoId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -330,6 +373,7 @@ export type MultaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   valor?: Prisma.SortOrder;
   paga?: Prisma.SortOrder;
+  dataPagamento?: Prisma.SortOrder;
   emprestimoId?: Prisma.SortOrder;
 };
 
@@ -343,6 +387,7 @@ export type MultaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   valor?: Prisma.SortOrder;
   paga?: Prisma.SortOrder;
+  dataPagamento?: Prisma.SortOrder;
   emprestimoId?: Prisma.SortOrder;
 };
 
@@ -350,6 +395,7 @@ export type MultaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   valor?: Prisma.SortOrder;
   paga?: Prisma.SortOrder;
+  dataPagamento?: Prisma.SortOrder;
   emprestimoId?: Prisma.SortOrder;
 };
 
@@ -426,12 +472,14 @@ export type FloatFieldUpdateOperationsInput = {
 export type MultaCreateWithoutEmprestimoInput = {
   valor: number;
   paga?: boolean;
+  dataPagamento?: Date | string | null;
 };
 
 export type MultaUncheckedCreateWithoutEmprestimoInput = {
   id?: number;
   valor: number;
   paga?: boolean;
+  dataPagamento?: Date | string | null;
 };
 
 export type MultaCreateOrConnectWithoutEmprestimoInput = {
@@ -465,12 +513,22 @@ export type MultaUpdateToOneWithWhereWithoutEmprestimoInput = {
 export type MultaUpdateWithoutEmprestimoInput = {
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type MultaUncheckedUpdateWithoutEmprestimoInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   valor?: Prisma.FloatFieldUpdateOperationsInput | number;
   paga?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  dataPagamento?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null;
 };
 
 export type MultaSelect<
@@ -481,6 +539,7 @@ export type MultaSelect<
     id?: boolean;
     valor?: boolean;
     paga?: boolean;
+    dataPagamento?: boolean;
     emprestimoId?: boolean;
     emprestimo?: boolean | Prisma.EmprestimoDefaultArgs<ExtArgs>;
   },
@@ -495,6 +554,7 @@ export type MultaSelectCreateManyAndReturn<
     id?: boolean;
     valor?: boolean;
     paga?: boolean;
+    dataPagamento?: boolean;
     emprestimoId?: boolean;
     emprestimo?: boolean | Prisma.EmprestimoDefaultArgs<ExtArgs>;
   },
@@ -509,6 +569,7 @@ export type MultaSelectUpdateManyAndReturn<
     id?: boolean;
     valor?: boolean;
     paga?: boolean;
+    dataPagamento?: boolean;
     emprestimoId?: boolean;
     emprestimo?: boolean | Prisma.EmprestimoDefaultArgs<ExtArgs>;
   },
@@ -519,6 +580,7 @@ export type MultaSelectScalar = {
   id?: boolean;
   valor?: boolean;
   paga?: boolean;
+  dataPagamento?: boolean;
   emprestimoId?: boolean;
 };
 
@@ -526,7 +588,7 @@ export type MultaOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'valor' | 'paga' | 'emprestimoId',
+  'id' | 'valor' | 'paga' | 'dataPagamento' | 'emprestimoId',
   ExtArgs['result']['multa']
 >;
 export type MultaInclude<
@@ -561,6 +623,7 @@ export type $MultaPayload<
       id: number;
       valor: number;
       paga: boolean;
+      dataPagamento: Date | null;
       emprestimoId: number;
     },
     ExtArgs['result']['multa']
@@ -1171,6 +1234,7 @@ export interface MultaFieldRefs {
   readonly id: Prisma.FieldRef<'Multa', 'Int'>;
   readonly valor: Prisma.FieldRef<'Multa', 'Float'>;
   readonly paga: Prisma.FieldRef<'Multa', 'Boolean'>;
+  readonly dataPagamento: Prisma.FieldRef<'Multa', 'DateTime'>;
   readonly emprestimoId: Prisma.FieldRef<'Multa', 'Int'>;
 }
 
