@@ -9,7 +9,7 @@ import {
 import { StatusLivro } from 'src/generated/prisma/enums';
 
 export class CreateLivroDto {
-  @IsString()
+  @IsString({ message: 'O título do livro deve ser uma string' })
   @IsNotEmpty({ message: 'O título do livro é obrigatório' })
   titulo: string;
 
@@ -17,11 +17,11 @@ export class CreateLivroDto {
   @IsNotEmpty({ message: 'O autorId é obrigatório' })
   autorId: number;
 
-  @IsString()
+  @IsString({ message: 'O nome da editora deve ser uma string' })
   @IsOptional()
   editora?: string;
 
-  @IsString()
+  @IsString({ message: 'O ISBN deve ser uma string' })
   @IsOptional()
   isbn?: string;
 

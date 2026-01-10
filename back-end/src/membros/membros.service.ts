@@ -102,7 +102,7 @@ export class MembrosService {
 
   async deleteMembroByMatricula(matricula: string): Promise<Object> {
     this.validarRegrasMatricula(matricula);
-    
+
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { matricula },

@@ -30,9 +30,10 @@ export class LivrosService {
     try {
       const livros = await this.prisma.livro.findMany({
         where: { status: StatusLivro[status.toUpperCase()] },
-        // take,
         // skip,
+        // take,
         orderBy: { titulo: 'asc' },
+        include: { autor: { select: { nome: true } } },
       });
 
       return livros;
@@ -40,6 +41,32 @@ export class LivrosService {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException();
+    }
+  }
+
+  async findLivrosByCategory(
+    categoria: string,
+    page: number,
+    limit: number,
+  ): Promise<Livro[]> {
+    const { skip, take } = this.getPage(page, limit);
+    try {
+      const livrosByCategory = await this.prisma.livro.findMany({
+        where: { categoria: { nome: categoria } },
+        include: { autor: { select: { nome: true } } },
+        skip,
+        take,
+      });
+
+      if (!livrosByCategory) new NotFoundException('Categoria não encontrada');
+
+      return livrosByCategory;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException(
+            'Erro ao buscar livros por categoria',
+          );
     }
   }
 
@@ -56,7 +83,7 @@ export class LivrosService {
     } catch (error) {
       throw error instanceof HttpException
         ? error
-        : new InternalServerErrorException();
+        : new InternalServerErrorException('Erro ao buscar livro por ID');
     }
   }
 
