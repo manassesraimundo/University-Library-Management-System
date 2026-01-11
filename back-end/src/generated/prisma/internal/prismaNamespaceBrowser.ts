@@ -63,6 +63,7 @@ export const ModelName = {
   Reserva: 'Reserva',
   Multa: 'Multa',
   HistoricoLeitura: 'HistoricoLeitura',
+  ChatMensagem: 'ChatMensagem',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -177,6 +178,17 @@ export const HistoricoLeituraScalarFieldEnum = {
 
 export type HistoricoLeituraScalarFieldEnum =
   (typeof HistoricoLeituraScalarFieldEnum)[keyof typeof HistoricoLeituraScalarFieldEnum];
+
+export const ChatMensagemScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  role: 'role',
+  criadoEm: 'criadoEm',
+  membroId: 'membroId',
+} as const;
+
+export type ChatMensagemScalarFieldEnum =
+  (typeof ChatMensagemScalarFieldEnum)[keyof typeof ChatMensagemScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',

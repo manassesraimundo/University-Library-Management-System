@@ -88,7 +88,7 @@ export class LivrosService {
   }
 
   // Criacao do livro
-  async createLivro(body: CreateLivroDto): Promise<Object> {
+  async createLivro(body: CreateLivroDto): Promise<{ message: string }> {
     try {
       if (body.isbn) {
         const livro = await this.prisma.livro.findUnique({

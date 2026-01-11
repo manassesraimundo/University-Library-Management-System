@@ -8,13 +8,16 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEmprestimoDto } from './dto/create-emprestimo.dto';
 import { StatusLivro, TipoMembro } from 'src/generated/prisma/enums';
-import { Emprestimo, Reserva } from 'src/generated/prisma/client';
+import { Emprestimo, Membro, Reserva } from 'src/generated/prisma/client';
+import { RenovarEmprestimoDto } from './dto/renovar-emprestimo.dto';
 
 @Injectable()
 export class EmprestimosService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createEmprestimo(body: CreateEmprestimoDto): Promise<Object> {
+  async createEmprestimo(
+    body: CreateEmprestimoDto,
+  ): Promise<{ message: string }> {
     try {
       await this.prisma.$transaction(async (tx) => {
         const membroExisted = await tx.membro.findUnique({
@@ -122,7 +125,25 @@ export class EmprestimosService {
     }
   }
 
-  async returnEmprestimo(emprestimoId: number): Promise<Object> {
+  // async getEmprestimosByMembroId(membroId: number): Promise<Emprestimo[]> {
+  //   try {
+  //     const emprestimos = await this.prisma.emprestimo.findMany({
+  //       where: { membroId },
+  //       include: {
+  //         livro: true,
+  //         membro: { select: { usuario: { select: { nome: true } } } },
+  //       },
+  //     });
+
+  //     return emprestimos;
+  //   } catch (error) {
+  //     throw error instanceof HttpException
+  //       ? error
+  //       : new InternalServerErrorException('');
+  //   }
+  // }
+
+  async returnEmprestimo(emprestimoId: number): Promise<{ message: string }> {
     try {
       await this.prisma.$transaction(async (tx) => {
         const emprestimo = await tx.emprestimo.findUnique({
@@ -186,19 +207,57 @@ export class EmprestimosService {
     }
   }
 
-  async findReserva(): Promise<Reserva[]> {
+  // Renovar empréstimo
+  async renovarEmprestimo(
+    renovar: RenovarEmprestimoDto,
+  ): Promise<{ message: string }> {
     try {
-      const reservas = await this.prisma.reserva.findMany({
-        include: {
-          membro: true,
-          livro: true,
+      const emprestimo = await this.prisma.emprestimo.findUnique({
+        where: { id: renovar.emprestimoId },
+      });
+
+      if (!emprestimo) {
+        throw new NotFoundException('Empréstimo não encontrado');
+      }
+
+      if (emprestimo.dataDevolucao) {
+        throw new BadRequestException('Empréstimo já foi devolvido');
+      }
+
+      if (emprestimo.renovacoes >= 2) {
+        throw new BadRequestException('Limite máximo de renovações atingido');
+      }
+
+      const reservaAtiva = await this.prisma.reserva.findFirst({
+        where: {
+          livroId: emprestimo.livroId,
+          ativa: true,
+        },
+        orderBy: { posicao: 'asc' },
+      });
+
+      if (reservaAtiva) {
+        throw new BadRequestException(
+          'Não é possível renovar o empréstimo, existe uma reserva ativa para este livro',
+        );
+      }
+
+      const novaDataPrevista = new Date(emprestimo.dataPrevista);
+      novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
+
+      await this.prisma.emprestimo.update({
+        where: { id: emprestimo.id },
+        data: {
+          dataPrevista: novaDataPrevista,
+          renovacoes: { increment: 1 },
         },
       });
-      return reservas;
+
+      return { message: 'Empréstimo renovado com sucesso' };
     } catch (error) {
       throw error instanceof HttpException
         ? error
-        : new InternalServerErrorException('Erro ao buscar reservas');
+        : new InternalServerErrorException('Erro ao renovar empréstimo');
     }
   }
 }

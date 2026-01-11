@@ -8,15 +8,14 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { Role } from 'src/generated/prisma/enums';
-
-import * as bcrypt from 'bcrypt';
 import { Usuario } from 'src/generated/prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUsuario(body: CreateUsuarioDto): Promise<Object> {
+  async createUsuario(body: CreateUsuarioDto): Promise<{ message: string }> {
     try {
       const userExited = await this.prisma.usuario.findUnique({
         where: { email: body.email },

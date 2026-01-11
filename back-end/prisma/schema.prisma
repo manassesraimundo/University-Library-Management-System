@@ -52,9 +52,10 @@ model Membro {
   usuarioId Int?     @unique
   usuario   Usuario? @relation(fields: [usuarioId], references: [id])
 
-  emprestimos Emprestimo[]
-  reservas    Reserva[]
-  historico   HistoricoLeitura[]
+  emprestimos  Emprestimo[]
+  reservas     Reserva[]
+  historico    HistoricoLeitura[]
+  chatMensagem ChatMensagem[]
 }
 
 model Livro {
@@ -138,4 +139,14 @@ model HistoricoLeitura {
 
   membro Membro @relation(fields: [membroId], references: [id])
   livro  Livro  @relation(fields: [livroId], references: [id])
+}
+
+model ChatMensagem {
+  id       Int      @id @default(autoincrement())
+  content  String
+  role     String
+  criadoEm DateTime @default(now())
+
+  membroId Int
+  membro   Membro @relation(fields: [membroId], references: [id])
 }

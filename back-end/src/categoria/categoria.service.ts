@@ -13,7 +13,7 @@ import { Categoria } from 'src/generated/prisma/client';
 export class CategoriaService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createCategoria(body: CategoriaDto): Promise<Object> {
+  async createCategoria(body: CategoriaDto): Promise<{ message: string }> {
     try {
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { nome: body.nome },
@@ -45,7 +45,7 @@ export class CategoriaService {
     }
   }
 
-  async deleteCategoria(id: number): Promise<Object> {
+  async deleteCategoria(id: number): Promise<{ message: string }> {
     try {
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { id },

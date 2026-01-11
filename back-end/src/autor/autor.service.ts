@@ -11,7 +11,7 @@ import { Autor } from 'src/generated/prisma/client';
 export class AutorService {
   constructor(private prisma: PrismaService) {}
 
-  async createAutor(autorDto: AutorDto): Promise<Object> {
+  async createAutor(autorDto: AutorDto): Promise<{ message: string }> {
     try {
       await this.prisma.autor.create({
         data: autorDto,
@@ -39,7 +39,7 @@ export class AutorService {
     }
   }
 
-  async deleteAutor(id: number): Promise<Object> {
+  async deleteAutor(id: number): Promise<{ message: string }> {
     try {
       await this.prisma.autor.delete({
         where: { id },

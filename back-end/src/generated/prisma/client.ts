@@ -87,3 +87,8 @@ export type Multa = Prisma.MultaModel;
  *
  */
 export type HistoricoLeitura = Prisma.HistoricoLeituraModel;
+/**
+ * Model ChatMensagem
+ *
+ */
+export type ChatMensagem = Prisma.ChatMensagemModel;

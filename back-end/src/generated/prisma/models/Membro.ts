@@ -239,6 +239,7 @@ export type MembroWhereInput = {
   emprestimos?: Prisma.EmprestimoListRelationFilter;
   reservas?: Prisma.ReservaListRelationFilter;
   historico?: Prisma.HistoricoLeituraListRelationFilter;
+  chatMensagem?: Prisma.ChatMensagemListRelationFilter;
 };
 
 export type MembroOrderByWithRelationInput = {
@@ -252,6 +253,7 @@ export type MembroOrderByWithRelationInput = {
   emprestimos?: Prisma.EmprestimoOrderByRelationAggregateInput;
   reservas?: Prisma.ReservaOrderByRelationAggregateInput;
   historico?: Prisma.HistoricoLeituraOrderByRelationAggregateInput;
+  chatMensagem?: Prisma.ChatMensagemOrderByRelationAggregateInput;
 };
 
 export type MembroWhereUniqueInput = Prisma.AtLeast<
@@ -272,6 +274,7 @@ export type MembroWhereUniqueInput = Prisma.AtLeast<
     emprestimos?: Prisma.EmprestimoListRelationFilter;
     reservas?: Prisma.ReservaListRelationFilter;
     historico?: Prisma.HistoricoLeituraListRelationFilter;
+    chatMensagem?: Prisma.ChatMensagemListRelationFilter;
   },
   'id' | 'matricula' | 'usuarioId'
 >;
@@ -317,6 +320,7 @@ export type MembroCreateInput = {
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUncheckedCreateInput = {
@@ -329,6 +333,7 @@ export type MembroUncheckedCreateInput = {
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUpdateInput = {
@@ -340,6 +345,7 @@ export type MembroUpdateInput = {
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroUncheckedUpdateInput = {
@@ -352,6 +358,7 @@ export type MembroUncheckedUpdateInput = {
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroCreateManyInput = {
@@ -576,6 +583,32 @@ export type MembroUpdateOneRequiredWithoutHistoricoNestedInput = {
   >;
 };
 
+export type MembroCreateNestedOneWithoutChatMensagemInput = {
+  create?: Prisma.XOR<
+    Prisma.MembroCreateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedCreateWithoutChatMensagemInput
+  >;
+  connectOrCreate?: Prisma.MembroCreateOrConnectWithoutChatMensagemInput;
+  connect?: Prisma.MembroWhereUniqueInput;
+};
+
+export type MembroUpdateOneRequiredWithoutChatMensagemNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.MembroCreateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedCreateWithoutChatMensagemInput
+  >;
+  connectOrCreate?: Prisma.MembroCreateOrConnectWithoutChatMensagemInput;
+  upsert?: Prisma.MembroUpsertWithoutChatMensagemInput;
+  connect?: Prisma.MembroWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.MembroUpdateToOneWithWhereWithoutChatMensagemInput,
+      Prisma.MembroUpdateWithoutChatMensagemInput
+    >,
+    Prisma.MembroUncheckedUpdateWithoutChatMensagemInput
+  >;
+};
+
 export type MembroCreateWithoutUsuarioInput = {
   matricula: string;
   tipo: $Enums.TipoMembro;
@@ -584,6 +617,7 @@ export type MembroCreateWithoutUsuarioInput = {
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUncheckedCreateWithoutUsuarioInput = {
@@ -595,6 +629,7 @@ export type MembroUncheckedCreateWithoutUsuarioInput = {
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroCreateOrConnectWithoutUsuarioInput = {
@@ -633,6 +668,7 @@ export type MembroUpdateWithoutUsuarioInput = {
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroUncheckedUpdateWithoutUsuarioInput = {
@@ -644,6 +680,7 @@ export type MembroUncheckedUpdateWithoutUsuarioInput = {
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroCreateWithoutEmprestimosInput = {
@@ -654,6 +691,7 @@ export type MembroCreateWithoutEmprestimosInput = {
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUncheckedCreateWithoutEmprestimosInput = {
@@ -665,6 +703,7 @@ export type MembroUncheckedCreateWithoutEmprestimosInput = {
   usuarioId?: number | null;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroCreateOrConnectWithoutEmprestimosInput = {
@@ -703,6 +742,7 @@ export type MembroUpdateWithoutEmprestimosInput = {
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroUncheckedUpdateWithoutEmprestimosInput = {
@@ -714,6 +754,7 @@ export type MembroUncheckedUpdateWithoutEmprestimosInput = {
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroCreateWithoutReservasInput = {
@@ -724,6 +765,7 @@ export type MembroCreateWithoutReservasInput = {
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUncheckedCreateWithoutReservasInput = {
@@ -735,6 +777,7 @@ export type MembroUncheckedCreateWithoutReservasInput = {
   usuarioId?: number | null;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
   historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroCreateOrConnectWithoutReservasInput = {
@@ -773,6 +816,7 @@ export type MembroUpdateWithoutReservasInput = {
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroUncheckedUpdateWithoutReservasInput = {
@@ -784,6 +828,7 @@ export type MembroUncheckedUpdateWithoutReservasInput = {
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
   historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroCreateWithoutHistoricoInput = {
@@ -794,6 +839,7 @@ export type MembroCreateWithoutHistoricoInput = {
   usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
   emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroUncheckedCreateWithoutHistoricoInput = {
@@ -805,6 +851,7 @@ export type MembroUncheckedCreateWithoutHistoricoInput = {
   usuarioId?: number | null;
   emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedCreateNestedManyWithoutMembroInput;
 };
 
 export type MembroCreateOrConnectWithoutHistoricoInput = {
@@ -843,6 +890,7 @@ export type MembroUpdateWithoutHistoricoInput = {
   usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
   emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUpdateManyWithoutMembroNestedInput;
 };
 
 export type MembroUncheckedUpdateWithoutHistoricoInput = {
@@ -854,6 +902,81 @@ export type MembroUncheckedUpdateWithoutHistoricoInput = {
   usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
   emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
+  chatMensagem?: Prisma.ChatMensagemUncheckedUpdateManyWithoutMembroNestedInput;
+};
+
+export type MembroCreateWithoutChatMensagemInput = {
+  matricula: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
+  criadoEm?: Date | string;
+  usuario?: Prisma.UsuarioCreateNestedOneWithoutMembroInput;
+  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutMembroInput;
+  reservas?: Prisma.ReservaCreateNestedManyWithoutMembroInput;
+  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutMembroInput;
+};
+
+export type MembroUncheckedCreateWithoutChatMensagemInput = {
+  id?: number;
+  matricula: string;
+  tipo: $Enums.TipoMembro;
+  ativo?: boolean;
+  criadoEm?: Date | string;
+  usuarioId?: number | null;
+  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutMembroInput;
+  reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutMembroInput;
+  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutMembroInput;
+};
+
+export type MembroCreateOrConnectWithoutChatMensagemInput = {
+  where: Prisma.MembroWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.MembroCreateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedCreateWithoutChatMensagemInput
+  >;
+};
+
+export type MembroUpsertWithoutChatMensagemInput = {
+  update: Prisma.XOR<
+    Prisma.MembroUpdateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedUpdateWithoutChatMensagemInput
+  >;
+  create: Prisma.XOR<
+    Prisma.MembroCreateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedCreateWithoutChatMensagemInput
+  >;
+  where?: Prisma.MembroWhereInput;
+};
+
+export type MembroUpdateToOneWithWhereWithoutChatMensagemInput = {
+  where?: Prisma.MembroWhereInput;
+  data: Prisma.XOR<
+    Prisma.MembroUpdateWithoutChatMensagemInput,
+    Prisma.MembroUncheckedUpdateWithoutChatMensagemInput
+  >;
+};
+
+export type MembroUpdateWithoutChatMensagemInput = {
+  matricula?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  usuario?: Prisma.UsuarioUpdateOneWithoutMembroNestedInput;
+  emprestimos?: Prisma.EmprestimoUpdateManyWithoutMembroNestedInput;
+  reservas?: Prisma.ReservaUpdateManyWithoutMembroNestedInput;
+  historico?: Prisma.HistoricoLeituraUpdateManyWithoutMembroNestedInput;
+};
+
+export type MembroUncheckedUpdateWithoutChatMensagemInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  matricula?: Prisma.StringFieldUpdateOperationsInput | string;
+  tipo?: Prisma.EnumTipoMembroFieldUpdateOperationsInput | $Enums.TipoMembro;
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  usuarioId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutMembroNestedInput;
+  reservas?: Prisma.ReservaUncheckedUpdateManyWithoutMembroNestedInput;
+  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput;
 };
 
 /**
@@ -864,6 +987,7 @@ export type MembroCountOutputType = {
   emprestimos: number;
   reservas: number;
   historico: number;
+  chatMensagem: number;
 };
 
 export type MembroCountOutputTypeSelect<
@@ -873,6 +997,7 @@ export type MembroCountOutputTypeSelect<
   emprestimos?: boolean | MembroCountOutputTypeCountEmprestimosArgs;
   reservas?: boolean | MembroCountOutputTypeCountReservasArgs;
   historico?: boolean | MembroCountOutputTypeCountHistoricoArgs;
+  chatMensagem?: boolean | MembroCountOutputTypeCountChatMensagemArgs;
 };
 
 /**
@@ -918,6 +1043,16 @@ export type MembroCountOutputTypeCountHistoricoArgs<
   where?: Prisma.HistoricoLeituraWhereInput;
 };
 
+/**
+ * MembroCountOutputType without action
+ */
+export type MembroCountOutputTypeCountChatMensagemArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.ChatMensagemWhereInput;
+};
+
 export type MembroSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -933,6 +1068,7 @@ export type MembroSelect<
     emprestimos?: boolean | Prisma.Membro$emprestimosArgs<ExtArgs>;
     reservas?: boolean | Prisma.Membro$reservasArgs<ExtArgs>;
     historico?: boolean | Prisma.Membro$historicoArgs<ExtArgs>;
+    chatMensagem?: boolean | Prisma.Membro$chatMensagemArgs<ExtArgs>;
     _count?: boolean | Prisma.MembroCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['membro']
@@ -994,6 +1130,7 @@ export type MembroInclude<
   emprestimos?: boolean | Prisma.Membro$emprestimosArgs<ExtArgs>;
   reservas?: boolean | Prisma.Membro$reservasArgs<ExtArgs>;
   historico?: boolean | Prisma.Membro$historicoArgs<ExtArgs>;
+  chatMensagem?: boolean | Prisma.Membro$chatMensagemArgs<ExtArgs>;
   _count?: boolean | Prisma.MembroCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type MembroIncludeCreateManyAndReturn<
@@ -1019,6 +1156,7 @@ export type $MembroPayload<
     emprestimos: Prisma.$EmprestimoPayload<ExtArgs>[];
     reservas: Prisma.$ReservaPayload<ExtArgs>[];
     historico: Prisma.$HistoricoLeituraPayload<ExtArgs>[];
+    chatMensagem: Prisma.$ChatMensagemPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1618,6 +1756,17 @@ export interface Prisma__MembroClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$HistoricoLeituraPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  chatMensagem<T extends Prisma.Membro$chatMensagemArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Membro$chatMensagemArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$ChatMensagemPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -2235,6 +2384,37 @@ export type Membro$historicoArgs<
   distinct?:
     | Prisma.HistoricoLeituraScalarFieldEnum
     | Prisma.HistoricoLeituraScalarFieldEnum[];
+};
+
+/**
+ * Membro.chatMensagem
+ */
+export type Membro$chatMensagemArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the ChatMensagem
+   */
+  select?: Prisma.ChatMensagemSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the ChatMensagem
+   */
+  omit?: Prisma.ChatMensagemOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatMensagemInclude<ExtArgs> | null;
+  where?: Prisma.ChatMensagemWhereInput;
+  orderBy?:
+    | Prisma.ChatMensagemOrderByWithRelationInput
+    | Prisma.ChatMensagemOrderByWithRelationInput[];
+  cursor?: Prisma.ChatMensagemWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.ChatMensagemScalarFieldEnum
+    | Prisma.ChatMensagemScalarFieldEnum[];
 };
 
 /**

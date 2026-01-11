@@ -7,19 +7,21 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMembroDto } from './dto/membro.dto';
-import { Membro, TipoMembro } from 'src/generated/prisma/client';
+import { Membro, Prisma, TipoMembro } from 'src/generated/prisma/client';
+
+type MembroComUsuario = Prisma.MembroGetPayload<{
+  include: { usuario: { select: { nome: true } } };
+}>;
 
 @Injectable()
 export class MembrosService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createMembro(body: CreateMembroDto): Promise<Object> {
+  async createMembro(body: CreateMembroDto): Promise<{ message: string }> {
     this.validarRegrasMatricula(body.matricula);
 
     try {
-      const existMembro = await this.prisma.membro.findUnique({
-        where: { matricula: body.matricula },
-      });
+      const existMembro = await this.deleteMembroByMatricula(body.matricula);
 
       if (existMembro) throw new ConflictException('Matrícula já cadastrada.');
 
@@ -72,16 +74,31 @@ export class MembrosService {
     }
   }
 
+  async getMembroById(membroId: number): Promise<MembroComUsuario | null> {
+    try {
+      const membro = await this.prisma.membro.findUnique({
+        where: { id: membroId },
+        include: { usuario: { select: { nome: true } } },
+      });
+
+      if (membro) return membro;
+
+      return null;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException('');
+    }
+  }
+
   async updateMembroStatus(
     matricula: string,
     status: boolean,
-  ): Promise<Object> {
+  ): Promise<{ message: string }> {
     this.validarRegrasMatricula(matricula);
 
     try {
-      const membro = await this.prisma.membro.findUnique({
-        where: { matricula },
-      });
+      const membro = await this.getMembroByMatricula(matricula);
 
       if (!membro) throw new BadRequestException('Membro não encontrado.');
 
@@ -100,13 +117,13 @@ export class MembrosService {
     }
   }
 
-  async deleteMembroByMatricula(matricula: string): Promise<Object> {
+  async deleteMembroByMatricula(
+    matricula: string,
+  ): Promise<{ message: string }> {
     this.validarRegrasMatricula(matricula);
 
     try {
-      const membro = await this.prisma.membro.findUnique({
-        where: { matricula },
-      });
+      const membro = await this.getMembroByMatricula(matricula);
 
       if (!membro) throw new BadRequestException('Membro não encontrado.');
 

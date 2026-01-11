@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "ChatMensagem" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "content" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'MEMBRO',
+    "criadoEm" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "membroId" INTEGER NOT NULL,
+    CONSTRAINT "ChatMensagem_membroId_fkey" FOREIGN KEY ("membroId") REFERENCES "Membro" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

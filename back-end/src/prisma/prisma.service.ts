@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import {
   Injectable,
   Logger,
@@ -7,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient } from 'src/generated/prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PrismaService
@@ -15,12 +15,17 @@ export class PrismaService
 {
   private readonly logger = new Logger(PrismaService.name);
 
-  constructor() {
+  constructor(configService: ConfigService) {
     try {
+      const dbUrl =
+        configService.get<string>('DATABASE_URL') || 'file:./dev.db';
+
       const adapter = new PrismaBetterSqlite3({
-        url: process.env.DATABASE_URL || 'file:./dev.db',
+        url: dbUrl,
       });
+
       super({ adapter });
+
       this.logger.log('Prisma Client initialized with Better SQLite3 adapter');
     } catch (error) {
       Logger.error(

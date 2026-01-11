@@ -421,6 +421,7 @@ export const ModelName = {
   Reserva: 'Reserva',
   Multa: 'Multa',
   HistoricoLeitura: 'HistoricoLeitura',
+  ChatMensagem: 'ChatMensagem',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -451,7 +452,8 @@ export type TypeMap<
       | 'emprestimo'
       | 'reserva'
       | 'multa'
-      | 'historicoLeitura';
+      | 'historicoLeitura'
+      | 'chatMensagem';
     txIsolationLevel: TransactionIsolationLevel;
   };
   model: {
@@ -1139,6 +1141,82 @@ export type TypeMap<
         };
       };
     };
+    ChatMensagem: {
+      payload: Prisma.$ChatMensagemPayload<ExtArgs>;
+      fields: Prisma.ChatMensagemFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.ChatMensagemFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.ChatMensagemFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        findFirst: {
+          args: Prisma.ChatMensagemFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.ChatMensagemFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        findMany: {
+          args: Prisma.ChatMensagemFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>[];
+        };
+        create: {
+          args: Prisma.ChatMensagemCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        createMany: {
+          args: Prisma.ChatMensagemCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.ChatMensagemCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>[];
+        };
+        delete: {
+          args: Prisma.ChatMensagemDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        update: {
+          args: Prisma.ChatMensagemUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        deleteMany: {
+          args: Prisma.ChatMensagemDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.ChatMensagemUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.ChatMensagemUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>[];
+        };
+        upsert: {
+          args: Prisma.ChatMensagemUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChatMensagemPayload>;
+        };
+        aggregate: {
+          args: Prisma.ChatMensagemAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChatMensagem>;
+        };
+        groupBy: {
+          args: Prisma.ChatMensagemGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.ChatMensagemGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.ChatMensagemCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.ChatMensagemCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
   };
 } & {
   other: {
@@ -1274,6 +1352,17 @@ export const HistoricoLeituraScalarFieldEnum = {
 
 export type HistoricoLeituraScalarFieldEnum =
   (typeof HistoricoLeituraScalarFieldEnum)[keyof typeof HistoricoLeituraScalarFieldEnum];
+
+export const ChatMensagemScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  role: 'role',
+  criadoEm: 'criadoEm',
+  membroId: 'membroId',
+} as const;
+
+export type ChatMensagemScalarFieldEnum =
+  (typeof ChatMensagemScalarFieldEnum)[keyof typeof ChatMensagemScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',
@@ -1469,6 +1558,7 @@ export type GlobalOmitConfig = {
   reserva?: Prisma.ReservaOmit;
   multa?: Prisma.MultaOmit;
   historicoLeitura?: Prisma.HistoricoLeituraOmit;
+  chatMensagem?: Prisma.ChatMensagemOmit;
 };
 
 /* Types for Logging */
