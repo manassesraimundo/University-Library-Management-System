@@ -4,6 +4,7 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMembroDto } from './dto/membro.dto';
@@ -21,7 +22,9 @@ export class MembrosService {
     this.validarRegrasMatricula(body.matricula);
 
     try {
-      const existMembro = await this.deleteMembroByMatricula(body.matricula);
+      const existMembro = await this.prisma.membro.findUnique({
+        where: { matricula: body.matricula },
+      });
 
       if (existMembro) throw new ConflictException('Matrícula já cadastrada.');
 
@@ -45,6 +48,7 @@ export class MembrosService {
       const membros = await this.prisma.membro.findMany({
         where: { ativo: status },
         include: { usuario: { select: { id: true, nome: true, email: true } } },
+        orderBy: { criadoEm: 'desc' },
       });
 
       return membros;
@@ -61,7 +65,18 @@ export class MembrosService {
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { matricula },
-        include: { usuario: { select: { id: true, nome: true, email: true } } },
+        include: {
+          usuario: { select: { id: true, nome: true, email: true } },
+          reservas: {
+            where: { ativa: true },
+            include: { livro: true },
+          },
+          emprestimos: {
+            where: { dataDevolucao: null },
+            include: { livro: true, multa: { where: { paga: false } } },
+          },
+          historico: true,
+        },
       });
 
       if (!membro) throw new BadRequestException('Membro não encontrado.');
@@ -123,7 +138,9 @@ export class MembrosService {
     this.validarRegrasMatricula(matricula);
 
     try {
-      const membro = await this.getMembroByMatricula(matricula);
+      const membro = await this.prisma.membro.findUnique({
+        where: { matricula },
+      });
 
       if (!membro) throw new BadRequestException('Membro não encontrado.');
 
@@ -135,7 +152,7 @@ export class MembrosService {
     } catch (error) {
       throw error instanceof HttpException
         ? error
-        : new InternalServerErrorException('Erro ao deletar membro.');
+        : new InternalServerErrorException('' + error.message);
     }
   }
 
@@ -151,5 +168,26 @@ export class MembrosService {
       Number(validateData) >= new Date().getFullYear()
     )
       throw new BadRequestException('Ano da matrícula inválido.');
+  }
+
+  /*
+    Obter dados do membro logado
+  */
+
+  async membroLogado(matricula: string) {
+    try {
+      const membro = await this.prisma.membro.findUnique({
+        where: { matricula },
+        include: { usuario: true },
+      });
+
+      if (!membro) throw new NotFoundException('');
+
+      return membro;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException();
+    }
   }
 }

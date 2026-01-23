@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createUsuario(body: CreateUsuarioDto): Promise<{ message: string }> {
     try {
@@ -43,13 +43,24 @@ export class UsuariosService {
     }
   }
 
-  async findUsuarioById(
+  async getUsuarioById(
     id: number,
-  ): Promise<Omit<Usuario, 'senha' | 'criadoEm'>> {
+  ) {
     try {
       const usuario = await this.prisma.usuario.findUnique({
         where: { id },
-        include: { membro: true },
+        select: {
+          nome: true,
+          email: true,
+          role: true,
+          membro: {
+            select: {
+              matricula: true,
+              tipo: true,
+              ativo: true
+            }
+          }
+        },
       });
 
       if (!usuario) throw new NotFoundException('Usuário não encontrado!');

@@ -29,7 +29,19 @@ export class CreateLivroDto {
   @IsEnum(StatusLivro, { message: 'Status inválido' })
   status: StatusLivro;
 
+  @IsInt()
+  @IsNotEmpty()
+  quantidade: number;
+
   @IsNumber({}, { message: 'O ID da categoria deve ser um número' })
   @IsNotEmpty({ message: 'O categoriaId é obrigatório' })
   categoriaId: number;
+
+  @IsString()
+  @IsOptional()
+  nomeAutor?: string;
+
+  @IsString()
+  @IsOptional()
+  nomeCategoria?: string;
 }

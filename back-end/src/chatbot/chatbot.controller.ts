@@ -2,6 +2,9 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -14,13 +17,19 @@ export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 
   @Post('conversar')
+  @HttpCode(HttpStatus.OK)
   async converca(@Body() body: ChatbotDto): Promise<{ response: string }> {
     const response = await this.chatbotService.conversar(body);
 
     return response;
   }
 
-  @Delete('historico/:membroId')
+  @Get('conversar')
+  @HttpCode(HttpStatus.OK)
+  async getCovercas() {}
+
+  @Delete('historico/limpar/:membroId')
+  @HttpCode(HttpStatus.OK)
   async clearChat(
     @Param('membroId', ParseIntPipe) id: number,
   ): Promise<{ message: string }> {

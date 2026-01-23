@@ -58,6 +58,19 @@ export class ReservasService {
         orderBy: { posicao: 'desc' },
       });
 
+      const novaDataPretendida = new Date(body.paraData);
+
+      if (ultimaReserva) {
+        const dataMinimaPermitida = new Date(ultimaReserva.paraData);
+        dataMinimaPermitida.setDate(dataMinimaPermitida.getDate() + 7);
+
+        if (novaDataPretendida < dataMinimaPermitida) {
+          throw new BadRequestException(
+            `Data inválida. A próxima data disponível estimada é ${dataMinimaPermitida.toLocaleDateString()}`,
+          );
+        }
+      }
+
       const posicao = ultimaReserva ? ultimaReserva.posicao + 1 : 1;
 
       await this.prisma.reserva.create({
@@ -65,6 +78,7 @@ export class ReservasService {
           membroId: body.membroId,
           livroId: body.livroId,
           posicao: posicao,
+          paraData: novaDataPretendida,
         },
       });
 
@@ -76,16 +90,33 @@ export class ReservasService {
     }
   }
 
-  async findReservas(): Promise<Reserva[]> {
+  async getReservas(status: boolean): Promise<Reserva[]> {
     try {
-      return await this.prisma.reserva.findMany({
-        where: { ativa: true },
+      const reservas = await this.prisma.reserva.findMany({
+        where: { ativa: status },
         include: {
           membro: true,
           livro: true,
         },
-        orderBy: { livroId: 'asc', posicao: 'asc' },
+        orderBy: { posicao: 'desc' },
       });
+      return reservas;
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao buscar reservas');
+    }
+  }
+
+  async getReservasByMatricula(matricula: string): Promise<Reserva[]> {
+    try {
+      const reservas = await this.prisma.reserva.findMany({
+        where: { membro: { matricula } },
+        include: {
+          membro: true,
+          livro: true,
+        },
+        orderBy: { posicao: 'asc' },
+      });
+      return reservas;
     } catch (error) {
       throw new InternalServerErrorException('Erro ao buscar reservas');
     }
@@ -139,7 +170,7 @@ export class ReservasService {
         where: {
           ativa: true,
           posicao: 1,
-          criadaEm: { lt: limiteExpiracao },
+          paraData: { lt: limiteExpiracao },
         },
       });
 

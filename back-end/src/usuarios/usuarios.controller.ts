@@ -1,23 +1,31 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { Usuario } from 'src/generated/prisma/client';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/decorators/roles.guard';
+import { Roles } from 'src/auth/decorators/roles';
+import type { Request } from 'express';
 
 @Controller('usuarios')
+@UseGuards(AuthGuard, RolesGuard)
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  async createUsuario(@Body() body: CreateUsuarioDto): Promise<Object> {
+  @Roles('ADMIN')
+  async createUsuario(@Body() body: CreateUsuarioDto): Promise<object> {
     const result = await this.usuariosService.createUsuario(body);
     return result;
   }
 
-  @Get(':id')
+  @Get('perfil')
+  @Roles('BIBLIOTECARIO')
   async getUsuarioProfile(
-    @Param('id') id: number,
-  ): Promise<Omit<Usuario, 'senha' | 'criadoEm'>> {
-    const usuario = await this.usuariosService.findUsuarioById(id);
+    @Req() request: Request,
+  ) {
+    const id = request['user'].sub;
+    const usuario = await this.usuariosService.getUsuarioById(id);
     return usuario;
   }
 }

@@ -59,12 +59,13 @@ model Membro {
 }
 
 model Livro {
-  id       Int         @id @default(autoincrement())
-  titulo   String
-  isbn     String?     @unique
-  editora  String?
-  status   StatusLivro @default(DISPONIVEL)
-  criadoEm DateTime    @default(now())
+  id         Int         @id @default(autoincrement())
+  titulo     String
+  isbn       String?     @unique
+  editora    String?
+  status     StatusLivro @default(DISPONIVEL)
+  quantidade Int
+  criadoEm   DateTime    @default(now())
 
   autorId     Int
   categoriaId Int
@@ -109,9 +110,10 @@ model Emprestimo {
 
 model Reserva {
   id       Int      @id @default(autoincrement())
-  criadaEm DateTime @default(now())
   ativa    Boolean  @default(true)
   posicao  Int
+  paraData DateTime
+  criadaEm DateTime @default(now())
 
   membroId Int
   livroId  Int

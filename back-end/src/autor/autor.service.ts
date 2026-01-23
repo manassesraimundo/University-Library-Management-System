@@ -11,13 +11,15 @@ import { Autor } from 'src/generated/prisma/client';
 export class AutorService {
   constructor(private prisma: PrismaService) {}
 
-  async createAutor(autorDto: AutorDto): Promise<{ message: string }> {
+  async createAutor(
+    autorDto: AutorDto,
+  ): Promise<{ message: string; id: number }> {
     try {
-      await this.prisma.autor.create({
-        data: autorDto,
+      const autor = await this.prisma.autor.create({
+        data: { nome: autorDto.nome },
       });
 
-      return { message: 'Autor criado com sucesso' };
+      return { message: 'Autor criado com sucesso', id: autor.id };
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -25,13 +27,24 @@ export class AutorService {
     }
   }
 
-  async getAutores(): Promise<Autor[]> {
+  async getAutores(nomeAutor?: string): Promise<Autor[]> {
     try {
-      const autores = await this.prisma.autor.findMany({
-        include: { livros: true },
-      });
+      if (!nomeAutor) {
+        const autores = await this.prisma.autor.findMany({
+          include: { livros: true },
+          orderBy: { nome: 'asc' },
+        });
 
-      return autores;
+        return autores;
+      } else {
+        const autores = await this.prisma.autor.findMany({
+          where: { nome: { contains: nomeAutor } },
+          include: { livros: true },
+          orderBy: { nome: 'asc' },
+        });
+
+        return autores;
+      }
     } catch (error) {
       throw error instanceof HttpException
         ? error

@@ -1,4 +1,4 @@
-import { IsInt } from 'class-validator';
+import { IsDate, IsDateString, IsInt } from 'class-validator';
 
 export class CreateReservaDto {
   @IsInt()
@@ -6,4 +6,7 @@ export class CreateReservaDto {
 
   @IsInt()
   livroId: number;
+
+  @IsDateString()
+  paraData: string;
 }

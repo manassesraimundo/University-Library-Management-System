@@ -1,8 +1,8 @@
-import { IsInt } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateEmprestimoDto {
-  @IsInt()
-  membroId: number;
+  @IsString()
+  matricula: string;
 
   @IsInt()
   livroId: number;

@@ -13,7 +13,9 @@ import { Categoria } from 'src/generated/prisma/client';
 export class CategoriaService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createCategoria(body: CategoriaDto): Promise<{ message: string }> {
+  async createCategoria(
+    body: CategoriaDto,
+  ): Promise<{ message: string; id: number }> {
     try {
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { nome: body.nome },
@@ -28,7 +30,10 @@ export class CategoriaService {
         },
       });
 
-      return { message: `Categoria '${categoria.nome}' criada com sucesso!` };
+      return {
+        message: `Categoria '${categoria.nome}' criada com sucesso!`,
+        id: categoria.id,
+      };
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -36,9 +41,22 @@ export class CategoriaService {
     }
   }
 
-  async getCategorias(): Promise<Omit<Categoria, 'livros'>[]> {
+  async getCategorias(
+    categoria?: string,
+  ): Promise<Omit<Categoria, 'livros'>[]> {
     try {
-      const categorias = await this.prisma.categoria.findMany();
+      if (categoria) {
+        const categorias = await this.prisma.categoria.findMany({
+          where: { nome: { contains: categoria } },
+          include: { livros: true },
+          orderBy: { nome: 'asc' },
+        });
+        return categorias;
+      }
+      const categorias = await this.prisma.categoria.findMany({
+        include: { livros: true },
+        orderBy : { nome: 'asc' }
+      });
       return categorias;
     } catch (error) {
       throw new InternalServerErrorException('Erro ao buscar as categorias.');
@@ -47,17 +65,17 @@ export class CategoriaService {
 
   async deleteCategoria(id: number): Promise<{ message: string }> {
     try {
+      console.log(id)
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { id },
       });
-
+      
       if (!existingCategoria)
         throw new NotFoundException(`Categoria com ID '${id}' não encontrada.`);
-
+      
       await this.prisma.categoria.delete({
         where: { id },
       });
-
       return {
         message: `Categoria '${existingCategoria.nome}' deletada com sucesso!`,
       };

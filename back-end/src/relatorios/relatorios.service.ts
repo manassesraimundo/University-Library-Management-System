@@ -7,28 +7,36 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RelatoriosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async findLivrosMaisEmprestados() {
+  async getLivrosMaisEmprestados() {
     try {
-      return this.prisma.$queryRaw`
-                SELECT livros.titulo, COUNT(emprestimos.id) AS total_emprestimos
-                FROM emprestimos
-                JOIN livros ON emprestimos.livro_id = livros.id
-                GROUP BY livros.titulo
-                ORDER BY total_emprestimos DESC
-                LIMIT 10;
-            `;
+      const result = await this.prisma.$queryRaw`
+        SELECT livro.titulo, COUNT(emprestimo.id) AS total_emprestimo
+        FROM emprestimo
+        JOIN livro ON emprestimo.livroId = livro.id
+        GROUP BY livro.titulo
+        ORDER BY total_emprestimo DESC
+        LIMIT 10;
+    `;
+
+      // Converte BigInt para Number ou String
+      return JSON.parse(
+        JSON.stringify(result, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value,
+        ),
+      );
     } catch (error) {
+      console.error(error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            'Erro ao gerar relatório de livros mais emprestados.',
-          );
+          'Erro ao gerar relatório de livros mais emprestados.',
+        );
     }
   }
 
-  async findLivrosMaisEmprestadosMes() {
+  async getLivrosMaisEmprestadosMes() {
     const dataAtual = new Date();
     const primeiroDiaMes = new Date(
       dataAtual.getFullYear(),
@@ -37,25 +45,31 @@ export class RelatoriosService {
     );
 
     try {
-      return this.prisma.$queryRaw`
-                SELECT livros.titulo, COUNT(emprestimos.id) AS total_emprestimos
-                FROM emprestimos
-                JOIN livros ON emprestimos.livro_id = livros.id
-                WHERE emprestimos.data_emprestimo >= ${primeiroDiaMes}
-                GROUP BY livros.titulo
-                ORDER BY total_emprestimos DESC
+      const result = await this.prisma.$queryRaw`
+                SELECT livro.titulo, COUNT(emprestimo.id) AS total_emprestimo
+                FROM emprestimo
+                JOIN livro ON emprestimo.livroId = livro.id
+                WHERE emprestimo.dataEmprestimo >= ${primeiroDiaMes}
+                GROUP BY livro.titulo
+                ORDER BY total_emprestimo DESC
                 LIMIT 10;
             `;
+      return JSON.parse(
+        JSON.stringify(result, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value,
+        ),
+      );
     } catch (error) {
+      console.log(error)
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            'Erro ao gerar relatório de livros mais emprestados no mês.',
-          );
+          'Erro ao gerar relatório de livros mais emprestados no mês.',
+        );
     }
   }
 
-  async findLivrosMaisEmprestadosByCategoriaPorMes(categoria: string) {
+  async getLivrosMaisEmprestadosByCategoriaPorMes(categoria: string) {
     const dataAtual = new Date();
     const primeiroDiaMes = new Date(
       dataAtual.getFullYear(),
@@ -64,42 +78,51 @@ export class RelatoriosService {
     );
 
     try {
-      return this.prisma.$queryRaw`
-                SELECT categorias.nome AS categoria, livros.titulo, COUNT(emprestimos.id) AS total_emprestimos
-                FROM emprestimos
-                JOIN livros ON emprestimos.livro_id = livros.id
-                JOIN categorias ON livros.categoria_id = categorias.id
-                WHERE emprestimos.data_emprestimo >= ${primeiroDiaMes}
-                AND categorias.nome = ${categoria}
-                GROUP BY categorias.nome, livros.titulo
-                ORDER BY total_emprestimos DESC
+      // Usamos await para capturar o resultado antes de retornar
+      const report = await this.prisma.$queryRaw`
+                SELECT c.nome AS categoria, l.titulo, COUNT(e.id) AS total_emprestimo
+                FROM emprestimo e
+                JOIN livro l ON e.livroId = l.id
+                JOIN categoria c ON l.categoriaId = c.id
+                WHERE e.data_emprestimo >= ${primeiroDiaMes}
+                AND c.nome = ${categoria}
+                GROUP BY c.nome, l.titulo
+                ORDER BY total_emprestimo DESC
                 LIMIT 10;
             `;
+
+      // Se você não colocou a solução global no main.ts, converta o BigInt aqui:
+      return JSON.parse(
+        JSON.stringify(report, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value,
+        ),
+      );
     } catch (error) {
-      throw error instanceof HttpException
-        ? error
-        : new InternalServerErrorException(
-            'Erro ao gerar relatório de livros mais emprestados por categoria no mês.',
-          );
+      console.error('Erro Detalhado:', error); // Log para debug
+      throw new InternalServerErrorException(
+        'Erro ao gerar relatório de livros mais emprestados por categoria no mês.',
+      );
     }
   }
 
-  async reservasPendentes() {
-    try {
-      return this.prisma.$queryRaw`
-                SELECT livros.titulo, COUNT(reservas.id) AS total_reservas
-                FROM reservas
-                JOIN livros ON reservas.livro_id = livros.id
-                WHERE reservas.status = 'PENDENTE'
-                GROUP BY livros.titulo
-                ORDER BY total_reservas DESC;
-            `;
-    } catch (error) {
-      throw error instanceof HttpException
-        ? error
-        : new InternalServerErrorException(
-            'Erro ao gerar relatório de reservas pendentes.',
-          );
-    }
+  async getReservasDetalhadas() {
+    return await this.prisma.reserva.findMany({
+      where: { ativa: true },
+      include: {
+        livro: {
+          select: { titulo: true },
+        },
+        membro: {
+          include: {
+            usuario: {
+              select: { nome: true },
+            },
+          },
+        },
+      },
+      orderBy: {
+        criadaEm: 'desc',
+      },
+    });
   }
 }

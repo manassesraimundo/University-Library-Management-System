@@ -11,6 +11,10 @@ import { ReservasModule } from './reservas/reservas.module';
 import { RelatoriosModule } from './relatorios/relatorios.module';
 import { RecomendacaoModule } from './recomendacao/recomendacao.module';
 import { ChatbotModule } from './chatbot/chatbot.module';
+import { AuthModule } from './auth/auth.module';
+import { RolesGuard } from './auth/decorators/roles.guard';
+import { AuthGuard } from './auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -29,6 +33,17 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     RelatoriosModule,
     RecomendacaoModule,
     ChatbotModule,
+    AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard, // Primeiro verifica se está logado
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard, // Depois verifica a permissão
+    },
   ],
 })
 export class AppModule {}

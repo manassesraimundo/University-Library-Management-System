@@ -24,5 +24,5 @@ export class CreateUsuarioDto {
 
   @IsEnum(Role, { message: 'Role inválida' })
   @IsOptional()
-  role: Role;
+  role?: Role;
 }
