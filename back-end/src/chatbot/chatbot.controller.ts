@@ -8,12 +8,15 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ChatbotService } from './chatbot.service';
 import { ChatbotDto } from './dto/chatbot.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/decorators/roles.guard';
+import type { Request } from 'express';
 
 @Controller('chatbot')
 @UseGuards(AuthGuard, RolesGuard)
@@ -28,15 +31,21 @@ export class ChatbotController {
     return response;
   }
 
-  @Get('conversar')
+  @Get('conversas')
   @HttpCode(HttpStatus.OK)
-  async getCovercas() {}
+  async getCovercas(@Req() resques: Request) {
+    const membroId = resques['user'].sub;
+    const response = await this.chatbotService.getConversas(membroId);
 
-  @Delete('historico/limpar/:membroId')
+    return response;
+  }
+
+  @Delete('historico/limpar')
   @HttpCode(HttpStatus.OK)
   async clearChat(
-    @Param('membroId', ParseIntPipe) id: number,
+    @Req() resques: Request,
   ): Promise<{ message: string }> {
+    const id = resques['user'].sub;
     const response = await this.chatbotService.clearChat(id);
 
     return response;

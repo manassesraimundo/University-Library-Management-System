@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Sparkles, BookOpen, ChevronRight, Loader2 } from "lucide-react"
+import { Sparkles, BookOpen, Loader2, BookmarkPlus, ArrowRight } from "lucide-react"
 import { toast } from "sonner"
 
 export default function RecomendacoesPage() {
-  const [recomendacoes, setRecomendacoes] = useState([])
+  const [textoBruto, setTextoBruto] = useState<string>("")
   const [loading, setLoading] = useState(true)
 
   const carregarRecomendacoes = async () => {
     try {
       const res = await api.get('/recomendacao')
-      setRecomendacoes(res.data)
+      setTextoBruto(res.data)
     } catch (error: any) {
-      toast.error(error.response.data.message ||  "Não conseguimos carregar suas sugestões agora.")
+      toast.error("Não conseguimos carregar suas sugestões agora.")
     } finally {
       setLoading(false)
     }
@@ -25,73 +25,94 @@ export default function RecomendacoesPage() {
 
   useEffect(() => { carregarRecomendacoes() }, [])
 
+  // Função para limpar e separar o texto (Lógica simples de parser)
+  const processarRecomendacoes = () => {
+    if (!textoBruto) return { intro: "", livros: [] };
+
+    // Divide o texto onde encontrar "1." ou "2." etc.
+    const partes = textoBruto.split(/\d\./);
+    const intro = partes[0].trim();
+    const livros = partes.slice(1).map(item => {
+      const [titulo, ...descricao] = item.split(":");
+      return {
+        titulo: titulo.replace(/\*\*/g, "").trim(),
+        descricao: descricao.join(":").trim()
+      };
+    });
+
+    return { intro, livros };
+  };
+
+  const { intro, livros } = processarRecomendacoes();
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-foreground animate-pulse">Analisando seu perfil de leitura...</p>
+        <div className="relative">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-yellow-500 animate-pulse" />
+        </div>
+        <p className="text-muted-foreground font-medium">Analisando seu perfil literário...</p>
       </div>
     )
   }
 
   return (
     <div className="p-6 space-y-8 max-w-7xl mx-auto">
-      {/* Banner de Boas-vindas */}
-      <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-8 rounded-2xl border border-primary/10">
-        <div className="flex items-center gap-3 mb-2">
-          <Sparkles className="text-primary h-5 w-5" />
-          <span className="text-sm font-bold text-primary uppercase tracking-wider">Para Você</span>
+      {/* Banner Principal */}
+      <div className="relative overflow-hidden bg-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl">
+        <div className="relative z-10 max-w-2xl">
+          <div className="flex items-center gap-2 mb-4">
+            <Badge className="bg-primary hover:bg-primary text-white border-none px-3 py-1">
+              SISTEMA IA
+            </Badge>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            Descobertas <span className="text-primary text-yellow-500">Sob Medida</span>
+          </h1>
+          <p className="text-slate-300 text-lg leading-relaxed">
+            {intro || "Analisamos seu histórico para sugerir sua próxima grande leitura."}
+          </p>
         </div>
-        <h1 className="text-3xl font-bold">Baseado nas suas leituras</h1>
-        <p className="text-muted-foreground mt-2">
-          Cruzamos os dados do seu histórico para encontrar títulos que você vai adorar.
-        </p>
+        {/* Decoração abstrata de fundo */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
       </div>
 
-      {recomendacoes.length === 0 ? (
-        <Card className="p-12 text-center border-dashed">
-          <p className="text-muted-foreground">
-            Ainda não temos dados suficientes. Comece a ler para receber indicações!
-          </p>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {recomendacoes.map((livro: any) => (
-            <Card key={livro.id} className="group overflow-hidden border-none shadow-md hover:shadow-xl transition-all">
-              <div className="aspect-[3/4] relative bg-slate-100">
-                {/* Overlay de Ação Rápida */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 gap-3 z-20">
-                   <Button size="sm" className="w-full gap-2">
-                     <BookOpen size={14} /> Ver detalhes
-                   </Button>
-                   <Button size="sm" variant="secondary" className="w-full">
-                     Reservar Agora
-                   </Button>
-                </div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <BookOpen className="text-primary" />
+          Sugestões Selecionadas
+        </h2>
+      </div>
 
-                {/* Badge de Categoria Recomendada */}
-                <Badge className="absolute top-3 left-3 z-10 bg-white/90 text-black hover:bg-white">
-                  {livro.categoria?.nome || "Sugestão"}
-                </Badge>
-
-                {/* Capa do Livro (Placeholder) */}
-                <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                  <BookOpen className="h-12 w-12 text-slate-300 mb-4" />
-                  <span className="font-bold text-sm leading-tight line-clamp-3">{livro.titulo}</span>
-                  <span className="text-xs text-muted-foreground mt-2">{livro.autor}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        {livros.map((livro, index) => (
+          <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-none bg-white shadow-md overflow-hidden flex flex-col">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <div className="p-2 bg-yellow-50 rounded-lg">
+                  <Sparkles className="h-5 w-5 text-yellow-600" />
                 </div>
+                <Badge variant="secondary">Rank #{index + 1}</Badge>
               </div>
-              
-              <CardContent className="p-4 bg-white">
-                <div className="flex items-center justify-between">
-                   <span className="text-[10px] font-bold uppercase text-primary tracking-tighter">Match de 98%</span>
-                   <ChevronRight size={16} className="text-slate-300 group-hover:text-primary transition-colors" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+              <h3 className="text-xl font-bold mt-4 group-hover:text-primary transition-colors">
+                {livro.titulo}
+              </h3>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {livro.descricao}
+              </p>
+            </CardContent>
+            <CardFooter className="pt-4 border-t bg-slate-50/50 flex gap-2">
+              <Button className="w-full gap-2" disabled>
+                Ver na Biblioteca
+                <ArrowRight size={16} />
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   )
 }

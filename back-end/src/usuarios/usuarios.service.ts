@@ -49,7 +49,7 @@ export class UsuariosService {
         orderBy: { nome: 'asc' },
       });
 
-      return usuarios;
+      return usuarios.filter((usuario) => usuario.role !== Role.MEMBRO);
     } catch (error) {
       throw error instanceof HttpException
         ? error

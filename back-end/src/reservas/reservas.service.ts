@@ -29,6 +29,12 @@ export class ReservasService {
         throw new Error('Membro não encontrado');
       }
 
+      if (membro.ativo === false) {
+        throw new BadRequestException(
+          'Membro está inativo não pode realizar reservas.',
+        );
+      }
+
       const livro = await this.prisma.livro.findUnique({
         where: { id: body.livroId },
       });

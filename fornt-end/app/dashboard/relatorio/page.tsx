@@ -22,6 +22,8 @@ import { BookOpen, Clock, Trophy } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import BotaoImprimirRelatorio from "@/components/botao-imprimir-relatorio";
 
 export default function RelatoriosPage() {
   const [maisEmprestados, setMaisEmprestados] = useState<any>([])
@@ -56,12 +58,20 @@ export default function RelatoriosPage() {
 
   return (
     <div className="p-6 space-y-6 bg-slate-50/50 min-h-screen">
-      <div className="flex gap-2">
-        <SidebarTrigger className="mt-2" />
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Relatórios & Métricas</h1>
-          <p className="text-muted-foreground">Análise de desempenho do acervo e fluxo de leitores.</p>
+      <div className="flex flex-1 justify-between items-start">
+
+        <div className="flex gap-2">
+          <SidebarTrigger className="mt-2" />
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Relatórios & Métricas</h1>
+            <p className="text-muted-foreground">Análise de desempenho do acervo e fluxo de leitores.</p>
+          </div>
         </div>
+
+        <BotaoImprimirRelatorio
+          dadosGrafico={maisEmprestados}
+          reservas={reservasPendentes}
+        />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

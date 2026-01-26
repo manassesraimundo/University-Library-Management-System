@@ -9,25 +9,29 @@ import { ChatbotDto } from './dto/chatbot.dto';
 import { MembrosService } from 'src/membros/membros.service';
 import { StatusLivro } from 'src/generated/prisma/enums';
 import { ConfigService } from '@nestjs/config';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 
 @Injectable()
 export class ChatbotService {
-  private openAI: OpenAI;
+  private googleAI: GoogleGenerativeAI;
+  private model: GenerativeModel;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly membroService: MembrosService,
     private readonly configService: ConfigService,
   ) {
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    const apiKey = this.configService.get<string>('GEMINI_API_KEY');
 
     if (!apiKey)
       throw new InternalServerErrorException(
         'A chave da API OpenAI não foi configurada.',
       );
 
-    this.openAI = new OpenAI({ apiKey });
+    this.googleAI = new GoogleGenerativeAI(apiKey);
+    this.model = this.googleAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+    });
   }
 
   async conversar(dto: ChatbotDto): Promise<{ response: string }> {
@@ -56,24 +60,24 @@ export class ChatbotService {
           }),
         ]);
 
-      const historicoIA = historicoBanco.map((msg) => ({
-        role: msg.role as 'user' | 'assistant',
-        content: msg.content,
+      const history = historicoBanco.map((msg) => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
       }));
 
       const nomeUsuario = membro.usuario?.nome ?? 'Membro da Biblioteca';
       const listaEmprestimos =
         emprestimos.length > 0
           ? emprestimos
-              .map(
-                (e) =>
-                  `- ${e.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
-              )
-              .join('\n')
+            .map(
+              (e) =>
+                `- ${e.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
+            )
+            .join('\n')
           : 'O membro não possui livros emprestados no momento.';
 
       const systemPrompt = `Você é um assistente virtual da Biblioteca Universitária. 
-Responda de forma clara e profissional. Use o histórico abaixo para ajudar o usuário.
+Responda de forma clara e profissional. 
 
 Membro: ${nomeUsuario}
 Empréstimos Ativos:
@@ -84,23 +88,21 @@ ${livrosDisponiveis.map((l) => `- ${l.titulo}`).join('\n')}
 
 IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele deve procurar o balcão físico ou usar o menu do sistema.`;
 
-      const response = await this.openAI.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...historicoIA,
-          { role: 'user', content: dto.message },
-        ],
+      const chatSession = this.model.startChat({
+        history: history,
+        systemInstruction: {
+          role: 'system',
+          parts: [{ text: systemPrompt }],
+        },
       });
 
-      const responseAI =
-        response.choices[0].message.content ||
-        'Desculpe, não consegui processar sua resposta.';
+      const response = await chatSession.sendMessage(dto.message);
+      const responseAI = response.response.text();
 
       await this.prisma.chatMensagem.createMany({
         data: [
           { membroId: dto.membroId, role: 'user', content: dto.message },
-          { membroId: dto.membroId, role: '', content: responseAI },
+          { membroId: dto.membroId, role: 'model', content: responseAI },
         ],
       });
 
@@ -108,11 +110,34 @@ IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele
         response: responseAI,
       };
     } catch (error) {
+      console.log(error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            'Erro na comunicação com o assistente inteligente.',
-          );
+          'Erro na comunicação com o assistente inteligente.',
+        );
+    }
+  }
+
+  async getConversas(membroId: number) {
+    try {
+      const mensagens = await this.prisma.chatMensagem.findMany({
+        where: { membroId },
+        orderBy: { criadoEm: 'asc' },
+      });
+
+      return mensagens.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+        criadoEm: msg.criadoEm,
+      }));
+    } catch (error) {
+      console.log(error);
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException(
+          'Erro ao buscar o histórico de conversas.',
+        );
     }
   }
 
@@ -127,8 +152,8 @@ IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            'Erro ao deletar o Histórico de conversa.',
-          );
+          'Erro ao deletar o Histórico de conversa.',
+        );
     }
   }
 }
