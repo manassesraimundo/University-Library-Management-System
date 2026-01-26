@@ -31,7 +31,7 @@ export default function DashboardPage() {
       const entreges = emprestimos.data.filter((emp: any) => emp.dataDevolucao !== null)
       setEmprestimos(entreges)
     } catch (error) {
-      
+      console.error("Erro ao carregar dados do dashboard:", error);
     }
   }
 

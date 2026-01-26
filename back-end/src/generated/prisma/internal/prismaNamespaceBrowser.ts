@@ -64,6 +64,7 @@ export const ModelName = {
   Multa: 'Multa',
   HistoricoLeitura: 'HistoricoLeitura',
   ChatMensagem: 'ChatMensagem',
+  Notificacao: 'Notificacao',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -72,9 +73,9 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName];
  * Enums
  */
 
-export const TransactionIsolationLevel = {
+export const TransactionIsolationLevel = runtime.makeStrictEnum({
   Serializable: 'Serializable',
-} as const;
+} as const);
 
 export type TransactionIsolationLevel =
   (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
@@ -84,6 +85,7 @@ export const UsuarioScalarFieldEnum = {
   nome: 'nome',
   email: 'email',
   senha: 'senha',
+  ativo: 'ativo',
   role: 'role',
   criadoEm: 'criadoEm',
 } as const;
@@ -191,6 +193,17 @@ export const ChatMensagemScalarFieldEnum = {
 
 export type ChatMensagemScalarFieldEnum =
   (typeof ChatMensagemScalarFieldEnum)[keyof typeof ChatMensagemScalarFieldEnum];
+
+export const NotificacaoScalarFieldEnum = {
+  id: 'id',
+  mensagem: 'mensagem',
+  lida: 'lida',
+  criadaEm: 'criadaEm',
+  membroId: 'membroId',
+} as const;
+
+export type NotificacaoScalarFieldEnum =
+  (typeof NotificacaoScalarFieldEnum)[keyof typeof NotificacaoScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',

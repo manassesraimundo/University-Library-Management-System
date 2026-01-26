@@ -1,12 +1,19 @@
-import { IsDate, IsDateString, IsInt } from 'class-validator';
+import {
+  IsDate,
+  IsDateString,
+  IsInt,
+  IsOctal,
+  IsString,
+} from 'class-validator';
 
 export class CreateReservaDto {
-  @IsInt()
-  membroId: number;
+  @IsString()
+  matricula: string;
 
   @IsInt()
   livroId: number;
 
-  @IsDateString()
-  paraData: string;
+  // @IsDateString()
+  // @IsOctal()
+  // paraData?: string;
 }

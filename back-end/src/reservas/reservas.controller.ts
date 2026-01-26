@@ -13,6 +13,7 @@ import { ReservasService } from './reservas.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/decorators/roles.guard';
+import { Roles } from 'src/auth/decorators/roles';
 
 @Controller('reservas')
 @UseGuards(AuthGuard, RolesGuard)
@@ -24,7 +25,14 @@ export class ReservasController {
     return this.reservasService.createReserva(body);
   }
 
+  @Put('confirmar/:reservaId')
+  @Roles('BIBLIOTECARIO')
+  async confirmarReservaParaEmprestimo(@Param('reservaId') reservaId: number) {
+    return await this.reservasService.confirmarReservaParaEmprestimo(reservaId);
+  }
+
   @Get()
+  @Roles('BIBLIOTECARIO')
   async getReservas(@Query('status') status?: string) {
     const st = status === 'true' ? true : false;
     return await this.reservasService.getReservas(st);

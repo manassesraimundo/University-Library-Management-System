@@ -11,6 +11,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { useAuth } from "@/context/auth-context"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -26,6 +27,8 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const { user, loading, setUser, setMembro } = useAuth();
+
     const toggleMode = () => {
         setIsMembro(!isMembro);
         setEmail(''); setSenha(''); setMatricula('');
@@ -37,7 +40,6 @@ export default function LoginPage() {
         setError('');
 
         try {
-            // Define qual endpoint e dados enviar baseado no modo
             const endpoint = isMembro ? '/auth/membro/login' : '/auth/usuario/login';
             const payload = isMembro ? { matricula } : { email, senha };
 
@@ -45,6 +47,18 @@ export default function LoginPage() {
 
             toast.success(response.data.message)
 
+            const res = await api.get('/auth/me')
+            const data = res.data;
+            
+            if (data?.matricula) {
+                setUser(null);
+                setMembro(data);
+            }
+            else {
+                setMembro(null)
+                setUser(data);
+            }
+         
             if (response.data.role !== 'MEMBRO')
                 router.replace('/dashboard');
             else

@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Loader2, User, Mail, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api"
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface PerfilModalProps {
     isOpen: boolean
@@ -69,6 +70,9 @@ export function PerfilModal({ isOpen, onClose }: PerfilModalProps) {
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold">Meu Perfil</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Visualize e edite suas informações de perfil e senha.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="flex flex-col items-center gap-6 py-4">

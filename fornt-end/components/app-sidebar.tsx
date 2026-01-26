@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
@@ -37,19 +37,23 @@ const items = [
   { title: "Autores", url: "/dashboard/autores", icon: Users },
   { title: "Empréstimos", url: "/dashboard/emprestimos", icon: Book },
   { title: "Reservas", url: "/dashboard/reservas", icon: Clock },
-  { title: "Funcionarios", url: "#", icon: Users },
+  { title: "Funcionarios", url: "/dashboard/funcionarios", icon: Users },
   { title: "Membros", url: "/dashboard/membro", icon: Users },
   { title: "Relatório", url: "/dashboard/relatorio", icon: NotebookIcon },
   { title: "Configurações", url: "#", icon: Settings },
 ]
+
 export function AppSidebar() {
   const router = useRouter()
+  const pathname = usePathname()
 
   const [modalPerfilAberto, setModalPerfilAberto] = useState(false)
 
-  const { user, loading } = useAuth();
+  const { user, loading, setUser } = useAuth();
 
   useEffect(() => {
+    if (loading) return ;
+
     router.refresh()
   }, [user, loading])
 
@@ -57,6 +61,7 @@ export function AppSidebar() {
     const res = await api.post('/auth/logout');
 
     if (res.data.statusCode === 200) {
+      setUser(null);
       toast.success(res.data.message)
       router.replace('/login')
     }
@@ -81,14 +86,20 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                user?.role === 'BIBLIOTECARIO' && (item.title === 'Funcionarios' || item.title === 'Configurações') ? null
+                  : (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton 
+                        asChild 
+                        variant={pathname === item.url ? 'marcado' : 'default'}
+                        >
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -98,7 +109,7 @@ export function AppSidebar() {
       {/* RODAPÉ DA SIDEBAR */}
       <SidebarFooter className="border-t p-2 pb-7">
         {/* SEÇÃO DO USUÁRIO */}
-        <div 
+        <div
           className="flex items-center gap-3 px-2 mb-2 cursor-pointer hover:bg-[#f1f5f9]"
           onClick={() => setModalPerfilAberto(true)}
         >
@@ -132,9 +143,9 @@ export function AppSidebar() {
       </SidebarFooter>
 
       {/* O Modal */}
-      <PerfilModal 
-        isOpen={modalPerfilAberto} 
-        onClose={() => setModalPerfilAberto(false)} 
+      <PerfilModal
+        isOpen={modalPerfilAberto}
+        onClose={() => setModalPerfilAberto(false)}
       />
     </Sidebar>
   )

@@ -10,12 +10,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "./ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,16 +80,18 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
             />
           </div>
 
-          <Select value={tipoMembro} onValueChange={setTipoMembro}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ESTUDANTE">Estudante</SelectItem>
-              <SelectItem value="PROFESSOR">Professor</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-1 justify-end">
+            <Select value={tipoMembro} onValueChange={setTipoMembro}>
+              <SelectTrigger className="w-[180px]">
+                <Filter className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ESTUDANTE">Estudante</SelectItem>
+                <SelectItem value="PROFESSOR">Professor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <DialogFooter className="mt-4">
             <Button

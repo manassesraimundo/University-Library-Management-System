@@ -93,12 +93,12 @@ export type PrismaVersion = {
 };
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.3.0
+ * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
  */
 export const prismaVersion: PrismaVersion = {
-  client: '7.2.0',
-  engine: '0c8ef2ce45c83248ab3df073180d5eda9e8be7a3',
+  client: '7.3.0',
+  engine: '9d6ad21cbbceab97458517b147a6a09ff43aa735',
 };
 
 /**
@@ -422,6 +422,7 @@ export const ModelName = {
   Multa: 'Multa',
   HistoricoLeitura: 'HistoricoLeitura',
   ChatMensagem: 'ChatMensagem',
+  Notificacao: 'Notificacao',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -453,7 +454,8 @@ export type TypeMap<
       | 'reserva'
       | 'multa'
       | 'historicoLeitura'
-      | 'chatMensagem';
+      | 'chatMensagem'
+      | 'notificacao';
     txIsolationLevel: TransactionIsolationLevel;
   };
   model: {
@@ -1217,6 +1219,82 @@ export type TypeMap<
         };
       };
     };
+    Notificacao: {
+      payload: Prisma.$NotificacaoPayload<ExtArgs>;
+      fields: Prisma.NotificacaoFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.NotificacaoFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.NotificacaoFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        findFirst: {
+          args: Prisma.NotificacaoFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.NotificacaoFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        findMany: {
+          args: Prisma.NotificacaoFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>[];
+        };
+        create: {
+          args: Prisma.NotificacaoCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        createMany: {
+          args: Prisma.NotificacaoCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.NotificacaoCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>[];
+        };
+        delete: {
+          args: Prisma.NotificacaoDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        update: {
+          args: Prisma.NotificacaoUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        deleteMany: {
+          args: Prisma.NotificacaoDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.NotificacaoUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.NotificacaoUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>[];
+        };
+        upsert: {
+          args: Prisma.NotificacaoUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificacaoPayload>;
+        };
+        aggregate: {
+          args: Prisma.NotificacaoAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificacao>;
+        };
+        groupBy: {
+          args: Prisma.NotificacaoGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.NotificacaoGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.NotificacaoCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.NotificacaoCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
   };
 } & {
   other: {
@@ -1258,6 +1336,7 @@ export const UsuarioScalarFieldEnum = {
   nome: 'nome',
   email: 'email',
   senha: 'senha',
+  ativo: 'ativo',
   role: 'role',
   criadoEm: 'criadoEm',
 } as const;
@@ -1366,6 +1445,17 @@ export const ChatMensagemScalarFieldEnum = {
 export type ChatMensagemScalarFieldEnum =
   (typeof ChatMensagemScalarFieldEnum)[keyof typeof ChatMensagemScalarFieldEnum];
 
+export const NotificacaoScalarFieldEnum = {
+  id: 'id',
+  mensagem: 'mensagem',
+  lida: 'lida',
+  criadaEm: 'criadaEm',
+  membroId: 'membroId',
+} as const;
+
+export type NotificacaoScalarFieldEnum =
+  (typeof NotificacaoScalarFieldEnum)[keyof typeof NotificacaoScalarFieldEnum];
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc',
@@ -1401,6 +1491,14 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  'Boolean'
+>;
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -1422,14 +1520,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type EnumTipoMembroFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'TipoMembro'
->;
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  'Boolean'
 >;
 
 /**
@@ -1561,6 +1651,7 @@ export type GlobalOmitConfig = {
   multa?: Prisma.MultaOmit;
   historicoLeitura?: Prisma.HistoricoLeituraOmit;
   chatMensagem?: Prisma.ChatMensagemOmit;
+  notificacao?: Prisma.NotificacaoOmit;
 };
 
 /* Types for Logging */

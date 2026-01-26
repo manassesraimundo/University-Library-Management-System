@@ -31,6 +31,24 @@ export class EmprestimosController {
     return emprestimo;
   }
 
+  /*
+    Obter emprestimo do membro logado
+  */
+  @Get('meus-emprestimos')
+  @HttpCode(HttpStatus.OK)
+  @Roles('MEMBRO')
+  async eprestimos(@Req() request: Request) {
+    if (request['user'].role === 'MEMBRO') {
+      const emprestimos = await this.emprestimosService.eprestimos(
+        request['user'].sub,
+      );
+
+      return emprestimos;
+    }
+
+    return { message: 'Rota para apenas membro' };
+  }
+
   @Get('todos')
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
@@ -52,7 +70,7 @@ export class EmprestimosController {
   async totalEmprestimosEmAtraso() {
     return await this.emprestimosService.totalEmprestimosEmAtraso();
   }
-  
+
   @Get('todos/atrasos')
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
@@ -65,7 +83,8 @@ export class EmprestimosController {
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
   async getAllEmprestimosByMembro(@Param('matricula') matricula: string) {
-    const emprestimos = await this.emprestimosService.getAllEmprestimosByMembro(matricula);
+    const emprestimos =
+      await this.emprestimosService.getAllEmprestimosByMembro(matricula);
     return emprestimos;
   }
 
@@ -73,7 +92,8 @@ export class EmprestimosController {
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
   async getAllEmprestimosByMembroAtraso(@Param('matricula') matricula: string) {
-    const emprestimos = await this.emprestimosService.getAllEmprestimosByMembroAtraso(matricula);
+    const emprestimos =
+      await this.emprestimosService.getAllEmprestimosByMembroAtraso(matricula);
     return emprestimos;
   }
 
@@ -93,23 +113,5 @@ export class EmprestimosController {
   async renovarEmprestimo(@Body() body: RenovarEmprestimoDto) {
     const resultado = await this.emprestimosService.renovarEmprestimo(body);
     return resultado;
-  }
-
-  /*
-    Obter emprestimo do membro logado
-  */
-  @Get('meu')
-  @HttpCode(HttpStatus.OK)
-  @Roles('MEMBRO')
-  async eprestimos(@Req() request: Request) {
-    if (request['user'].role === 'MEMBRO') {
-      const emprestimos = await this.emprestimosService.eprestimos(
-        request['user'].sub,
-      );
-
-      return emprestimos;
-    }
-
-    return { message: 'Rota para apenas membro' };
   }
 }

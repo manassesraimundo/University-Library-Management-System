@@ -72,10 +72,11 @@ export class RecomendacaoService {
         'Nenhuma recomendação disponível.'
       );
     } catch (error) {
+      // console.error('ERRO OPENAI:', error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            'Erro ao gerar recomendação de livro',
+            error.message || 'Erro ao gerar recomendação de livro',
           );
     }
   }

@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RelatoriosService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getLivrosMaisEmprestados() {
     try {
@@ -31,8 +31,8 @@ export class RelatoriosService {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro ao gerar relatório de livros mais emprestados.',
-        );
+            'Erro ao gerar relatório de livros mais emprestados.',
+          );
     }
   }
 
@@ -60,12 +60,12 @@ export class RelatoriosService {
         ),
       );
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro ao gerar relatório de livros mais emprestados no mês.',
-        );
+            'Erro ao gerar relatório de livros mais emprestados no mês.',
+          );
     }
   }
 

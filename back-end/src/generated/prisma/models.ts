@@ -17,4 +17,5 @@ export type * from './models/Reserva.js';
 export type * from './models/Multa.js';
 export type * from './models/HistoricoLeitura.js';
 export type * from './models/ChatMensagem.js';
+export type * from './models/Notificacao.js';
 export type * from './commonInputTypes.js';

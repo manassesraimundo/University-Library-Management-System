@@ -35,7 +35,8 @@ model Usuario {
   id       Int      @id @default(autoincrement())
   nome     String
   email    String   @unique
-  senha    String
+  senha    String?
+  ativo    Boolean  @default(true)
   role     Role     @default(MEMBRO)
   criadoEm DateTime @default(now())
 
@@ -56,6 +57,7 @@ model Membro {
   reservas     Reserva[]
   historico    HistoricoLeitura[]
   chatMensagem ChatMensagem[]
+  notificacoes Notificacao[]
 }
 
 model Livro {
@@ -112,7 +114,7 @@ model Reserva {
   id       Int      @id @default(autoincrement())
   ativa    Boolean  @default(true)
   posicao  Int
-  paraData DateTime
+  paraData DateTime?
   criadaEm DateTime @default(now())
 
   membroId Int
@@ -148,6 +150,16 @@ model ChatMensagem {
   content  String
   role     String
   criadoEm DateTime @default(now())
+
+  membroId Int
+  membro   Membro @relation(fields: [membroId], references: [id])
+}
+
+model Notificacao {
+  id        Int      @id @default(autoincrement())
+  mensagem  String
+  lida      Boolean  @default(false)
+  criadaEm  DateTime @default(now())
 
   membroId Int
   membro   Membro @relation(fields: [membroId], references: [id])

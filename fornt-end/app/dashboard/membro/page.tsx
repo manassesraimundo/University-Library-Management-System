@@ -2,16 +2,6 @@
 
 import { useState, useEffect } from "react";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle
-} from "@/components/ui/alert-dialog";
-import {
     Table,
     TableBody,
     TableCell,
@@ -191,28 +181,9 @@ export default function MembrosPage() {
                                             >
                                                 {membro.ativo ? "Desativar" : "Ativar"} Membro
                                             </DropdownMenuItem>
-                                            {/* <DropdownMenuItem
-                                                onSelect={(e) => {
-                                                    e.preventDefault();
-                                                    setMembroSelecionado(membro.matricula)
-                                                    setIsAlertOpen(true);
-                                                }}
-                                                className="text-red-600 focus:text-red-600 font-medium cursor-pointer"
-                                            >
-                                                <Trash2 className="mr-2 h-4 w-4" />
-                                                Excluir
-                                            </DropdownMenuItem> */}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
-
-                                {/* <ModalDelete
-                                    isAlertOpen={isAlertOpen}
-                                    onOpenChange={setIsAlertOpen}
-                                    funcao={handleDelete}
-                                    nome={membro.usuario?.nome}
-                                    matricula={membroSelecionado}
-                                /> */}
                             </TableRow>
                         )) : (
                             <TableRow>
@@ -231,33 +202,5 @@ export default function MembrosPage() {
                 onClose={() => setModalDetalhesAberto(false)}
             />
         </div>
-    )
-}
-
-function ModalDelete({ isAlertOpen, onOpenChange, funcao, nome, matricula }: any) {
-    const deletar = async () => {
-        await funcao(matricula)
-    }
-    return (
-        <AlertDialog open={isAlertOpen} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir Membro?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Esta ação não pode ser desfeita. Isso excluirá permanentemente o registro de
-                        <strong> {matricula}</strong>.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => onOpenChange(false)}>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                        className="bg-red-600 hover:bg-red-700"
-                        onClick={() => deletar()}
-                    >
-                        Excluir membro
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
     )
 }

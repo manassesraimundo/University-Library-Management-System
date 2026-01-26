@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Notificacao" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "mensagem" TEXT NOT NULL,
+    "lida" BOOLEAN NOT NULL DEFAULT false,
+    "criadaEm" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "membroId" INTEGER NOT NULL,
+    CONSTRAINT "Notificacao_membroId_fkey" FOREIGN KEY ("membroId") REFERENCES "Membro" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

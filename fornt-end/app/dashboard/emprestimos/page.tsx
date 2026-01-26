@@ -34,7 +34,7 @@ export default function EmprestimosPage() {
         try {
             const response = await api.get('/emprestimos/todos')
             const res = response.data;
-            const ativos = res.filter((emp: any) => !emp.dataDevolucao)
+            const ativos = res.filter((emp: any) => !emp.dataDevolucao && emp.dataPrevista >= new Date().toISOString())
             setEmprestimos(ativos)
         } catch (error: any) {
             toast.error("Erro ao carregar dados dos empréstimos")
@@ -182,6 +182,7 @@ export default function EmprestimosPage() {
                             <TableRow>
                                 <TableHead>Livro</TableHead>
                                 <TableHead>Membro</TableHead>
+                                <TableHead>Nome</TableHead>
                                 <TableHead>Data Empréstimo</TableHead>
                                 <TableHead>Devolução Prevista</TableHead>
                                 <TableHead>Data da Devolução</TableHead>
@@ -202,6 +203,7 @@ export default function EmprestimosPage() {
                                     <TableRow key={emp.id}>
                                         <TableCell className="font-medium">{emp.livro?.titulo}</TableCell>
                                         <TableCell>{emp.membro?.matricula}</TableCell>
+                                        <TableCell>{emp.membro.usuario?.nome}</TableCell>
                                         <TableCell>{new Date(emp.dataEmprestimo).toLocaleDateString()}</TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className="border-blue-200 text-blue-700">
@@ -222,7 +224,7 @@ export default function EmprestimosPage() {
                                             status !== 'ativos' && (
                                                 <TableCell>
                                                     <Badge variant="outline" className="border-blue-200 text-blue-700">
-                                                        {emp.multa?.valor ? emp.multa?.valor : '0.00kz'}
+                                                        {emp.multa?.valor ? emp.multa?.valor + 'Kz' : '0.00kz'}
                                                     </Badge>
                                                 </TableCell>
                                             )

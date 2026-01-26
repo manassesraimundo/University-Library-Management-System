@@ -15,13 +15,16 @@ interface IMembroAuth {
   usuario: IUserAuth
   matricula: string
   tipo: string
+  criadoEm: Date
 }
 
 interface IAuthContext {
   user: IUserAuth | null
   membro: IMembroAuth | null
   loading: boolean
-  // setUser: () => {}
+  setUser: (usuario: IUserAuth | null) => void | null
+  setMembro: (membro: IMembroAuth | null) => void | null
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<IAuthContext | null>(null)
@@ -52,8 +55,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadUser()
   }, [])
 
+  const logout = async () => {
+    const res = await api.post('/auth/logout')
+    if (res.status === 200) {
+      setUser(null)
+      setMembro(null)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, membro, loading }}>
+    <AuthContext.Provider value={{ user, membro, loading, setUser, setMembro, logout }}>
       {children}
     </AuthContext.Provider>
   )

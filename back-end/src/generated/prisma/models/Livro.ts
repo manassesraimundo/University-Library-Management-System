@@ -521,10 +521,6 @@ export type LivroScalarRelationFilter = {
   isNot?: Prisma.LivroWhereInput;
 };
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null;
-};
-
 export type EnumStatusLivroFieldUpdateOperationsInput = {
   set?: $Enums.StatusLivro;
 };

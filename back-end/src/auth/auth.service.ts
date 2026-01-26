@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async usuarioLogin(body: UsuarioAuthDto) {
     try {
@@ -27,7 +27,10 @@ export class AuthService {
       if (!usuario)
         throw new UnauthorizedException('E-mail ou senha inválidos');
 
-      const machSenha = await bcrypt.compare(body.senha, usuario.senha);
+      const machSenha = await bcrypt.compare(
+        body.senha,
+        usuario.senha as string,
+      );
       if (!machSenha)
         throw new UnauthorizedException('E-mail ou senha inválidos');
 
@@ -66,7 +69,7 @@ export class AuthService {
 
       if (!membro) throw new UnauthorizedException('');
 
-      const payload = { 
+      const payload = {
         sub: membro.id,
         matricula,
         role: 'MEMBRO',
@@ -88,11 +91,13 @@ export class AuthService {
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { matricula },
-        omit: { criadoEm: true, },
-        include: { usuario: { select: { nome: true, email: true, role: true } } },
-      })
+        // select: { id: true, matricula: true, tipo: true },
+        include: {
+          usuario: { select: { nome: true, email: true, role: true } },
+        },
+      });
 
-      if (!membro) throw new NotFoundException()
+      if (!membro) throw new NotFoundException();
 
       return membro;
     } catch (error) {
@@ -108,9 +113,9 @@ export class AuthService {
         where: { id },
         omit: { senha: true, criadoEm: true },
         include: { membro: { select: { matricula: true, tipo: true } } },
-      })
+      });
 
-      if (!usuario) throw new NotFoundException()
+      if (!usuario) throw new NotFoundException();
 
       return usuario;
     } catch (error) {

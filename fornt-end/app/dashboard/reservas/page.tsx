@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { XCircle, Search, Filter } from "lucide-react";
+import { XCircle, Search, Filter, CheckCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CreateReservaModal } from "@/components/create-reserva-modal";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -80,12 +80,23 @@ export default function ReservasPage() {
     }, [busca])
 
     const handleCancelarReserva = async (id: number) => {
-        // if (!confirm("Tem certeza que deseja cancelar esta reserva?")) return
         try {
-            // Usando PUT conforme a sua rota original
             await api.put(`/reservas/cancelar/${id}`)
 
             toast.success("Reserva cancelada com sucesso!")
+
+            carregarReservas()
+        } catch (error: any) {
+            const mensagem = error.response?.data?.message || "Erro ao cancelar reserva"
+            toast.error(mensagem)
+        }
+    }
+
+    const confirmarReservaParaEmprestimo = async (id: number) => {
+        try {
+            await api.put(`/reservas/confirmar/${id}`)
+
+            toast.success("Empréstimo realizado com sucesso!")
 
             carregarReservas()
         } catch (error: any) {
@@ -111,7 +122,7 @@ export default function ReservasPage() {
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="Filtrar por membro..."
+                        placeholder="Filtrar por matricula..."
                         className="pl-10"
                         value={busca}
                         onChange={(e) => setBusca(e.target.value)}
@@ -134,8 +145,9 @@ export default function ReservasPage() {
                     <TableHeader className="bg-slate-50">
                         <TableRow>
                             <TableHead>Livro</TableHead>
-                            <TableHead>Membro</TableHead>
-                            <TableHead>Reserva para Data</TableHead>
+                            <TableHead>Matricula</TableHead>
+                            <TableHead>Nome</TableHead>
+                            <TableHead>Data da Reserva</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
@@ -145,7 +157,8 @@ export default function ReservasPage() {
                             <TableRow key={reserva.id}>
                                 <TableCell className="font-medium">{reserva.livro?.titulo}</TableCell>
                                 <TableCell>{reserva.membro.matricula}</TableCell>
-                                <TableCell>{new Date(reserva.paraData).toLocaleDateString()}</TableCell>
+                                <TableCell>{reserva.membro.usuario?.nome}</TableCell>
+                                <TableCell>{new Date(reserva.criadaEm).toLocaleDateString()}</TableCell>
                                 <TableCell>
                                     <Badge variant={reserva.ativa === true ? 'success' : 'default'}>
                                         {reserva.ativa === true ? 'Ativo' : 'Não ativo'}
@@ -155,9 +168,28 @@ export default function ReservasPage() {
                                     {reserva.ativa == true && (
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                                                    <XCircle className="mr-2 h-4 w-4" /> Cancelar
-                                                </Button>
+                                                <div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                    >
+                                                        <XCircle className="mr-2 h-4 w-4" /> Cancelar
+                                                    </Button>
+                                                    {
+                                                        reserva.livro.quantidade > 1 && reserva.posicao === 1 && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                                onClick={() => confirmarReservaParaEmprestimo(reserva.id)}
+                                                            >
+                                                                <CheckCheck className="mr-2 h-4 w-4" />
+                                                                Efetuar Empréstimo
+                                                            </Button>
+                                                        )
+                                                    }
+                                                </div>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>

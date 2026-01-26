@@ -92,3 +92,8 @@ export type HistoricoLeitura = Prisma.HistoricoLeituraModel;
  *
  */
 export type ChatMensagem = Prisma.ChatMensagemModel;
+/**
+ * Model Notificacao
+ *
+ */
+export type Notificacao = Prisma.NotificacaoModel;

@@ -43,10 +43,8 @@ export class CategoriaController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
-  async deleteCategoria(
-    @Param('id') id: string,
-  ): Promise<{ message: string }> {
-    console.log(id)
+  async deleteCategoria(@Param('id') id: string): Promise<{ message: string }> {
+    console.log(id);
     const result = await this.categoriaService.deleteCategoria(Number(id));
     return result;
   }

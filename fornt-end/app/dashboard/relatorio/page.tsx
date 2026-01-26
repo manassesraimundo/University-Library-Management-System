@@ -100,7 +100,7 @@ export default function RelatoriosPage() {
             <CardDescription>Ranking baseado no histórico total de empréstimos.</CardDescription>
           </CardHeader>
           <CardContent className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width={"100%"} height={"100%"} >
               <BarChart data={maisEmprestados}>
                 <CartesianGrid vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="titulo" fontSize={12} tickLine={true} axisLine={true} />
@@ -140,7 +140,7 @@ export default function RelatoriosPage() {
 
                   </div>
                   <Badge variant="outline" className="text-[10px]">
-                    {new Date(reserva.paraData).toLocaleDateString()}
+                    {new Date(reserva.criadaEm).toLocaleDateString()}
                   </Badge>
                 </div>
               ))}

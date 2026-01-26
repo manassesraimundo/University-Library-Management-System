@@ -55,7 +55,11 @@ export class AuthController {
       maxAge: 1000 * 60 * 60,
     });
 
-    return { statusCode: 200, message: 'Login com sucesso.', role: membro.role };
+    return {
+      statusCode: 200,
+      message: 'Login com sucesso.',
+      role: membro.role,
+    };
   }
 
   @Post('logout')
@@ -72,10 +76,12 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async me(@Req() request: Request) {
     if (request['user'].role === 'MEMBRO') {
-      const re = await this.authService.membroAutenticado(request['user'].matricula);
-      return {...re, role: request['user'].role }
+      const re = await this.authService.membroAutenticado(
+        request['user'].matricula,
+      );
+      return { ...re, role: request['user'].role };
     }
 
-      return await this.authService.usuarioAutenticado(request['user'].sub);
+    return await this.authService.usuarioAutenticado(request['user'].sub);
   }
 }

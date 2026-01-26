@@ -55,7 +55,7 @@ export class CategoriaService {
       }
       const categorias = await this.prisma.categoria.findMany({
         include: { livros: true },
-        orderBy : { nome: 'asc' }
+        orderBy: { nome: 'asc' },
       });
       return categorias;
     } catch (error) {
@@ -65,14 +65,14 @@ export class CategoriaService {
 
   async deleteCategoria(id: number): Promise<{ message: string }> {
     try {
-      console.log(id)
+      console.log(id);
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { id },
       });
-      
+
       if (!existingCategoria)
         throw new NotFoundException(`Categoria com ID '${id}' não encontrada.`);
-      
+
       await this.prisma.categoria.delete({
         where: { id },
       });

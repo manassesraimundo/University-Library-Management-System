@@ -13,7 +13,7 @@ import { RenovarEmprestimoDto } from './dto/renovar-emprestimo.dto';
 
 @Injectable()
 export class EmprestimosService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createEmprestimo(
     body: CreateEmprestimoDto,
@@ -42,6 +42,7 @@ export class EmprestimosService {
             'Membro inativo não pode realizar empréstimos',
           );
         }
+
         // verificar se ja tem o livro emprestado
         const emprestadoExiste = await this.prisma.emprestimo.findFirst({
           where: {
@@ -157,27 +158,34 @@ export class EmprestimosService {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { dataPrevista: { lt: new Date() }, dataDevolucao: null },
-        orderBy: { dataEmprestimo: 'desc' }
+        include: {
+          livro: true,
+          multa: true,
+          membro: { include: { usuario: true } },
+        },
+        orderBy: { dataEmprestimo: 'desc' },
       });
 
       return emprestimos;
     } catch (error) {
       throw error instanceof HttpException
         ? error
-        : new InternalServerErrorException('Erro ao buscar empréstimos em atrasos.');
+        : new InternalServerErrorException(
+            'Erro ao buscar empréstimos em atrasos.',
+          );
     }
   }
 
   async getAllEmprestimosByMembro(matricula: string) {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
-        where: { membro: { matricula }},
+        where: { membro: { matricula } },
         include: {
           livro: true,
           multa: true,
-          membro: true
+          membro: { include: { usuario: true } },
         },
-        orderBy: { dataEmprestimo: 'desc' }
+        orderBy: { dataEmprestimo: 'desc' },
       });
 
       return emprestimos;
@@ -191,13 +199,17 @@ export class EmprestimosService {
   async getAllEmprestimosByMembroAtraso(matricula: string) {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
-        where: { membro: { matricula }, dataPrevista: { lt: new Date() }, dataDevolucao: null},
+        where: {
+          membro: { matricula },
+          dataPrevista: { lt: new Date() },
+          dataDevolucao: null,
+        },
         include: {
           livro: true,
           multa: true,
-          membro: true
+          membro: { include: { usuario: true } },
         },
-        orderBy: { dataEmprestimo: 'desc' }
+        orderBy: { dataEmprestimo: 'desc' },
       });
 
       return emprestimos;
@@ -213,7 +225,7 @@ export class EmprestimosService {
       const totalEmprestimos = await this.prisma.emprestimo.count({
         where: { dataDevolucao: null },
       });
-      
+
       return { totalEmprestimos };
     } catch (error) {
       throw error instanceof HttpException
@@ -225,7 +237,7 @@ export class EmprestimosService {
   async totalEmprestimosEmAtraso() {
     try {
       const data = new Date();
-      data.setDate(data.getDate() + 1);
+      data.setDate(data.getDate());
 
       const totalEmprestimos = await this.prisma.emprestimo.count({
         where: { dataPrevista: { lt: data }, dataDevolucao: null },
@@ -290,6 +302,16 @@ export class EmprestimosService {
           reservaAtiva.length > 0
             ? StatusLivro.RESERVADO
             : StatusLivro.DISPONIVEL;
+
+        if (reservaAtiva.length > 0) {
+          const primeiraReserva = reservaAtiva[0];
+          await tx.notificacao.create({
+            data: {
+              membroId: primeiraReserva.membroId,
+              mensagem: `O livro "${emprestimo.livro.titulo}" que você reservou está agora disponível para levantamento.`,
+            },
+          });
+        }
 
         await tx.livro.update({
           where: { id: emprestimo.livroId },
@@ -366,7 +388,7 @@ export class EmprestimosService {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { membroId },
-        include: { livro: true, multa: true },
+        include: { livro: { include: { autor: true } }, multa: true },
       });
 
       return emprestimos;

@@ -8,11 +8,15 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ChatbotService } from './chatbot.service';
 import { ChatbotDto } from './dto/chatbot.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/decorators/roles.guard';
 
 @Controller('chatbot')
+@UseGuards(AuthGuard, RolesGuard)
 export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 

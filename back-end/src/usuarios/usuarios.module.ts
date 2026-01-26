@@ -7,3 +7,6 @@ import { UsuariosController } from './usuarios.controller';
   controllers: [UsuariosController],
 })
 export class UsuariosModule {}
+// npx prisma validate
+// npx prisma migrate dev
+// npx prisma generate

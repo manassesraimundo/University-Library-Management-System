@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -42,6 +43,22 @@ export class MembrosController {
   /*
     Obter dados do membro logado
   */
+  @Put('perfil/atualizar')
+  @Roles('MEMBRO')
+  async membroPerfilUpdate(
+    @Req() require: Request,
+    @Body() body: { nome?: string; email?: string },
+  ) {
+    const matricula = require['user'].matricula;
+
+    const membro = await this.membrosService.membroPerfilUpdate(
+      matricula,
+      body,
+    );
+
+    return membro;
+  }
+
   @Get('perfil')
   @Roles('MEMBRO')
   async membroLogado(@Req() require: Request): Promise<Membro> {
@@ -52,6 +69,43 @@ export class MembrosController {
     return membro;
   }
 
+  @Get('notificacoes/')
+  @Roles('MEMBRO')
+  async getNotificacoesMembro(@Req() require: Request): Promise<object> {
+    const membroId = require['user'].sub;
+
+    const notificacoes =
+      await this.membrosService.getNotificacoesMembro(membroId);
+
+    return notificacoes;
+  }
+
+  @Post('/vincular-usuario')
+  @Roles('MEMBRO')
+  async vincularUsuarioMembro(
+    @Req() require: Request,
+    @Body() body: { nome: string; email: string },
+  ): Promise<{ message: string }> {
+    const membroId = require['user'].sub;
+
+    const data = await this.membrosService.vincularUsuarioMembro(
+      membroId,
+      body,
+    );
+
+    return data;
+  }
+
+  @Get('/meu-painel')
+  @Roles('MEMBRO')
+  async meuPanel(@Req() require: Request) {
+    const matricula = require['user'].matricula;
+
+    const painel = await this.membrosService.meuPanel(matricula);
+
+    return painel;
+  }
+
   @Get(':matricula')
   @Roles('BIBLIOTECARIO')
   async getMembroByMatricula(
@@ -59,6 +113,26 @@ export class MembrosController {
   ): Promise<Membro[]> {
     const data = await this.membrosService.getMembroByMatricula(matricula);
     return [data];
+  }
+
+  @Patch('/notificacoes/mark-all-as-read')
+  @Roles('MEMBRO')
+  async markAllNotificacoesAsRead(
+    @Req() require: Request,
+  ): Promise<{ message: string }> {
+    const membroId = require['user'].sub;
+
+    const data = await this.membrosService.markAllNotificacoesAsRead(membroId);
+    return data;
+  }
+
+  @Patch('notificacoes/:id/mark-as-read')
+  @Roles('MEMBRO')
+  async markNotificacaoAsRead(
+    @Param('id') id: string,
+  ): Promise<{ message: string }> {
+    const data = await this.membrosService.markNotificacaoAsRead(id);
+    return data;
   }
 
   @Put(':matricula/status/:activate')
@@ -71,6 +145,17 @@ export class MembrosController {
       matricula,
       activate,
     );
+    return data;
+  }
+
+  @Delete('/notificacoes/clear-history')
+  @Roles('MEMBRO')
+  async clearNotificacoesHistory(
+    @Req() require: Request,
+  ): Promise<{ message: string }> {
+    const membroId = require['user'].sub;
+
+    const data = await this.membrosService.clearNotificacoesHistory(membroId);
     return data;
   }
 

@@ -3,6 +3,7 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
@@ -20,7 +21,9 @@ export class ReservasService {
 
   async createReserva(body: CreateReservaDto): Promise<{ message: string }> {
     try {
-      const membro = await this.membroService.getMembroById(body.membroId);
+      const membro = await this.membroService.getMembroByMatricula(
+        body.matricula,
+      );
 
       if (!membro) {
         throw new Error('Membro não encontrado');
@@ -41,7 +44,7 @@ export class ReservasService {
 
       const reservaExistente = await this.prisma.reserva.findFirst({
         where: {
-          membroId: body.membroId,
+          membroId: membro.id,
           livroId: body.livroId,
           ativa: true,
         },
@@ -53,32 +56,36 @@ export class ReservasService {
         );
       }
 
+      const emprestimoAtivo = await this.prisma.emprestimo.findFirst({
+        where: {
+          membroId: membro.id,
+          livroId: body.livroId,
+          dataDevolucao: null,
+        },
+      });
+
+      if (emprestimoAtivo) {
+        throw new BadRequestException(
+          'Membro possui um empréstimo ativo deste livro',
+        );
+      }
+
       const ultimaReserva = await this.prisma.reserva.findFirst({
         where: { livroId: body.livroId, ativa: true },
         orderBy: { posicao: 'desc' },
       });
 
-      const novaDataPretendida = new Date(body.paraData);
-
-      if (ultimaReserva) {
+      if (ultimaReserva && ultimaReserva.paraData) {
         const dataMinimaPermitida = new Date(ultimaReserva.paraData);
         dataMinimaPermitida.setDate(dataMinimaPermitida.getDate() + 7);
-
-        if (novaDataPretendida < dataMinimaPermitida) {
-          throw new BadRequestException(
-            `Data inválida. A próxima data disponível estimada é ${dataMinimaPermitida.toLocaleDateString()}`,
-          );
-        }
       }
-
       const posicao = ultimaReserva ? ultimaReserva.posicao + 1 : 1;
 
       await this.prisma.reserva.create({
         data: {
-          membroId: body.membroId,
+          membroId: membro.id,
           livroId: body.livroId,
           posicao: posicao,
-          paraData: novaDataPretendida,
         },
       });
 
@@ -95,10 +102,10 @@ export class ReservasService {
       const reservas = await this.prisma.reserva.findMany({
         where: { ativa: status },
         include: {
-          membro: true,
+          membro: { include: { usuario: true } },
           livro: true,
         },
-        orderBy: { posicao: 'desc' },
+        orderBy: { criadaEm: 'desc' },
       });
       return reservas;
     } catch (error) {
@@ -114,7 +121,7 @@ export class ReservasService {
           membro: true,
           livro: true,
         },
-        orderBy: { posicao: 'asc' },
+        orderBy: { criadaEm: 'desc' },
       });
       return reservas;
     } catch (error) {
@@ -155,6 +162,88 @@ export class ReservasService {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException('Erro ao cancelar reserva');
+    }
+  }
+
+  async confirmarReservaParaEmprestimo(
+    reservaId: number,
+  ): Promise<{ message: string }> {
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        // 1. Buscar a reserva com os dados do livro
+        const reserva = await tx.reserva.findUnique({
+          where: { id: reservaId },
+          include: { livro: true },
+        });
+
+        if (!reserva || !reserva.ativa) {
+          throw new NotFoundException('Reserva não encontrada ou inativa');
+        }
+
+        // 2. Regra de Negócio: Apenas o primeiro da fila pode levantar
+        if (reserva.posicao !== 1) {
+          throw new BadRequestException(
+            'Aguarde sua vez na fila. Existem membros à sua frente.',
+          );
+        }
+
+        // 3. Verificar se a data já chegou (Pode ser hoje ou depois)
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+
+        if (!reserva.paraData) {
+          throw new BadRequestException(
+            'Data de levantamento não definida para esta reserva.',
+          );
+        }
+
+        const dataReserva = new Date(reserva.paraData);
+        dataReserva.setHours(0, 0, 0, 0);
+
+        const dataPrevista = new Date();
+        dataPrevista.setDate(dataPrevista.getDate() + 7);
+
+        await tx.emprestimo.create({
+          data: {
+            membroId: reserva.membroId,
+            livroId: reserva.livroId,
+            dataPrevista,
+          },
+        });
+
+        // 5. Finalizar esta reserva e reordenar a fila
+        await tx.reserva.update({
+          where: { id: reservaId },
+          data: { ativa: false, posicao: 0 },
+        });
+
+        await tx.reserva.updateMany({
+          where: {
+            livroId: reserva.livroId,
+            posicao: { gt: 1 },
+            ativa: true,
+          },
+          data: { posicao: { decrement: 1 } },
+        });
+
+        // 6. Atualizar histórico
+        await tx.historicoLeitura.create({
+          data: {
+            membroId: reserva.membroId,
+            livroId: reserva.livroId,
+          },
+        });
+
+        return {
+          message: 'Empréstimo realizado com sucesso a partir da reserva!',
+        };
+      });
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException(
+            'Erro ao processar levantamento de reserva',
+          );
     }
   }
 
