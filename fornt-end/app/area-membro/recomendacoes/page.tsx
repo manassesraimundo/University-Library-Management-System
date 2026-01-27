@@ -5,7 +5,7 @@ import { api } from "@/lib/api"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Sparkles, BookOpen, Loader2, BookmarkPlus, ArrowRight } from "lucide-react"
+import { Sparkles, BookOpen, Loader2, ArrowRight } from "lucide-react"
 import { toast } from "sonner"
 
 export default function RecomendacoesPage() {
@@ -16,6 +16,7 @@ export default function RecomendacoesPage() {
     try {
       const res = await api.get('/recomendacao')
       setTextoBruto(res.data)
+      toast.success("")
     } catch (error: any) {
       toast.error("Não conseguimos carregar suas sugestões agora.")
     } finally {

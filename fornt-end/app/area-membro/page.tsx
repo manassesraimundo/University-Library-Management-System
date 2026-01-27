@@ -21,7 +21,6 @@ import {
   History,
   BookmarkCheck
 } from "lucide-react"
-import { CardVincular } from "@/components/card-vincular"
 import { CardResume } from "@/components/card-resume"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
@@ -32,14 +31,12 @@ export default function MembroDashboard() {
   const [dados, setDados] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
-  const [vincular, setVincular] = useState(true)
-
   const carregarPainelMembro = async () => {
     try {
       const res = await api.get('/membros/meu-painel')
       setDados(res.data)
     } catch (error) {
-      console.error("Erro ao carregar dados do membro")
+      console.log("Erro ao carregar dados do membro")
     } finally {
       setLoading(false)
     }
@@ -47,25 +44,15 @@ export default function MembroDashboard() {
 
   useEffect(() => {
     carregarPainelMembro()
-  }, [dados, vincular])
+  }, [])
 
   if (loading) return <div className="p-10 text-center">Carregando seu acervo...</div>
-
-  if (dados && !dados.usuario && vincular) {
-    return (
-      <CardVincular
-        dados={dados}
-        carregarPainelMembro={carregarPainelMembro}
-        setVincular={setVincular}
-      />
-    )
-  }
 
   return (
     <div className="p-6 space-y-8 bg-slate-50/30 min-h-screen">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Olá, {dados?.usuario?.nome}</h1>
+          <h1 className="text-3xl font-bold">Olá, {dados?.usuario?.nome ? dados?.usuario?.nome : 'Membro'}</h1>
           <p className="text-muted-foreground">Matrícula: {dados?.matricula} • Tipo: {dados?.tipo}</p>
         </div>
         <Badge variant={dados?.ativo ? "success" : "destructive"} className="h-6">

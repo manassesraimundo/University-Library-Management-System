@@ -43,6 +43,7 @@ export class RecomendacaoService {
       const historicoEmprestimos = await this.prisma.emprestimo.findMany({
         where: { membroId },
         include: { livro: true },
+        take: 10,
       });
 
       const livrosLidos = historicoEmprestimos

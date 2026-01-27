@@ -24,7 +24,7 @@ interface Message {
 }
 
 export default function ChatIAPage() {
-  const { user } = useAuth() // Usando o usuário do contexto
+  const { membro } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -61,7 +61,7 @@ export default function ChatIAPage() {
     try {
       const res = await api.post('/chatbot/conversar', {
         message: userMessage,
-        membroId: user?.id
+        membroId: membro?.id
       })
 
       setMessages(prev => [...prev, { role: 'model', content: res.data.response }])

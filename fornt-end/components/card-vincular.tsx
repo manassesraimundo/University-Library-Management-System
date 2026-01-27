@@ -38,7 +38,7 @@ export function CardVincular({ dados, carregarPainelMembro, setVincular }: any) 
                     variant="ghost"
                     size="sm"
                     className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-                    onClick={() => setVincular(false)}
+                    onClick={setVincular}
                 >
                    <XCircle /> Agora não
                 </Button>

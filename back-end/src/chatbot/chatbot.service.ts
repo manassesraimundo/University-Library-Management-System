@@ -44,10 +44,12 @@ export class ChatbotService {
       const [emprestimos, livrosDisponiveis, historicoBanco] =
         await Promise.all([
           this.prisma.emprestimo.findMany({
-            where: { membroId: dto.membroId },
+            where: { membroId: dto.membroId, dataDevolucao: null },
             include: {
               livro: true,
             },
+            take: 10,
+            orderBy: { dataEmprestimo: 'desc' },
           }),
           this.prisma.livro.findMany({
             where: { status: StatusLivro.DISPONIVEL },
