@@ -45,7 +45,7 @@ export class ReservasService {
 
       if (livro.status === StatusLivro.DISPONIVEL)
         throw new BadRequestException(
-          'Livro está disponível, não pode ser reservado',
+          'Livro está disponível, não pode ser reservado. Dirija-se a biblipoteca para realizar o emprestimo.',
         );
 
       if (livro.etiqueta === Etiqueta.VERMELHO)

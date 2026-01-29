@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -40,7 +40,8 @@ export default function EmprestimosPage() {
       setEmprestimos(res)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -50,7 +51,8 @@ export default function EmprestimosPage() {
       setEmprestimos(response.data)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -62,7 +64,8 @@ export default function EmprestimosPage() {
       setEmprestimos(ativos)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -75,7 +78,8 @@ export default function EmprestimosPage() {
       setEmprestimos(ativos)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -85,7 +89,8 @@ export default function EmprestimosPage() {
       setEmprestimos(response.data)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -96,7 +101,8 @@ export default function EmprestimosPage() {
       setEmprestimos(res)
     } catch (error: any) {
       toast.error("Erro ao carregar dados dos empréstimos")
-      if (error.response?.status === 401) window.location.href = '/login'
+      if (error.response?.status === 401) 
+        window.location.href = '/login'
     }
   }
 
@@ -130,6 +136,7 @@ export default function EmprestimosPage() {
       setMulta(multa)
 
       toast.success("Livro devolvido com sucesso!")
+      setStatus("ativos")
       carregarEmprestimosAtivos()
     } catch (error: any) {
       const msg = error.response?.data?.message || "Erro ao processar devolução"
@@ -196,9 +203,10 @@ export default function EmprestimosPage() {
 
                 }
                 {
-                  status !== 'todos' && (<TableHead className="text-right">Ações</TableHead>)
+                  status !== 'todos' && (
+                    <TableHead className="text-right">Ações</TableHead>
+                  )
                 }
-
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -218,7 +226,7 @@ export default function EmprestimosPage() {
                           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                           if (diffDays === 0) {
                             const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
-                            if (diffHours < 1) {
+                            if (diffHours <= 1) {
                               const diffMint = Math.ceil(diffMs / (1000 * 60));
                               return `${diffMint}min`;
                             }
@@ -285,8 +293,6 @@ export default function EmprestimosPage() {
           </Table>
         </TabsContent>
       </Tabs>
-
-      {/* <Alert /> */}
     </div>
   )
 }

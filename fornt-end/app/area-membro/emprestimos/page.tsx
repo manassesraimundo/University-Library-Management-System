@@ -101,7 +101,7 @@ export default function MeusEmprestimosPage() {
                                     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                                     if (diffDays === 0) {
                                       const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
-                                      if (diffHours < 1) {
+                                      if (diffHours <= 1) {
                                         const diffMint = Math.ceil(diffMs / (1000 * 60));
                                         return `${diffMint}min`;                                      }
                                       return `${diffHours}h`;

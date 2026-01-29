@@ -13,7 +13,8 @@ import {
 } from "./ui/alert-dialog";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
-import React from "react";
+import React, { useState } from "react";
+import AlertGlobal from "./alertGlobal";
 
 interface IAlertMultaProps {
   children: React.ReactNode;
@@ -22,15 +23,29 @@ interface IAlertMultaProps {
 }
 
 export default function AlertMulta({ children, multa, emprestimoId }: IAlertMultaProps) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
   const pagarMulta = async () => {
     try {
       const res = await api.put(`/emprestimos/multa/pagar/${emprestimoId}`);
       const data = res.data;
       toast.success(data.message)
     } catch (error: any) {
-      toast.error(error.response?.data?.message)
+      setMessage(error.response?.data?.message)
+      setIsOpen(true);
     }
   }
+
+  if (isOpen) {
+    return <AlertGlobal 
+      isOpen={isOpen}
+      setIsOpen={() => setIsOpen(false)}
+      message={message}
+      titulo="Erro Multa"
+    />
+  }
+  
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

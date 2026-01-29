@@ -125,7 +125,7 @@ export default function MembroDashboard() {
                         // Se for hoje, calcular horas
                         if (diffDays === 0) {
                           const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
-                          if (diffHours < 1) {
+                          if (diffHours <= 1) {
                             const diffMint = Math.ceil(diffMs / (1000 * 60));
                             return `${diffMint}min`;
                           }

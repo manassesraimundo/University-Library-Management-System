@@ -467,6 +467,7 @@ export class EmprestimosService {
     try {
       const emprestimo = await this.prisma.emprestimo.findUnique({
         where: { id: renovar.emprestimoId },
+        include: { membro: true },
       });
 
       if (!emprestimo) {
@@ -500,10 +501,17 @@ export class EmprestimosService {
       });
 
       const novaDataPrevista = new Date(emprestimo.dataPrevista);
-      if (livro?.etiqueta === Etiqueta.BRANCO)
-        novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
-      else if (livro?.etiqueta === Etiqueta.AMARELO)
-        novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
+      if (
+        livro?.etiqueta === Etiqueta.BRANCO &&
+        emprestimo.membro.tipo === TipoMembro.PROFESSOR
+      )
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + 15);
+      else if (
+        livro?.etiqueta === Etiqueta.BRANCO &&
+        emprestimo.membro.tipo !== TipoMembro.PROFESSOR
+      )
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + 5);
+      else novaDataPrevista.setHours(novaDataPrevista.getHours() + 24);
 
       await this.prisma.emprestimo.update({
         where: { id: emprestimo.id },
