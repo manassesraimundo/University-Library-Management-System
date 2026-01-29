@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from "@/context/auth-context";
+import { Role } from "@/types/enums";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -17,7 +18,7 @@ export default function Home() {
       return
     }
 
-    if (user?.role === 'ADMIN' || user?.role === 'BIBLIOTECARIO') {
+    if (user?.role === Role.ADMIN || user?.role === Role.BIBLIOTECARIO) {
       router.replace('/dashboard')
       return
     }

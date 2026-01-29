@@ -65,7 +65,6 @@ export class CategoriaService {
 
   async deleteCategoria(id: number): Promise<{ message: string }> {
     try {
-      console.log(id);
       const existingCategoria = await this.prisma.categoria.findUnique({
         where: { id },
       });
@@ -76,6 +75,7 @@ export class CategoriaService {
       await this.prisma.categoria.delete({
         where: { id },
       });
+
       return {
         message: `Categoria '${existingCategoria.nome}' deletada com sucesso!`,
       };

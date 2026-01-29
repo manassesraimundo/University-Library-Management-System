@@ -7,13 +7,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLivroDto } from './dto/livro.dto';
-import { Livro, StatusLivro } from 'src/generated/prisma/client';
+import { Etiqueta, Livro, StatusLivro } from 'src/generated/prisma/client';
 
 @Injectable()
 export class LivrosService {
   constructor(private prisma: PrismaService) {}
 
-  private getPage(page: number, limit: number) {
+  private getPage(page?: number, limit?: number) {
     const take = Math.min(Number(limit), 50);
     const skip = (Number(page) - 1) * take;
 
@@ -22,10 +22,11 @@ export class LivrosService {
 
   async getAllLivros(
     status: string,
-    page: number,
-    limit: number,
+    etiqueta?: string,
+    page?: number,
+    limit?: number,
     titulo?: string,
-  ): Promise<Omit<Livro, 'criadoEm'>[]> {
+  ): Promise<Livro[]> {
     try {
       const { skip, take } = this.getPage(page, limit);
 
@@ -35,12 +36,22 @@ export class LivrosService {
             titulo: { contains: titulo },
             status:
               StatusLivro[status.toUpperCase() as keyof typeof StatusLivro],
+            etiqueta:
+              Etiqueta[etiqueta?.toUpperCase() as keyof typeof Etiqueta],
           },
 
           orderBy: { titulo: 'asc' },
           include: {
             autor: { select: { nome: true } },
             categoria: { select: { nome: true } },
+            _count: {
+              select: {
+                reservas: {
+                  where: { ativa: true },
+                },
+                emprestimos: { where: { dataDevolucao: null } },
+              },
+            },
           },
           skip,
           take,
@@ -52,12 +63,21 @@ export class LivrosService {
       const livros = await this.prisma.livro.findMany({
         where: {
           status: StatusLivro[status.toUpperCase() as keyof typeof StatusLivro],
+          etiqueta: Etiqueta[etiqueta?.toUpperCase() as keyof typeof Etiqueta],
         },
 
         orderBy: { titulo: 'asc' },
         include: {
           autor: { select: { nome: true } },
           categoria: { select: { nome: true } },
+          _count: {
+            select: {
+              reservas: {
+                where: { ativa: true },
+              },
+              emprestimos: { where: { dataDevolucao: null } },
+            },
+          },
         },
         skip,
         take,
@@ -140,6 +160,7 @@ export class LivrosService {
               `Já existe um livro com este isbn \'${body.isbn}\'`,
             );
         }
+
         let autor;
         let categoria;
 
@@ -175,6 +196,7 @@ export class LivrosService {
             status: body.status
               ? StatusLivro[body.status.toUpperCase()]
               : undefined,
+            etiqueta: Etiqueta[body.etiqueta.toUpperCase()],
             quantidade: body.quantidade,
           },
         });

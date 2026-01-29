@@ -20,15 +20,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Book, Bookmark, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { IEmprestimo, IMembro, IReserva } from "@/types/interface";
 
-interface MembroDetalhesProps {
+interface IMembroDetalhesProps {
     matricula: string | null
     isOpen: boolean
     onClose: () => void
 }
 
-export function MembroDetalhesModal({ matricula, isOpen, onClose }: MembroDetalhesProps) {
-    const [membro, setMembro] = useState<any>(null)
+export function MembroDetalhesModal({ matricula, isOpen, onClose }: IMembroDetalhesProps) {
+    const [membro, setMembro] = useState<IMembro | null>(null)
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -112,7 +113,7 @@ export function MembroDetalhesModal({ matricula, isOpen, onClose }: MembroDetalh
                                     </TableHeader>
                                     <TableBody>
                                         {membro.emprestimos?.length > 0 ? (
-                                            membro.emprestimos.map((emp: any) => (
+                                            membro.emprestimos.map((emp: IEmprestimo) => (
                                                 <TableRow key={emp.id}>
                                                     <TableCell className="text-xs font-medium">{emp.livro.titulo}</TableCell>
                                                     <TableCell className="text-right text-xs text-muted-foreground">
@@ -147,7 +148,7 @@ export function MembroDetalhesModal({ matricula, isOpen, onClose }: MembroDetalh
                                     </TableHeader>
                                     <TableBody>
                                         {membro.reservas?.length > 0 ? (
-                                            membro.reservas.map((res: any) => (
+                                            membro.reservas.map((res: IReserva) => (
                                                 <TableRow key={res.id}>
                                                     <TableCell className="text-xs font-medium">{res.livro.titulo}</TableCell>
                                                     <TableCell className="text-right text-xs">Aguardando</TableCell>

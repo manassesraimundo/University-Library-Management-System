@@ -11,9 +11,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Printer, FileText } from "lucide-react";
+import { IReserva } from "@/types/interface";
 
-export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: any) {
-    const [open, setOpen] = useState(false);
+interface IBotaoImprimirRelatorioProps {
+    dadosGrafico: { titulo: string }[];
+    reservas: IReserva[];
+}
+export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBotaoImprimirRelatorioProps) {
+    const [open, setOpen] = useState<boolean>(false);
 
     const acionarImpressao = () => {
         setTimeout(() => {
@@ -53,7 +58,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: any) 
                         </div>
                         <div className="p-4 border-2 border-slate-200 rounded-lg">
                             <p className="text-[10px] uppercase font-black text-slate-500">Título Mais Popular</p>
-                            <p className="text-md font-bold truncate">{dadosGrafico?.[0]?.titulo || "N/A"}</p>
+                            <p className="text-md font-bold truncate">{dadosGrafico[0]?.titulo || "N/A"}</p>
                         </div>
                     </div>
 
@@ -62,7 +67,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: any) 
                         <p className="text-sm leading-relaxed text-justify">
                             Este relatório sintetiza o estado atual do acervo. Constatamos que
                             <strong> {reservas?.length || 0} </strong> solicitações de reserva aguardam atendimento.
-                            O título <em>"{dadosGrafico?.[0]?.titulo || "N/A"}"</em> mantém-se como o mais requisitado do período.
+                            O título <em>"{dadosGrafico[0]?.titulo || "N/A"}"</em> mantém-se como o mais requisitado do período.
                         </p>
                     </div>
 

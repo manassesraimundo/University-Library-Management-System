@@ -10,13 +10,16 @@ import { Search, BookMarked, Info, Filter } from "lucide-react"
 import { toast } from "sonner"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/context/auth-context"
+import { ILivro } from "@/types/interface"
+import { Etiqueta, StatusLivro } from "@/types/enums"
 
 export default function ExplorarLivrosPage() {
-    const [livros, setLivros] = useState<any>([])
-    const [busca, setBusca] = useState("")
-    const [loading, setLoading] = useState(true)
-    const [statusFiltro, setStatusFiltro] = useState("DISPONIVEL")
-    const [page, setPage] = useState(1)
+    const [livros, setLivros] = useState<ILivro[]>([]);
+    const [busca, setBusca] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [statusFiltro, setStatusFiltro] = useState<string>(StatusLivro.DISPONIVEL);
+    const [etiqueta, setEtiqueta] = useState<string>(Etiqueta.BRANCO);
+    const [page, setPage] = useState<number>(1);
 
     const { membro } = useAuth();
 
@@ -60,18 +63,18 @@ export default function ExplorarLivrosPage() {
         }
     }
 
-    const filtrados = livros.filter((l: any) =>
+    const filtrados = livros.filter((l) =>
         l.titulo.toLowerCase().includes(busca.toLowerCase()) ||
         l.autor.nome.toLowerCase().includes(busca.toLowerCase())
     )
 
-    const realizarReserva = async (livroId: string) => {
+    const realizarReserva = async (livroId: number) => {
         try {
             await api.post(`/reservas`, { livroId, matricula: membro?.matricula })
             toast.success("Livro reservado com sucesso!")
-            
+
         } catch (error: any) {
-            toast.error(error.response?.data?.message  || "Erro ao reservar livro")
+            toast.error(error.response?.data?.message || "Erro ao reservar livro")
         }
     }
 
@@ -102,7 +105,7 @@ export default function ExplorarLivrosPage() {
                             <SelectValue placeholder="Status" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="DISPONIVEL">DISPONIVEL</SelectItem>
+                            <SelectItem value={StatusLivro.DISPONIVEL}>DISPONIVEL</SelectItem>
                             <SelectItem value="INDISPUNIVEIS">INDISPUNIVEIS</SelectItem>
                         </SelectContent>
                     </Select>
@@ -116,13 +119,29 @@ export default function ExplorarLivrosPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    {filtrados.map((livro: any) => (
+                    {filtrados.map((livro) => (
                         <Card key={livro.id} className="overflow-hidden hover:shadow-lg transition-all border-none shadow-sm">
                             <div className="aspect-[3/4] bg-slate-100 relative group">
                                 {/* Badge de Disponibilidade */}
-                                <div className="absolute top-2 right-2 z-10">
-                                    <Badge variant={livro.status === 'DISPONIVEL' ? "success" : "destructive"}>
-                                        {livro.status === 'DISPONIVEL' ? "Disponível" : "Indisponível"}
+                                <div className="absolute top-2 right-2 z-10 justify-between">
+                                    <Badge
+                                        variant={
+                                            livro.etiqueta === Etiqueta.BRANCO ? "outline"
+                                                : livro.etiqueta === Etiqueta.AMARELO ? "yellow" : "destructive"
+                                        }
+                                    >
+                                        {
+                                            livro.etiqueta === Etiqueta.BRANCO ? 'Branco'
+                                                : livro.etiqueta === Etiqueta.AMARELO ? 'Amarelo' : 'Vermelho'
+                                        }
+                                    </Badge>
+                                    <Badge
+                                        variant={
+                                            livro.status === StatusLivro.DISPONIVEL ? "success"
+                                                : "destructive"
+                                        }
+                                    >
+                                        {livro.status === StatusLivro.DISPONIVEL ? "Disponível" : "Indisponível"}
                                     </Badge>
                                 </div>
 
@@ -153,10 +172,10 @@ export default function ExplorarLivrosPage() {
                                 <Button
                                     className="w-full"
                                     variant={livro.quantidade > 1 ? "default" : "outline"}
-                                    disabled={livro.status === 'DISPONIVEL' ? true : false}
+                                    disabled={livro.status === StatusLivro.DISPONIVEL ? true : false}
                                     onClick={() => realizarReserva(livro.id)}
                                 >
-                                    {livro.status === 'DISPONIVEL' ? "Empresrimo na biblioteca" : "Reservar Livro"}
+                                    {livro.status === StatusLivro.DISPONIVEL ? "Empresrimo na biblioteca" : "Reservar Livro"}
                                 </Button>
                             </CardFooter>
                         </Card>

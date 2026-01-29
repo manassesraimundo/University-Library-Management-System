@@ -8,13 +8,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { 
-    Eye, 
+import {
+    Eye,
     Book,
-    User, 
-    Tag, 
-    Calendar, 
-    Hash 
+    User,
+    Tag,
+    Calendar,
+    Hash
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,12 +22,14 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { ILivro } from "@/types/interface";
 
 
 export function ViewLivroModal({ livroId }: { livroId: number }) {
-    const router = useRouter()
-    const [livro, setLivro] = useState<any>(null)
-    const [loading, setLoading] = useState(false)
+    const router = useRouter();
+
+    const [livro, setLivro] = useState<ILivro | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const fetchLivroDetalhes = async () => {
         setLoading(true)
@@ -69,14 +71,25 @@ export function ViewLivroModal({ livroId }: { livroId: number }) {
                     <div className="space-y-6 pt-4">
                         {/* Cabeçalho de Status */}
                         <div className="flex justify-between items-center bg-slate-50 p-4 rounded-lg border">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Status Atual</p>
-                                <Badge
-                                    variant={livro.status === 'DISPONIVEL' ? 'success' : livro.status === 'RESERVADO' ? 'default' : 'destructive'}
-                                    className="mt-1"
-                                >
-                                    {livro.status}
-                                </Badge>
+                            <div className="flex gap-2">
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Status Atual</p>
+                                    <Badge
+                                        variant={livro.status === 'DISPONIVEL' ? 'success' : livro.status === 'RESERVADO' ? 'default' : 'destructive'}
+                                        className="mt-1"
+                                    >
+                                        {livro.status}
+                                    </Badge>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Etiqueta</p>
+                                    <Badge
+                                        variant={livro.etiqueta === 'BRANCO' ? 'outline' : livro.etiqueta === 'AMARELO' ? 'yellow' : 'destructive'}
+                                        className="mt-1"
+                                    >
+                                        {livro.etiqueta}
+                                    </Badge>
+                                </div>
                             </div>
                             <div className="text-right">
                                 <p className="text-sm text-muted-foreground">ID do Acervo</p>
@@ -121,11 +134,7 @@ export function ViewLivroModal({ livroId }: { livroId: number }) {
                             )}
                         </div>
 
-                        <div className="flex justify-end pt-4">
-                            <Button onClick={() => window.print()} variant="ghost" className="text-xs">
-                                Imprimir Ficha
-                            </Button>
-                        </div>
+                        <div className="flex justify-end pt-4"></div>
                     </div>
                 ) : null}
             </DialogContent>

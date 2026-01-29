@@ -29,6 +29,7 @@ export type AggregateReserva = {
 export type ReservaAvgAggregateOutputType = {
   id: number | null;
   posicao: number | null;
+  quantidadeReserva: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -36,6 +37,7 @@ export type ReservaAvgAggregateOutputType = {
 export type ReservaSumAggregateOutputType = {
   id: number | null;
   posicao: number | null;
+  quantidadeReserva: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -46,6 +48,7 @@ export type ReservaMinAggregateOutputType = {
   posicao: number | null;
   paraData: Date | null;
   criadaEm: Date | null;
+  quantidadeReserva: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -56,6 +59,7 @@ export type ReservaMaxAggregateOutputType = {
   posicao: number | null;
   paraData: Date | null;
   criadaEm: Date | null;
+  quantidadeReserva: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -66,6 +70,7 @@ export type ReservaCountAggregateOutputType = {
   posicao: number;
   paraData: number;
   criadaEm: number;
+  quantidadeReserva: number;
   membroId: number;
   livroId: number;
   _all: number;
@@ -74,6 +79,7 @@ export type ReservaCountAggregateOutputType = {
 export type ReservaAvgAggregateInputType = {
   id?: true;
   posicao?: true;
+  quantidadeReserva?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -81,6 +87,7 @@ export type ReservaAvgAggregateInputType = {
 export type ReservaSumAggregateInputType = {
   id?: true;
   posicao?: true;
+  quantidadeReserva?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -91,6 +98,7 @@ export type ReservaMinAggregateInputType = {
   posicao?: true;
   paraData?: true;
   criadaEm?: true;
+  quantidadeReserva?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -101,6 +109,7 @@ export type ReservaMaxAggregateInputType = {
   posicao?: true;
   paraData?: true;
   criadaEm?: true;
+  quantidadeReserva?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -111,6 +120,7 @@ export type ReservaCountAggregateInputType = {
   posicao?: true;
   paraData?: true;
   criadaEm?: true;
+  quantidadeReserva?: true;
   membroId?: true;
   livroId?: true;
   _all?: true;
@@ -215,6 +225,7 @@ export type ReservaGroupByOutputType = {
   posicao: number;
   paraData: Date | null;
   criadaEm: Date;
+  quantidadeReserva: number;
   membroId: number;
   livroId: number;
   _count: ReservaCountAggregateOutputType | null;
@@ -246,6 +257,7 @@ export type ReservaWhereInput = {
   posicao?: Prisma.IntFilter<'Reserva'> | number;
   paraData?: Prisma.DateTimeNullableFilter<'Reserva'> | Date | string | null;
   criadaEm?: Prisma.DateTimeFilter<'Reserva'> | Date | string;
+  quantidadeReserva?: Prisma.IntFilter<'Reserva'> | number;
   membroId?: Prisma.IntFilter<'Reserva'> | number;
   livroId?: Prisma.IntFilter<'Reserva'> | number;
   membro?: Prisma.XOR<
@@ -261,6 +273,7 @@ export type ReservaOrderByWithRelationInput = {
   posicao?: Prisma.SortOrder;
   paraData?: Prisma.SortOrderInput | Prisma.SortOrder;
   criadaEm?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
   membro?: Prisma.MembroOrderByWithRelationInput;
@@ -277,6 +290,7 @@ export type ReservaWhereUniqueInput = Prisma.AtLeast<
     posicao?: Prisma.IntFilter<'Reserva'> | number;
     paraData?: Prisma.DateTimeNullableFilter<'Reserva'> | Date | string | null;
     criadaEm?: Prisma.DateTimeFilter<'Reserva'> | Date | string;
+    quantidadeReserva?: Prisma.IntFilter<'Reserva'> | number;
     membroId?: Prisma.IntFilter<'Reserva'> | number;
     livroId?: Prisma.IntFilter<'Reserva'> | number;
     membro?: Prisma.XOR<
@@ -297,6 +311,7 @@ export type ReservaOrderByWithAggregationInput = {
   posicao?: Prisma.SortOrder;
   paraData?: Prisma.SortOrderInput | Prisma.SortOrder;
   criadaEm?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
   _count?: Prisma.ReservaCountOrderByAggregateInput;
@@ -323,6 +338,7 @@ export type ReservaScalarWhereWithAggregatesInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeWithAggregatesFilter<'Reserva'> | Date | string;
+  quantidadeReserva?: Prisma.IntWithAggregatesFilter<'Reserva'> | number;
   membroId?: Prisma.IntWithAggregatesFilter<'Reserva'> | number;
   livroId?: Prisma.IntWithAggregatesFilter<'Reserva'> | number;
 };
@@ -332,6 +348,7 @@ export type ReservaCreateInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membro: Prisma.MembroCreateNestedOneWithoutReservasInput;
   livro: Prisma.LivroCreateNestedOneWithoutReservasInput;
 };
@@ -342,6 +359,7 @@ export type ReservaUncheckedCreateInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membroId: number;
   livroId: number;
 };
@@ -355,6 +373,7 @@ export type ReservaUpdateInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutReservasNestedInput;
   livro?: Prisma.LivroUpdateOneRequiredWithoutReservasNestedInput;
 };
@@ -369,6 +388,7 @@ export type ReservaUncheckedUpdateInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -379,6 +399,7 @@ export type ReservaCreateManyInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membroId: number;
   livroId: number;
 };
@@ -392,6 +413,7 @@ export type ReservaUpdateManyMutationInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type ReservaUncheckedUpdateManyInput = {
@@ -404,6 +426,7 @@ export type ReservaUncheckedUpdateManyInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -424,6 +447,7 @@ export type ReservaCountOrderByAggregateInput = {
   posicao?: Prisma.SortOrder;
   paraData?: Prisma.SortOrder;
   criadaEm?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -431,6 +455,7 @@ export type ReservaCountOrderByAggregateInput = {
 export type ReservaAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   posicao?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -441,6 +466,7 @@ export type ReservaMaxOrderByAggregateInput = {
   posicao?: Prisma.SortOrder;
   paraData?: Prisma.SortOrder;
   criadaEm?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -451,6 +477,7 @@ export type ReservaMinOrderByAggregateInput = {
   posicao?: Prisma.SortOrder;
   paraData?: Prisma.SortOrder;
   criadaEm?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -458,6 +485,7 @@ export type ReservaMinOrderByAggregateInput = {
 export type ReservaSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   posicao?: Prisma.SortOrder;
+  quantidadeReserva?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -655,6 +683,7 @@ export type ReservaCreateWithoutMembroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   livro: Prisma.LivroCreateNestedOneWithoutReservasInput;
 };
 
@@ -664,6 +693,7 @@ export type ReservaUncheckedCreateWithoutMembroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   livroId: number;
 };
 
@@ -718,6 +748,7 @@ export type ReservaScalarWhereInput = {
   posicao?: Prisma.IntFilter<'Reserva'> | number;
   paraData?: Prisma.DateTimeNullableFilter<'Reserva'> | Date | string | null;
   criadaEm?: Prisma.DateTimeFilter<'Reserva'> | Date | string;
+  quantidadeReserva?: Prisma.IntFilter<'Reserva'> | number;
   membroId?: Prisma.IntFilter<'Reserva'> | number;
   livroId?: Prisma.IntFilter<'Reserva'> | number;
 };
@@ -727,6 +758,7 @@ export type ReservaCreateWithoutLivroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membro: Prisma.MembroCreateNestedOneWithoutReservasInput;
 };
 
@@ -736,6 +768,7 @@ export type ReservaUncheckedCreateWithoutLivroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membroId: number;
 };
 
@@ -787,6 +820,7 @@ export type ReservaCreateManyMembroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   livroId: number;
 };
 
@@ -799,6 +833,7 @@ export type ReservaUpdateWithoutMembroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   livro?: Prisma.LivroUpdateOneRequiredWithoutReservasNestedInput;
 };
 
@@ -812,6 +847,7 @@ export type ReservaUncheckedUpdateWithoutMembroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -825,6 +861,7 @@ export type ReservaUncheckedUpdateManyWithoutMembroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -834,6 +871,7 @@ export type ReservaCreateManyLivroInput = {
   posicao: number;
   paraData?: Date | string | null;
   criadaEm?: Date | string;
+  quantidadeReserva?: number;
   membroId: number;
 };
 
@@ -846,6 +884,7 @@ export type ReservaUpdateWithoutLivroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutReservasNestedInput;
 };
 
@@ -859,6 +898,7 @@ export type ReservaUncheckedUpdateWithoutLivroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -872,6 +912,7 @@ export type ReservaUncheckedUpdateManyWithoutLivroInput = {
     | string
     | null;
   criadaEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  quantidadeReserva?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -885,6 +926,7 @@ export type ReservaSelect<
     posicao?: boolean;
     paraData?: boolean;
     criadaEm?: boolean;
+    quantidadeReserva?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -903,6 +945,7 @@ export type ReservaSelectCreateManyAndReturn<
     posicao?: boolean;
     paraData?: boolean;
     criadaEm?: boolean;
+    quantidadeReserva?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -921,6 +964,7 @@ export type ReservaSelectUpdateManyAndReturn<
     posicao?: boolean;
     paraData?: boolean;
     criadaEm?: boolean;
+    quantidadeReserva?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -935,6 +979,7 @@ export type ReservaSelectScalar = {
   posicao?: boolean;
   paraData?: boolean;
   criadaEm?: boolean;
+  quantidadeReserva?: boolean;
   membroId?: boolean;
   livroId?: boolean;
 };
@@ -943,7 +988,14 @@ export type ReservaOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'ativa' | 'posicao' | 'paraData' | 'criadaEm' | 'membroId' | 'livroId',
+  | 'id'
+  | 'ativa'
+  | 'posicao'
+  | 'paraData'
+  | 'criadaEm'
+  | 'quantidadeReserva'
+  | 'membroId'
+  | 'livroId',
   ExtArgs['result']['reserva']
 >;
 export type ReservaInclude<
@@ -984,6 +1036,7 @@ export type $ReservaPayload<
       posicao: number;
       paraData: Date | null;
       criadaEm: Date;
+      quantidadeReserva: number;
       membroId: number;
       livroId: number;
     },
@@ -1611,6 +1664,7 @@ export interface ReservaFieldRefs {
   readonly posicao: Prisma.FieldRef<'Reserva', 'Int'>;
   readonly paraData: Prisma.FieldRef<'Reserva', 'DateTime'>;
   readonly criadaEm: Prisma.FieldRef<'Reserva', 'DateTime'>;
+  readonly quantidadeReserva: Prisma.FieldRef<'Reserva', 'Int'>;
   readonly membroId: Prisma.FieldRef<'Reserva', 'Int'>;
   readonly livroId: Prisma.FieldRef<'Reserva', 'Int'>;
 }

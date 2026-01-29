@@ -23,12 +23,13 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Loader2, Filter } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { TipoMembro } from "@/types/enums";
 
 export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => void }) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [matricula, setMatricula] = useState("")
-  const [tipoMembro, setTipoMembro] = useState('ESTUDANTE')
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [matricula, setMatricula] = useState<string>("");
+  const [tipoMembro, setTipoMembro] = useState<string>(TipoMembro.ESTUDANTE);
 
   const onSubmit = async () => {
     setLoading(true)
@@ -87,8 +88,8 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ESTUDANTE">Estudante</SelectItem>
-                <SelectItem value="PROFESSOR">Professor</SelectItem>
+                <SelectItem value={TipoMembro.ESTUDANTE}>Estudante</SelectItem>
+                <SelectItem value={TipoMembro.PROFESSOR}>Professor</SelectItem>
               </SelectContent>
             </Select>
           </div>

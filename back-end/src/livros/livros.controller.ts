@@ -23,6 +23,7 @@ export class LivrosController {
   @Get()
   async getAllLivros(
     @Query('status') status?: string,
+    @Query('etiqueta') etiqueta?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('titulo') titulo?: string,
@@ -31,6 +32,7 @@ export class LivrosController {
 
     const result = await this.livrosService.getAllLivros(
       sta,
+      etiqueta,
       Number(page) || 1,
       Number(limit) || 10,
       titulo,

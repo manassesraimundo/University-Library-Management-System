@@ -46,6 +46,7 @@ export type LivroMinAggregateOutputType = {
   isbn: string | null;
   editora: string | null;
   status: $Enums.StatusLivro | null;
+  etiqueta: $Enums.Etiqueta | null;
   quantidade: number | null;
   criadoEm: Date | null;
   autorId: number | null;
@@ -58,6 +59,7 @@ export type LivroMaxAggregateOutputType = {
   isbn: string | null;
   editora: string | null;
   status: $Enums.StatusLivro | null;
+  etiqueta: $Enums.Etiqueta | null;
   quantidade: number | null;
   criadoEm: Date | null;
   autorId: number | null;
@@ -70,6 +72,7 @@ export type LivroCountAggregateOutputType = {
   isbn: number;
   editora: number;
   status: number;
+  etiqueta: number;
   quantidade: number;
   criadoEm: number;
   autorId: number;
@@ -97,6 +100,7 @@ export type LivroMinAggregateInputType = {
   isbn?: true;
   editora?: true;
   status?: true;
+  etiqueta?: true;
   quantidade?: true;
   criadoEm?: true;
   autorId?: true;
@@ -109,6 +113,7 @@ export type LivroMaxAggregateInputType = {
   isbn?: true;
   editora?: true;
   status?: true;
+  etiqueta?: true;
   quantidade?: true;
   criadoEm?: true;
   autorId?: true;
@@ -121,6 +126,7 @@ export type LivroCountAggregateInputType = {
   isbn?: true;
   editora?: true;
   status?: true;
+  etiqueta?: true;
   quantidade?: true;
   criadoEm?: true;
   autorId?: true;
@@ -227,6 +233,7 @@ export type LivroGroupByOutputType = {
   isbn: string | null;
   editora: string | null;
   status: $Enums.StatusLivro;
+  etiqueta: $Enums.Etiqueta;
   quantidade: number;
   criadoEm: Date;
   autorId: number;
@@ -259,6 +266,7 @@ export type LivroWhereInput = {
   isbn?: Prisma.StringNullableFilter<'Livro'> | string | null;
   editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
   status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
   quantidade?: Prisma.IntFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntFilter<'Livro'> | number;
@@ -279,6 +287,7 @@ export type LivroOrderByWithRelationInput = {
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder;
   editora?: Prisma.SortOrderInput | Prisma.SortOrder;
   status?: Prisma.SortOrder;
+  etiqueta?: Prisma.SortOrder;
   quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
@@ -300,6 +309,7 @@ export type LivroWhereUniqueInput = Prisma.AtLeast<
     titulo?: Prisma.StringFilter<'Livro'> | string;
     editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
     status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
+    etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
     quantidade?: Prisma.IntFilter<'Livro'> | number;
     criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
     autorId?: Prisma.IntFilter<'Livro'> | number;
@@ -325,6 +335,7 @@ export type LivroOrderByWithAggregationInput = {
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder;
   editora?: Prisma.SortOrderInput | Prisma.SortOrder;
   status?: Prisma.SortOrder;
+  etiqueta?: Prisma.SortOrder;
   quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
@@ -351,6 +362,7 @@ export type LivroScalarWhereWithAggregatesInput = {
   status?:
     | Prisma.EnumStatusLivroWithAggregatesFilter<'Livro'>
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaWithAggregatesFilter<'Livro'> | $Enums.Etiqueta;
   quantidade?: Prisma.IntWithAggregatesFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeWithAggregatesFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntWithAggregatesFilter<'Livro'> | number;
@@ -362,6 +374,7 @@ export type LivroCreateInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
@@ -377,6 +390,7 @@ export type LivroUncheckedCreateInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -393,6 +407,7 @@ export type LivroUpdateInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
@@ -410,6 +425,7 @@ export type LivroUncheckedUpdateInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -425,6 +441,7 @@ export type LivroCreateManyInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -438,6 +455,7 @@ export type LivroUpdateManyMutationInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -450,6 +468,7 @@ export type LivroUncheckedUpdateManyInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -462,6 +481,7 @@ export type LivroCountOrderByAggregateInput = {
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
+  etiqueta?: Prisma.SortOrder;
   quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
@@ -481,6 +501,7 @@ export type LivroMaxOrderByAggregateInput = {
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
+  etiqueta?: Prisma.SortOrder;
   quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
@@ -493,6 +514,7 @@ export type LivroMinOrderByAggregateInput = {
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
   status?: Prisma.SortOrder;
+  etiqueta?: Prisma.SortOrder;
   quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
@@ -523,6 +545,10 @@ export type LivroScalarRelationFilter = {
 
 export type EnumStatusLivroFieldUpdateOperationsInput = {
   set?: $Enums.StatusLivro;
+};
+
+export type EnumEtiquetaFieldUpdateOperationsInput = {
+  set?: $Enums.Etiqueta;
 };
 
 export type LivroCreateNestedManyWithoutAutorInput = {
@@ -780,6 +806,7 @@ export type LivroCreateWithoutAutorInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
@@ -794,6 +821,7 @@ export type LivroUncheckedCreateWithoutAutorInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   categoriaId: number;
@@ -851,6 +879,7 @@ export type LivroScalarWhereInput = {
   isbn?: Prisma.StringNullableFilter<'Livro'> | string | null;
   editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
   status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
   quantidade?: Prisma.IntFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntFilter<'Livro'> | number;
@@ -862,6 +891,7 @@ export type LivroCreateWithoutCategoriaInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
@@ -876,6 +906,7 @@ export type LivroUncheckedCreateWithoutCategoriaInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -931,6 +962,7 @@ export type LivroCreateWithoutEmprestimosInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
@@ -945,6 +977,7 @@ export type LivroUncheckedCreateWithoutEmprestimosInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -988,6 +1021,7 @@ export type LivroUpdateWithoutEmprestimosInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
@@ -1004,6 +1038,7 @@ export type LivroUncheckedUpdateWithoutEmprestimosInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1017,6 +1052,7 @@ export type LivroCreateWithoutReservasInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
@@ -1031,6 +1067,7 @@ export type LivroUncheckedCreateWithoutReservasInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -1074,6 +1111,7 @@ export type LivroUpdateWithoutReservasInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
@@ -1090,6 +1128,7 @@ export type LivroUncheckedUpdateWithoutReservasInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1103,6 +1142,7 @@ export type LivroCreateWithoutHistoricoInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
@@ -1117,6 +1157,7 @@ export type LivroUncheckedCreateWithoutHistoricoInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -1160,6 +1201,7 @@ export type LivroUpdateWithoutHistoricoInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
@@ -1176,6 +1218,7 @@ export type LivroUncheckedUpdateWithoutHistoricoInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1190,6 +1233,7 @@ export type LivroCreateManyAutorInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   categoriaId: number;
@@ -1202,6 +1246,7 @@ export type LivroUpdateWithoutAutorInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
@@ -1218,6 +1263,7 @@ export type LivroUncheckedUpdateWithoutAutorInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1234,6 +1280,7 @@ export type LivroUncheckedUpdateManyWithoutAutorInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1245,6 +1292,7 @@ export type LivroCreateManyCategoriaInput = {
   isbn?: string | null;
   editora?: string | null;
   status?: $Enums.StatusLivro;
+  etiqueta?: $Enums.Etiqueta;
   quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
@@ -1257,6 +1305,7 @@ export type LivroUpdateWithoutCategoriaInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
@@ -1273,6 +1322,7 @@ export type LivroUncheckedUpdateWithoutCategoriaInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1289,6 +1339,7 @@ export type LivroUncheckedUpdateManyWithoutCategoriaInput = {
   status?:
     | Prisma.EnumStatusLivroFieldUpdateOperationsInput
     | $Enums.StatusLivro;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
   quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -1366,6 +1417,7 @@ export type LivroSelect<
     isbn?: boolean;
     editora?: boolean;
     status?: boolean;
+    etiqueta?: boolean;
     quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
@@ -1390,6 +1442,7 @@ export type LivroSelectCreateManyAndReturn<
     isbn?: boolean;
     editora?: boolean;
     status?: boolean;
+    etiqueta?: boolean;
     quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
@@ -1410,6 +1463,7 @@ export type LivroSelectUpdateManyAndReturn<
     isbn?: boolean;
     editora?: boolean;
     status?: boolean;
+    etiqueta?: boolean;
     quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
@@ -1426,6 +1480,7 @@ export type LivroSelectScalar = {
   isbn?: boolean;
   editora?: boolean;
   status?: boolean;
+  etiqueta?: boolean;
   quantidade?: boolean;
   criadoEm?: boolean;
   autorId?: boolean;
@@ -1441,6 +1496,7 @@ export type LivroOmit<
   | 'isbn'
   | 'editora'
   | 'status'
+  | 'etiqueta'
   | 'quantidade'
   | 'criadoEm'
   | 'autorId'
@@ -1492,6 +1548,7 @@ export type $LivroPayload<
       isbn: string | null;
       editora: string | null;
       status: $Enums.StatusLivro;
+      etiqueta: $Enums.Etiqueta;
       quantidade: number;
       criadoEm: Date;
       autorId: number;
@@ -2154,6 +2211,7 @@ export interface LivroFieldRefs {
   readonly isbn: Prisma.FieldRef<'Livro', 'String'>;
   readonly editora: Prisma.FieldRef<'Livro', 'String'>;
   readonly status: Prisma.FieldRef<'Livro', 'StatusLivro'>;
+  readonly etiqueta: Prisma.FieldRef<'Livro', 'Etiqueta'>;
   readonly quantidade: Prisma.FieldRef<'Livro', 'Int'>;
   readonly criadoEm: Prisma.FieldRef<'Livro', 'DateTime'>;
   readonly autorId: Prisma.FieldRef<'Livro', 'Int'>;

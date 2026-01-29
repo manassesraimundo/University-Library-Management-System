@@ -1,15 +1,9 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { api } from "@/lib/api"
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Bell, 
   CheckCheck, 
@@ -18,27 +12,27 @@ import {
   BookOpen, 
   CalendarClock,
   MoreVertical
-} from "lucide-react"
-import { format } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { toast } from "sonner"
+} from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { INotificacao } from "@/types/interface";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 export default function NotificacoesPage() {
-  const [notificacoes, setNotificacoes] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filtro, setFiltro] = useState('todas')
+  const [notificacoes, setNotificacoes] = useState<INotificacao[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [filtro, setFiltro] = useState<string>('todas');
 
   const carregarNotificacoes = async () => {
     try {
       const res = await api.get('membros/notificacoes')
       const naoLidas = res.data.filter((notif: any) => !notif.lida)
 
-      if (filtro === 'nao-lidas') {
-        setNotificacoes(naoLidas)
-        return ;
-      }
-
-      setNotificacoes(res.data)
+      if (filtro === 'nao-lidas')
+        setNotificacoes(naoLidas) 
+      else
+        setNotificacoes(res.data)
     } catch (error) {
       toast.error("Erro ao carregar seu histórico.")
     } finally {
@@ -46,7 +40,7 @@ export default function NotificacoesPage() {
     }
   }
 
-  useEffect(() => { carregarNotificacoes() }, [filtro])
+  useEffect(() => { carregarNotificacoes() }, [notificacoes, filtro])
 
   const marcarLida = async (id: string) => {
     try {
@@ -90,6 +84,7 @@ export default function NotificacoesPage() {
             size="sm" 
             className="gap-2"
             onClick={marcarTodasComoLidas}
+            disabled={notificacoes.length === 0 ? true : false}
           >
             <CheckCheck size={16} /> Marcar tudo como lido
           </Button>
@@ -98,6 +93,7 @@ export default function NotificacoesPage() {
             size="sm" 
             className="gap-2"
             onClick={limparHistorico}
+            disabled={notificacoes.length === 0 ? true : false}
           >
             <Trash2 size={16} /> Limpar histórico
           </Button>
@@ -110,7 +106,7 @@ export default function NotificacoesPage() {
           <TabsTrigger value="nao-lidas">Não Lidas</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="todas" className="mt-6 space-y-4">
+        <TabsContent value={filtro} className="mt-6 space-y-4">
           {notificacoes.length === 0 && !loading ? (
              <Card className="border-dashed py-20 flex flex-col items-center opacity-50">
                 <Bell size={48} className="mb-4" />

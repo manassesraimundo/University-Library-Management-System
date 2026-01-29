@@ -1,22 +1,22 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { api } from "@/lib/api"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Sparkles, BookOpen, Loader2, ArrowRight } from "lucide-react"
-import { toast } from "sonner"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, BookOpen, Loader2, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 export default function RecomendacoesPage() {
-  const [textoBruto, setTextoBruto] = useState<string>("")
-  const [loading, setLoading] = useState(true)
+  const [textoBruto, setTextoBruto] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const carregarRecomendacoes = async () => {
     try {
-      const res = await api.get('/recomendacao')
-      setTextoBruto(res.data)
-      toast.success("")
+      const res = await api.get('/recomendacao');
+      setTextoBruto(res.data);
+      toast.success("");
     } catch (error: any) {
       toast.error("Não conseguimos carregar suas sugestões agora.")
     } finally {

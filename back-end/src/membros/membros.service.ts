@@ -43,11 +43,13 @@ export class MembrosService {
     }
   }
 
-  async getAllMembros(status: boolean): Promise<Omit<Membro, 'criadoEm'>[]> {
+  async getAllMembros(status: boolean): Promise<Membro[]> {
     try {
       const membros = await this.prisma.membro.findMany({
         where: { ativo: status },
-        include: { usuario: { select: { id: true, nome: true, email: true } } },
+        include: {
+          usuario: { select: { id: true, nome: true, email: true } },
+        },
         orderBy: { criadoEm: 'desc' },
       });
 
@@ -93,7 +95,7 @@ export class MembrosService {
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { id: membroId },
-        include: { usuario: { select: { nome: true } } },
+        include: { usuario: { select: { nome: true, email: true, id: true } } },
       });
 
       if (membro) return membro;
@@ -173,13 +175,12 @@ export class MembrosService {
   /*
     Obter dados do membro logado
   */
-
   async membroLogado(matricula: string) {
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { matricula },
         include: {
-          usuario: { select: { nome: true, email: true } },
+          usuario: { select: { nome: true, email: true, id: true } },
           historico: true,
           reservas: { where: { ativa: true } },
         },
@@ -203,6 +204,7 @@ export class MembrosService {
           reservas: {
             where: { ativa: true },
             include: { livro: true },
+            orderBy: { criadaEm: 'desc' },
           },
           usuario: {
             select: { nome: true, email: true, ativo: true, role: true },
@@ -210,6 +212,7 @@ export class MembrosService {
           emprestimos: {
             where: { dataDevolucao: null },
             include: { livro: true, multa: { where: { paga: false } } },
+            orderBy: { dataEmprestimo: 'desc' },
           },
           historico: true,
         },
@@ -264,6 +267,7 @@ export class MembrosService {
           data: { usuarioId: novoUsuario.id },
         });
       });
+
       return { message: 'Usuário vinculado ao membro com sucesso.' };
     } catch (error) {
       throw error instanceof HttpException
@@ -289,7 +293,6 @@ export class MembrosService {
       const updateData: any = {};
 
       if (body.nome) updateData.nome = body.nome;
-      // if (body.email) updateData.email = body.email;
 
       if (Object.keys(updateData).length === 0)
         throw new BadRequestException('Nenhum dado para atualizar.');

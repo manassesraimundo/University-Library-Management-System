@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,29 +17,30 @@ import { Calendar, Clock, Book, RotateCcw, AlertCircle } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 import { api } from "@/lib/api";
+import { IEmprestimo } from "@/types/interface"
 
 export default function MeusEmprestimosPage() {
-  const [emprestimos, setEmprestimos] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [emprestimos, setEmprestimos] = useState<IEmprestimo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const carregarEmprestimos = async () => {
     try {
-      const res = await api.get('/emprestimos/meus-emprestimos')
-      setEmprestimos(res.data)
+      const res = await api.get('/emprestimos/meus-emprestimos');
+      setEmprestimos(res.data);
     } catch (error) {
-      toast.error("Erro ao carregar seus empréstimos.")
+      toast.error("Erro ao carregar seus empréstimos.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  useEffect(() => { carregarEmprestimos() }, [])
+  useEffect(() => { carregarEmprestimos() }, []);
 
-  const ativos = emprestimos.filter((e: any) => !e.dataDevolucao)
-  const historico = emprestimos.filter((e: any) => e.dataDevolucao)
+  const ativos = emprestimos.filter((e) => !e.dataDevolucao);
+  const historico = emprestimos.filter((e) => e.dataDevolucao);
 
   const handleRenovar = async (id: string) => {
-    toast.message("Renovando empréstimo é na bibiloteca")
+    toast.message("Renovando empréstimo é na bibiloteca");
     return ;
   }
 
@@ -67,7 +68,7 @@ export default function MeusEmprestimosPage() {
             </Card>
           ) : (
             <div className="grid gap-4">
-              {ativos.map((emp: any) => {
+              {ativos.map((emp) => {
                 const isAtrasado = new Date(emp.dataPrevista) < new Date()
                 return (
                   <Card key={emp.id} className={isAtrasado ? "border-red-200 bg-red-50/30" : ""}>
@@ -75,34 +76,40 @@ export default function MeusEmprestimosPage() {
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div className="flex gap-4">
                           <div className="h-16 w-12 bg-slate-200 rounded flex items-center justify-center text-slate-400">
-                             <Book size={24} />
+                            <Book size={24} />
                           </div>
                           <div>
                             <h3 className="font-bold text-lg">{emp.livro?.titulo}</h3>
-                            <p className="text-sm text-muted-foreground">{emp.livro?.auto?.nome}</p>
+                            <p className="text-sm text-muted-foreground">{emp.livro?.autor?.nome}</p>
                             <div className="flex items-center gap-4 mt-2">
-                               <div className="flex items-center gap-1 text-xs">
-                                 <Calendar size={14} className="text-primary" />
-                                 <span>Retirado em: {format(new Date(emp.dataEmprestimo), 'dd/MM/yyyy')}</span>
-                               </div>
-                               <div className={`flex items-center gap-1 text-xs font-semibold ${isAtrasado ? 'text-red-600' : 'text-orange-600'}`}>
-                                 <Clock size={14} />
-                                 <span>Devolver até: {format(new Date(emp.dataPrevista), 'dd/MM/yyyy')}</span>
-                               </div>
-                               <div className={`flex items-center gap-1 text-xs font-semibold ${isAtrasado ? 'text-red-600' : 'text-green-600'}`}>
-                                 {/* <Clock size={14} /> */}
-                                 <span>
-                                    Dias restantes: {
-                                        (() => {
-                                          const hoje = new Date()
-                                          const dataPrevista = new Date(emp.dataPrevista)
-                                          const diffTime = dataPrevista.getTime() - hoje.getTime()
-                                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-                                          return isAtrasado ? 0 : diffDays
-                                        })()
+                              <div className="flex items-center gap-1 text-xs">
+                                <Calendar size={14} className="text-primary" />
+                                <span>Retirado em: {format(new Date(emp.dataEmprestimo), 'dd/MM/yyyy')}</span>
+                              </div>
+                              <div className={`flex items-center gap-1 text-xs font-semibold ${isAtrasado ? 'text-red-600' : 'text-orange-600'}`}>
+                                <Clock size={14} />
+                                <span>Devolver até: {format(new Date(emp.dataPrevista), 'dd/MM/yyyy')}</span>
+                              </div>
+                              <div className={`flex items-center gap-1 text-xs font-semibold ${isAtrasado ? 'text-red-600' : 'text-green-600'}`}>
+                                {/* <Clock size={14} /> */}
+                                <span>
+                                  Dias restantes: {(() => {
+                                    const agora = new Date();
+                                    const prevista = new Date(emp.dataPrevista);
+                                    const diffMs = prevista.getTime() - agora.getTime();
+                                    if (diffMs <= 0) return 0;
+                                    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                                    if (diffDays === 0) {
+                                      const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+                                      if (diffHours < 1) {
+                                        const diffMint = Math.ceil(diffMs / (1000 * 60));
+                                        return `${diffMint}min`;                                      }
+                                      return `${diffHours}h`;
                                     }
-                                 </span>
-                               </div>
+                                    return prevista.toLocaleDateString();
+                                  })()}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -113,11 +120,11 @@ export default function MeusEmprestimosPage() {
                               <AlertCircle size={12} /> Em Atraso
                             </Badge>
                           )}
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="gap-2 w-full md:w-auto"
-                            onClick={() => handleRenovar(emp.id)}
+                            onClick={() => handleRenovar(String(emp.id))}
                             disabled={isAtrasado} // Geralmente não permite renovar se já estiver atrasado
                           >
                             <RotateCcw size={14} /> Renovar Prazo

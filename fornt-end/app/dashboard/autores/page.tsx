@@ -22,19 +22,20 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, UserPlus, Trash2, Loader2 } from "lucide-react";
+import { Search, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { CreateAutorModal } from "@/components/create-autor-modal";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
+import { IAutor } from "@/types/interface";
 import { api } from "@/lib/api";
 
 export default function AutoresPage() {
   const router = useRouter()
 
-  const [autores, setAutores] = useState([])
-  const [busca, setBusca] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [autores, setAutores] = useState<IAutor[]>([])
+  const [busca, setBusca] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
 
   const carregarAutores = async () => {
     setLoading(true)
@@ -49,8 +50,8 @@ export default function AutoresPage() {
     } catch (error: any) {
       toast.error("Erro ao carregar autores")
 
-      if (error.response?.status === 401) router.push('/login')
-
+      if (error.response?.status === 401) 
+        router.push('/login')
     } finally {
       setLoading(false)
     }
@@ -124,7 +125,7 @@ export default function AutoresPage() {
                 </TableCell>
               </TableRow>
             ) : autores.length > 0 ? (
-              autores.map((autor: any, index: number) => (
+              autores.map((autor: IAutor, index: number) => (
                 <TableRow key={autor.id}>
                   <TableCell className="font-mono text-muted-foreground">#{index + 1}</TableCell>
                   <TableCell className="font-medium">{autor.nome}</TableCell>

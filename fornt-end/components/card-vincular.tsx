@@ -6,13 +6,20 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import { IMembro } from "@/types/interface";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 
-export function CardVincular({ dados, carregarPainelMembro, setVincular }: any) {
-    const [nome, setNome] = useState("")
-    const [email, setEmail] = useState("")
-    const [loading, setLoading] = useState(false)
+interface ICardVincularProps {
+    dados: IMembro | null;
+    carregarPainelMembro: () => void;
+    setVincular: () => void;
+
+}
+export function CardVincular({ dados, carregarPainelMembro, setVincular }: ICardVincularProps) {
+    const [nome, setNome] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleCriarUsuario = async () => {
         setLoading(true)

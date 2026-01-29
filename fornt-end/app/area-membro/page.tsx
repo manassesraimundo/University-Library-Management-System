@@ -26,10 +26,11 @@ import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { api } from "@/lib/api"
+import { IMembro } from "@/types/interface"
 
 export default function MembroDashboard() {
-  const [dados, setDados] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [dados, setDados] = useState<IMembro | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const carregarPainelMembro = async () => {
     try {
@@ -98,10 +99,10 @@ export default function MembroDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dados?.emprestimos?.map((emp: any) => (
+                { dados?.emprestimos && dados?.emprestimos.map((emp) => (
                   <TableRow key={emp.id}>
                     <TableCell className="font-medium">
-                      {emp.livro?.titulo.length > 10
+                      {emp.livro.titulo.length > 10
                         ? emp.livro?.titulo.substring(0, 16) + "..."
                         : emp.livro?.titulo
                       }
@@ -115,13 +116,25 @@ export default function MembroDashboard() {
                     {/* CALCULAR DIAS RESTANTES */}
                     <TableCell>
                       {(() => {
-                        const hoje = new Date();
+                        const agora = new Date();
                         const prevista = new Date(emp.dataPrevista);
-                        const diffTime = prevista.getTime() - hoje.getTime();
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        return diffDays >= 0 ? diffDays > 1 ? diffDays : 'Hoje' : 0;
+                        const diffMs = prevista.getTime() - agora.getTime();
+                        // Já passou do prazo
+                        if (diffMs <= 0) return 0;
+                        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                        // Se for hoje, calcular horas
+                        if (diffDays === 0) {
+                          const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+                          if (diffHours < 1) {
+                            const diffMint = Math.ceil(diffMs / (1000 * 60));
+                            return `${diffMint}min`;
+                          }
+                          return `${diffHours}h`;
+                        }
+                        return diffDays;
                       })()}
                     </TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>
@@ -136,7 +149,7 @@ export default function MembroDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {dados?.reservas?.map((res: any) => (
+              { dados?.reservas && dados?.reservas.map((res) => (
                 <div key={res.id} className="flex justify-between items-center p-3 border rounded-lg bg-white">
                   <div>
                     <p className="font-semibold text-sm">{res.livro?.titulo}</p>

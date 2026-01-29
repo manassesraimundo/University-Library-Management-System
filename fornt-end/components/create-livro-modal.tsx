@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 import { CreateLivroForm } from "./create-livro-form";
 
 export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void }) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

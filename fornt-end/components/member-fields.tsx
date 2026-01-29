@@ -2,7 +2,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 // Componente para Login de Membro
-export const MemberFields = ({ matricula, setMatricula }: any) => (
+interface IMemberFieldsProps {
+    matricula: string;
+    setMatricula: (e: string) => void;
+}
+export const MemberFields = ({ matricula, setMatricula }: IMemberFieldsProps) => (
     <div className="grid gap-2">
         <Label htmlFor="matricula">Matrícula</Label>
         <Input

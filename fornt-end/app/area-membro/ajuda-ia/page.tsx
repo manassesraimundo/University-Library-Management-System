@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react"
-import ReactMarkdown from 'react-markdown' // Importe o renderizador
+import ReactMarkdown from 'react-markdown'
 import { api } from "@/lib/api"
 import { useAuth } from "@/context/auth-context"
 import { Button } from "@/components/ui/button"
@@ -24,30 +24,30 @@ interface Message {
 }
 
 export default function ChatIAPage() {
-  const { membro } = useAuth()
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState("")
-  const [loading, setLoading] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const { membro } = useAuth();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const getMessages = async () => {
     try {
-      const res = await api.get('/chatbot/conversas')
-      setMessages(res.data)
+      const res = await api.get('/chatbot/conversas');
+      setMessages(res.data);
     } catch (error) {
-      toast.error("Não foi possível carregar o histórico de mensagens.")
+      toast.error("Não foi possível carregar o histórico de mensagens.");
     }
   }
 
   useEffect(() => {
-    getMessages()
+    getMessages();
     if (scrollRef.current) {
       const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
-  }, [messages, loading])
+  }, [messages, loading]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -123,7 +123,7 @@ export default function ChatIAPage() {
             </div>
           )}
 
-          {messages.map((msg, index) => (
+          {messages.slice(messages.length - 4, messages.length).map((msg, index) => (
             <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
               <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <Avatar className="h-9 w-9 border-2 border-white shadow-sm shrink-0">

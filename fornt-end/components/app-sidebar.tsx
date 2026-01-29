@@ -27,8 +27,8 @@ import { useAuth } from "@/context/auth-context";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { PerfilModal } from "./perfil-modal";
+import { Role } from "@/types/enums";
 import { toast } from "sonner";
-import { api } from "@/lib/api";
 
 const items = [
   { title: "Início", url: "/dashboard", icon: Home },
@@ -44,27 +44,23 @@ const items = [
 ]
 
 export function AppSidebar() {
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [modalPerfilAberto, setModalPerfilAberto] = useState(false)
+  const [modalPerfilAberto, setModalPerfilAberto] = useState<boolean>(false);
 
-  const { user, loading, setUser } = useAuth();
+  const { user, loading, setUser, logout } = useAuth();
 
   useEffect(() => {
-    if (loading) return ;
+    if (loading) return;
 
-    router.refresh()
-  }, [user, loading])
+    router.refresh();
+  }, [user, loading]);
 
   const handleLogout = async () => {
-    const res = await api.post('/auth/logout');
-
-    if (res.data.statusCode === 200) {
-      setUser(null);
-      toast.success(res.data.message)
-      router.replace('/login')
-    }
+    logout();
+    toast.success("Logout com sucesso.")
+    router.replace('/login');
   }
 
   const getInitials = (name: string) => {
@@ -86,13 +82,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                user?.role === 'BIBLIOTECARIO' && (item.title === 'Funcionarios' || item.title === 'Configurações') ? null
+                user?.role === Role.BIBLIOTECARIO && (item.title === 'Funcionarios' || item.title === 'Configurações') ? null
                   : (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton 
-                        asChild 
+                      <SidebarMenuButton
+                        asChild
                         variant={pathname === item.url ? 'marcado' : 'default'}
-                        >
+                      >
                         <Link href={item.url}>
                           <item.icon />
                           <span>{item.title}</span>

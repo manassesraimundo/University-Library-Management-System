@@ -17,9 +17,9 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 
 export function CreateCategoriaModal({ onSucesso }: { onSucesso: () => void }) {
-  const [nome, setNome] = useState("")
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [nome, setNome] = useState<string>("")
+  const [open, setOpen] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSalvar = async () => {
     if (!nome) return toast.error("O nome é obrigatório")

@@ -8,36 +8,33 @@ import {
     DialogTitle,
     DialogTrigger
 } from "./ui/dialog";
-import { 
-    CalendarClock, 
-    Calendar as CalendarIcon, 
-    Loader2 
+import {
+    CalendarClock,
+    Calendar as CalendarIcon,
+    Loader2
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { SearchableSelect } from "./create-livro-form";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { ILivro } from "@/types/interface";
+import AlertGlobal from "./alertGlobal";
 
 export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
-    const [livros, setLivros] = useState<any>([])
-    const [libvroSel, setLivroSel] = useState("")
-    const [isOpen, setIsOpen] = useState(false)
-    const [open, setOpen] = useState("")
-    const [matricula, setMatricula] = useState("")
-    const [tituloLivro, setTituloLivro] = useState("")
-    const [loading, setLoading] = useState(false)
+    const [livros, setLivros] = useState<ILivro[]>([])
+    const [libvroSel, setLivroSel] = useState<string>("")
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [open, setOpen] = useState<boolean>(false)
+    const [matricula, setMatricula] = useState<string>("")
+    const [tituloLivro, setTituloLivro] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
 
     const [timeZone, setTimeZone] = useState<string | undefined>(undefined)
 
-    // NOVO: Estado para a data da reserva
-    const [dataReserva, setDataReserva] = useState<Date | undefined>(new Date())
+    const [message, setMessage] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
 
     const carregarLivros = async () => {
         try {
@@ -49,12 +46,13 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
             const formatados2 = resReservados.data.map((l: any) => ({ id: l.id, nome: l.titulo }));
             setLivros([...formatados1, ...formatados2])
         } catch (error) {
-            console.log(error)
+            toast.error("")
         }
     }
 
     useEffect(() => {
-        if (isOpen) carregarLivros();
+        if (isOpen)
+            carregarLivros();
     }, [tituloLivro, isOpen])
 
     useEffect(() => {
@@ -66,13 +64,11 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
             return toast.error("Preencha todos os campos corretamente.");
         }
 
-        // alert("matricula: " + matricula + "\nlivroId: " + libvroSel + "\ndataReserva: " + dataReserva.toISOString())
         setLoading(true)
         try {
             await api.post('/reservas', {
                 livroId: libvroSel,
                 matricula: matricula
-                // paraData: dataReserva.toISOString()
             });
             toast.success("Reserva criada com sucesso!");
             onSucesso();
@@ -81,10 +77,20 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
             setMatricula("");
             setLivroSel("");
         } catch (error: any) {
-            toast.error(error.response?.data?.message || "Erro ao criar reserva");
+            setError(true)
+            setMessage(error.response?.data?.message || "Erro ao criar reserva")
         } finally {
             setLoading(false)
         }
+    }
+
+    if (error) {
+        return <AlertGlobal
+            isOpen={error}
+            setIsOpen={() => setError(false)}
+            message={message}
+            titulo="Error ao Reservar"
+        />
     }
 
     return (
@@ -107,37 +113,9 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
                             setOpen={setOpen}
                             placeholder="Pesquisar livro indisponível..."
                             value={tituloLivro}
-                            onChangeCapture={setTituloLivro}
+                            onChangeCapture={() => setTituloLivro}
                         />
                     </div>
-
-                    {/* SEÇÃO DO CALENDÁRIO */}
-                    {/* <div className="grid gap-2">
-                        <Label>Data Prevista para Retirada</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                        "w-full justify-start text-left font-normal",
-                                        !dataReserva && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {dataReserva ? format(dataReserva, "PPP", { locale: ptBR }) : <span>Selecione uma data</span>}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    timeZone={timeZone}
-                                    mode="single"
-                                    selected={dataReserva}
-                                    onSelect={setDataReserva}
-                                    disabled={(date) => date < new Date()} // Bloqueia datas passadas
-                                />
-                            </PopoverContent>
-                        </Popover>
-                    </div> */}
 
                     <div className="grid gap-2">
                         <Label>Matrícula do Membro</Label>

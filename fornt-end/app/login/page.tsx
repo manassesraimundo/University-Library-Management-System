@@ -13,19 +13,21 @@ import {
 } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context"
 import { api } from "@/lib/api"
+import { Role } from "@/types/enums"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
 export default function LoginPage() {
     const router = useRouter();
-    const [isMembro, setIsMembro] = useState(false);
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [matricula, setMatricula] = useState('');
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [senha, setSenha] = useState<string>('');
+    const [matricula, setMatricula] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    
+    const [isMembro, setIsMembro] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { user, loading, setUser, setMembro } = useAuth();
 
@@ -59,12 +61,11 @@ export default function LoginPage() {
                 setUser(data);
             }
          
-            if (response.data.role !== 'MEMBRO')
+            if (response.data.role !== Role.MEMBRO)
                 router.replace('/dashboard');
             else
                 router.replace('/area-membro')
         } catch (err: any) {
-            console.log(err)
             const message = err.response?.data?.message || "Erro ao realizar login. Tente novamente.";
             setError(message);
         } finally {

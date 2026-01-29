@@ -35,11 +35,12 @@ import { CreateReservaModal } from "@/components/create-reserva-modal";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { IReserva } from "@/types/interface";
 
 export default function ReservasPage() {
-    const [reservas, setReservas] = useState([])
-    const [busca, setBusca] = useState("")
-    const [statusReserva, setStatusReseva] = useState("true");
+    const [reservas, setReservas] = useState<IReserva[]>([]);
+    const [busca, setBusca] = useState<string>("")
+    const [statusReserva, setStatusReseva] = useState<string>("true");
 
     const carregarReservas = async () => {
         try {
@@ -149,21 +150,23 @@ export default function ReservasPage() {
                             <TableHead>Nome</TableHead>
                             <TableHead>Data da Reserva</TableHead>
                             <TableHead>Status</TableHead>
+                            { statusReserva === 'true' && <TableHead>Posição</TableHead> }
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {reservas.length !== 0 ? reservas.map((reserva: any) => (
+                        {reservas.length !== 0 ? reservas.map((reserva: IReserva) => (
                             <TableRow key={reserva.id}>
                                 <TableCell className="font-medium">{reserva.livro?.titulo}</TableCell>
-                                <TableCell>{reserva.membro.matricula}</TableCell>
-                                <TableCell>{reserva.membro.usuario?.nome}</TableCell>
+                                <TableCell>{reserva.membro?.matricula}</TableCell>
+                                <TableCell>{reserva.membro?.usuario?.nome}</TableCell>
                                 <TableCell>{new Date(reserva.criadaEm).toLocaleDateString()}</TableCell>
                                 <TableCell>
                                     <Badge variant={reserva.ativa === true ? 'success' : 'default'}>
                                         {reserva.ativa === true ? 'Ativo' : 'Não ativo'}
                                     </Badge>
                                 </TableCell>
+                                { statusReserva === 'true' && <TableCell>{reserva.posicao}</TableCell>}
                                 <TableCell className="text-right">
                                     {reserva.ativa == true && (
                                         <AlertDialog>

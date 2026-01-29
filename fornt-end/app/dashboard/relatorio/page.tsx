@@ -20,15 +20,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, Trophy } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import BotaoImprimirRelatorio from "@/components/botao-imprimir-relatorio";
+import { IEmprestimo, IReserva } from "@/types/interface";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import BotaoImprimirRelatorio from "@/components/botao-imprimir-relatorio";
 
 export default function RelatoriosPage() {
-  const [maisEmprestados, setMaisEmprestados] = useState<any>([])
-  const [reservasPendentes, setReservasPendentes] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [maisEmprestados, setMaisEmprestados] = useState<IEmprestimo[] | any>([])
+  const [reservasPendentes, setReservasPendentes] = useState<IReserva[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   const carregarDados = async () => {
     try {
@@ -137,8 +137,11 @@ export default function RelatoriosPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {reservasPendentes && reservasPendentes.slice(0, 5).map((reserva: any, index: number) => (
-                <div key={index} className="flex items-center gap-4 p-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+              {reservasPendentes && reservasPendentes.slice(0, 5).map((reserva: IReserva, index: number) => (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-4 p-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100"
+                >
                   <div className="bg-primary/10 p-2 rounded-full text-primary">
                     <BookOpen size={16} />
                   </div>

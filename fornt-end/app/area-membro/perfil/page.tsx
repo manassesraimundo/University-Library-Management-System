@@ -1,46 +1,47 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { api } from "@/lib/api"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { format } from "date-fns"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
     User,
     Mail,
     IdCard,
-    Camera,
     Save,
     Trophy,
     Calendar
-} from "lucide-react"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { IMembro } from "@/types/interface";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 export default function PerfilMembroPage() {
     const router = useRouter();
-    const [membro, setMembro] = useState<any>(null)
-    const [isLoading, setIsLoading] = useState(false)
-    const [nome, setNome] = useState("")
-    const [email, setEmail] = useState("")
+
+    const [membro, setMembro] = useState<IMembro | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [nome, setNome] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
 
     const getMembro = async () => {
         try {
-            const response = await api.get('/membros/perfil')
-            setMembro(response.data)
-            setEmail(response.data.usuario?.email || "")
-            setNome(response.data.usuario?.nome || "")
+            const response = await api.get('/membros/perfil');
+            setMembro(response.data);
+            setEmail(response.data.usuario?.email || "");
+            setNome(response.data.usuario?.nome || "");
         } catch (error) {
-            console.error('Erro ao buscar dados do membro:', error)
+            console.error('Erro ao buscar dados do membro:', error);
         }
     }
 
     const handleUpdatePerfil = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
+        e.preventDefault();
+        setIsLoading(true);
         try {
             if (membro?.usuario) {
                 console.log(membro.usuario);
@@ -134,11 +135,11 @@ export default function PerfilMembroPage() {
                                         <Label htmlFor="nome">Nome Completo</Label>
                                         <div className="relative">
                                             <User className="absolute left-3 top-3 text-muted-foreground" size={16} />
-                                            <Input 
-                                                id="nome" 
-                                                className="pl-10" 
-                                                value={nome} 
-                                                onChange={(e) => setNome(e.target.value)} 
+                                            <Input
+                                                id="nome"
+                                                className="pl-10"
+                                                value={nome}
+                                                onChange={(e) => setNome(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -146,13 +147,13 @@ export default function PerfilMembroPage() {
                                         <Label htmlFor="email">E-mail</Label>
                                         <div className="relative">
                                             <Mail className="absolute left-3 top-3 text-muted-foreground" size={16} />
-                                            <Input 
-                                                id="email" 
-                                                type="email" 
-                                                className="pl-10" 
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                className="pl-10"
                                                 disabled
-                                                value={email} 
-                                                onChange={(e) => setEmail(e.target.value)} 
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
                                             />
                                         </div>
                                     </div>

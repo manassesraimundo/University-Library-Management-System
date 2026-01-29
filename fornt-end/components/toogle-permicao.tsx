@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ShieldCheck, UserCog, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Role } from "@/types/enums";
 import { toast } from "sonner";
 import { api } from "@/lib/api"
 
@@ -22,9 +23,9 @@ interface TooglePermicaoProps {
   onSucesso: () => void;
 }
 export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [role, setRole] = useState(funcionario?.role || "BIBLIOTECARIO")
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [role, setRole] = useState<string>(funcionario?.role || Role.BIBLIOTECARIO);
 
   const handleUpdateRole = async () => {
     setLoading(true)
@@ -71,7 +72,7 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
               className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${role === "ADMIN" ? "border-primary bg-primary/5" : "hover:bg-slate-50"
                 }`}
             >
-              <RadioGroupItem value="ADMIN" id="admin" className="mt-1" />
+              <RadioGroupItem value={Role.ADMIN} id="admin" className="mt-1" />
               <div className="grid gap-1">
                 <span className="font-bold">Administrador</span>
                 <span className="text-xs text-muted-foreground leading-relaxed">
@@ -86,7 +87,7 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
               className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${role === "BIBLIOTECARIO" ? "border-primary bg-primary/5" : "hover:bg-slate-50"
                 }`}
             >
-              <RadioGroupItem value="BIBLIOTECARIO" id="biblio" className="mt-1" />
+              <RadioGroupItem value={Role.BIBLIOTECARIO} id="biblio" className="mt-1" />
               <div className="grid gap-1">
                 <span className="font-bold">Bibliotecário</span>
                 <span className="text-xs text-muted-foreground leading-relaxed">

@@ -27,12 +27,12 @@ interface IAuthContext {
   logout: () => Promise<void>
 }
 
-const AuthContext = createContext<IAuthContext | null>(null)
+const AuthContext = createContext<IAuthContext | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<IUserAuth | null>(null)
-  const [membro, setMembro] = useState<IMembroAuth | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<IUserAuth | null>(null);
+  const [membro, setMembro] = useState<IMembroAuth | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setLoading(true)

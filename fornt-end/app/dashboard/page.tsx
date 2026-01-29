@@ -26,9 +26,9 @@ export default function DashboardPage() {
       const totalAtraso = await api.get('/emprestimos/cont-emprestimos-atraso')
       setTotalEmprestimosAtraso(totalAtraso.data.totalEmprestimos)
 
-      const emprestimos = await api.get('/emprestimos/todos')
+      const emprestimos = await api.get('/emprestimos/todos/entreges')
 
-      const entreges = emprestimos.data.filter((emp: any) => emp.dataDevolucao !== null)
+      const entreges = emprestimos.data;
       setEmprestimos(entreges)
     } catch (error) {
       console.error("Erro ao carregar dados do dashboard:", error);
@@ -39,6 +39,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 p-6 space-y-6 bg-slate-50/50 min-h-screen">
+      {/* <AlertGlobal /> */}
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <SidebarTrigger />

@@ -111,6 +111,7 @@ export const LivroScalarFieldEnum = {
   isbn: 'isbn',
   editora: 'editora',
   status: 'status',
+  etiqueta: 'etiqueta',
   quantidade: 'quantidade',
   criadoEm: 'criadoEm',
   autorId: 'autorId',
@@ -142,6 +143,7 @@ export const EmprestimoScalarFieldEnum = {
   dataPrevista: 'dataPrevista',
   dataDevolucao: 'dataDevolucao',
   renovacoes: 'renovacoes',
+  quantidadeEmprestimo: 'quantidadeEmprestimo',
   membroId: 'membroId',
   livroId: 'livroId',
 } as const;
@@ -155,6 +157,7 @@ export const ReservaScalarFieldEnum = {
   posicao: 'posicao',
   paraData: 'paraData',
   criadaEm: 'criadaEm',
+  quantidadeReserva: 'quantidadeReserva',
   membroId: 'membroId',
   livroId: 'livroId',
 } as const;

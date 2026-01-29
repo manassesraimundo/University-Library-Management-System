@@ -17,8 +17,8 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 
 export function CreateAutorModal({ onSucesso }: { onSucesso: () => void }) {
-  const [nome, setNome] = useState("")
-  const [open, setOpen] = useState(false)
+  const [nome, setNome] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSalvar = async () => {
     try {
@@ -28,8 +28,8 @@ export function CreateAutorModal({ onSucesso }: { onSucesso: () => void }) {
       onSucesso()
       setOpen(false)
       setNome('')
-    } catch (error) {
-      toast.error("Erro ao cadastrar")
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Erro ao cadastrar")
     }
   }
 

@@ -47,6 +47,7 @@ export class UsuariosService {
       const usuarios = await this.prisma.usuario.findMany({
         where: { ativo: status },
         orderBy: { nome: 'asc' },
+        omit: { senha: true },
       });
 
       return usuarios.filter((usuario) => usuario.role !== Role.MEMBRO);
@@ -117,6 +118,7 @@ export class UsuariosService {
             contains: nome,
           },
         },
+        omit: { senha: true },
         orderBy: { nome: 'asc' },
       });
 
@@ -134,6 +136,7 @@ export class UsuariosService {
         where: {
           email: email,
         },
+        omit: { senha: true },
       });
 
       if (!usuarios) {

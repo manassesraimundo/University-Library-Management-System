@@ -71,11 +71,11 @@ export class ChatbotService {
       const listaEmprestimos =
         emprestimos.length > 0
           ? emprestimos
-            .map(
-              (e) =>
-                `- ${e.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
-            )
-            .join('\n')
+              .map(
+                (e) =>
+                  `- ${e.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
+              )
+              .join('\n')
           : 'O membro não possui livros emprestados no momento.';
 
       const systemPrompt = `Você é um assistente virtual da Biblioteca Universitária. 
@@ -116,8 +116,8 @@ IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro na comunicação com o assistente inteligente.',
-        );
+            'Erro na comunicação com o assistente inteligente.',
+          );
     }
   }
 
@@ -138,8 +138,8 @@ IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro ao buscar o histórico de conversas.',
-        );
+            'Erro ao buscar o histórico de conversas.',
+          );
     }
   }
 
@@ -154,8 +154,8 @@ IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro ao deletar o Histórico de conversa.',
-        );
+            'Erro ao deletar o Histórico de conversa.',
+          );
     }
   }
 }

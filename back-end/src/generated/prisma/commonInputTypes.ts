@@ -222,6 +222,13 @@ export type EnumStatusLivroFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel> | $Enums.StatusLivro;
 };
 
+export type EnumEtiquetaFilter<$PrismaModel = never> = {
+  equals?: $Enums.Etiqueta | Prisma.EnumEtiquetaFieldRefInput<$PrismaModel>;
+  in?: $Enums.Etiqueta[];
+  notIn?: $Enums.Etiqueta[];
+  not?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel> | $Enums.Etiqueta;
+};
+
 export type EnumStatusLivroWithAggregatesFilter<$PrismaModel = never> = {
   equals?:
     | $Enums.StatusLivro
@@ -234,6 +241,18 @@ export type EnumStatusLivroWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>;
   _min?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel>;
   _max?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel>;
+};
+
+export type EnumEtiquetaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Etiqueta | Prisma.EnumEtiquetaFieldRefInput<$PrismaModel>;
+  in?: $Enums.Etiqueta[];
+  notIn?: $Enums.Etiqueta[];
+  not?:
+    | Prisma.NestedEnumEtiquetaWithAggregatesFilter<$PrismaModel>
+    | $Enums.Etiqueta;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel>;
 };
 
 export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -523,6 +542,13 @@ export type NestedEnumStatusLivroFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel> | $Enums.StatusLivro;
 };
 
+export type NestedEnumEtiquetaFilter<$PrismaModel = never> = {
+  equals?: $Enums.Etiqueta | Prisma.EnumEtiquetaFieldRefInput<$PrismaModel>;
+  in?: $Enums.Etiqueta[];
+  notIn?: $Enums.Etiqueta[];
+  not?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel> | $Enums.Etiqueta;
+};
+
 export type NestedEnumStatusLivroWithAggregatesFilter<$PrismaModel = never> = {
   equals?:
     | $Enums.StatusLivro
@@ -535,6 +561,18 @@ export type NestedEnumStatusLivroWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>;
   _min?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel>;
   _max?: Prisma.NestedEnumStatusLivroFilter<$PrismaModel>;
+};
+
+export type NestedEnumEtiquetaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Etiqueta | Prisma.EnumEtiquetaFieldRefInput<$PrismaModel>;
+  in?: $Enums.Etiqueta[];
+  notIn?: $Enums.Etiqueta[];
+  not?:
+    | Prisma.NestedEnumEtiquetaWithAggregatesFilter<$PrismaModel>
+    | $Enums.Etiqueta;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumEtiquetaFilter<$PrismaModel>;
 };
 
 export type NestedDateTimeNullableFilter<$PrismaModel = never> = {

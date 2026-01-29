@@ -27,13 +27,15 @@ import { TooglePermicao } from "@/components/toogle-permicao";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { Switch } from "@/components/ui/switch";
+import { IUsuario } from "@/types/interface";
+import { Role } from "@/types/enums";
 
 export default function FuncionariosPage() {
-  const [funcionarios, setFuncionarios] = useState([])
-  const [busca, setBusca] = useState("")
-  const [loading, setLoading] = useState(true)
+  const [funcionarios, setFuncionarios] = useState<IUsuario[]>([]);
+  const [busca, setBusca] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [filtroStatus, setFiltroStatus] = useState(true);
+  const [filtroStatus, setFiltroStatus] = useState<boolean>(true);
 
   const carregarFuncionarios = async () => {
     try {
@@ -132,7 +134,7 @@ export default function FuncionariosPage() {
                 </TableCell>
               </TableRow>
             ) : (
-              funcionarios.map((func: any) => (
+              funcionarios.map((func: IUsuario) => (
                 <TableRow key={func.id}>
                   <TableCell className="font-medium">
                     <div className="flex flex-col">
@@ -143,7 +145,7 @@ export default function FuncionariosPage() {
                   <TableCell>{func.email}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {func.role === 'ADMIN' && (<Shield size={14} className="text-primary" />)}
+                      {func.role === Role.ADMIN && (<Shield size={14} className="text-primary" />)}
                       <span className="text-sm">{func.role}</span>
                     </div>
                   </TableCell>
@@ -176,7 +178,7 @@ export default function FuncionariosPage() {
                         <DropdownMenuItem
                           className={`flex items-center gap-2 cursor-pointer font-medium ${func.ativo ? 'text-red-600 focus:text-red-600 focus:bg-red-50' : 'text-green-600 focus:text-green-600 focus:bg-green-50'
                             }`}
-                          onClick={() => handleToggleStatus(func.id, func.ativo)}
+                          onClick={() => handleToggleStatus(String(func.id), func.ativo)}
                         >
                           {func.ativo ? (
                             <>

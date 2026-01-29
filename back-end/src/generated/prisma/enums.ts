@@ -24,6 +24,14 @@ export const StatusLivro = {
 
 export type StatusLivro = (typeof StatusLivro)[keyof typeof StatusLivro];
 
+export const Etiqueta = {
+  BRANCO: 'BRANCO',
+  AMARELO: 'AMARELO',
+  VERMELHO: 'VERMELHO',
+} as const;
+
+export type Etiqueta = (typeof Etiqueta)[keyof typeof Etiqueta];
+
 export const TipoMembro = {
   ESTUDANTE: 'ESTUDANTE',
   PROFESSOR: 'PROFESSOR',

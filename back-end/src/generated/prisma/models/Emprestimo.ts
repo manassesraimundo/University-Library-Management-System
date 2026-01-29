@@ -29,6 +29,7 @@ export type AggregateEmprestimo = {
 export type EmprestimoAvgAggregateOutputType = {
   id: number | null;
   renovacoes: number | null;
+  quantidadeEmprestimo: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -36,6 +37,7 @@ export type EmprestimoAvgAggregateOutputType = {
 export type EmprestimoSumAggregateOutputType = {
   id: number | null;
   renovacoes: number | null;
+  quantidadeEmprestimo: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -46,6 +48,7 @@ export type EmprestimoMinAggregateOutputType = {
   dataPrevista: Date | null;
   dataDevolucao: Date | null;
   renovacoes: number | null;
+  quantidadeEmprestimo: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -56,6 +59,7 @@ export type EmprestimoMaxAggregateOutputType = {
   dataPrevista: Date | null;
   dataDevolucao: Date | null;
   renovacoes: number | null;
+  quantidadeEmprestimo: number | null;
   membroId: number | null;
   livroId: number | null;
 };
@@ -66,6 +70,7 @@ export type EmprestimoCountAggregateOutputType = {
   dataPrevista: number;
   dataDevolucao: number;
   renovacoes: number;
+  quantidadeEmprestimo: number;
   membroId: number;
   livroId: number;
   _all: number;
@@ -74,6 +79,7 @@ export type EmprestimoCountAggregateOutputType = {
 export type EmprestimoAvgAggregateInputType = {
   id?: true;
   renovacoes?: true;
+  quantidadeEmprestimo?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -81,6 +87,7 @@ export type EmprestimoAvgAggregateInputType = {
 export type EmprestimoSumAggregateInputType = {
   id?: true;
   renovacoes?: true;
+  quantidadeEmprestimo?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -91,6 +98,7 @@ export type EmprestimoMinAggregateInputType = {
   dataPrevista?: true;
   dataDevolucao?: true;
   renovacoes?: true;
+  quantidadeEmprestimo?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -101,6 +109,7 @@ export type EmprestimoMaxAggregateInputType = {
   dataPrevista?: true;
   dataDevolucao?: true;
   renovacoes?: true;
+  quantidadeEmprestimo?: true;
   membroId?: true;
   livroId?: true;
 };
@@ -111,6 +120,7 @@ export type EmprestimoCountAggregateInputType = {
   dataPrevista?: true;
   dataDevolucao?: true;
   renovacoes?: true;
+  quantidadeEmprestimo?: true;
   membroId?: true;
   livroId?: true;
   _all?: true;
@@ -215,6 +225,7 @@ export type EmprestimoGroupByOutputType = {
   dataPrevista: Date;
   dataDevolucao: Date | null;
   renovacoes: number;
+  quantidadeEmprestimo: number;
   membroId: number;
   livroId: number;
   _count: EmprestimoCountAggregateOutputType | null;
@@ -250,6 +261,7 @@ export type EmprestimoWhereInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
+  quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntFilter<'Emprestimo'> | number;
   livroId?: Prisma.IntFilter<'Emprestimo'> | number;
   membro?: Prisma.XOR<
@@ -269,6 +281,7 @@ export type EmprestimoOrderByWithRelationInput = {
   dataPrevista?: Prisma.SortOrder;
   dataDevolucao?: Prisma.SortOrderInput | Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
   membro?: Prisma.MembroOrderByWithRelationInput;
@@ -290,6 +303,7 @@ export type EmprestimoWhereUniqueInput = Prisma.AtLeast<
       | string
       | null;
     renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
+    quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
     membroId?: Prisma.IntFilter<'Emprestimo'> | number;
     livroId?: Prisma.IntFilter<'Emprestimo'> | number;
     membro?: Prisma.XOR<
@@ -314,6 +328,7 @@ export type EmprestimoOrderByWithAggregationInput = {
   dataPrevista?: Prisma.SortOrder;
   dataDevolucao?: Prisma.SortOrderInput | Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
   _count?: Prisma.EmprestimoCountOrderByAggregateInput;
@@ -346,6 +361,7 @@ export type EmprestimoScalarWhereWithAggregatesInput = {
     | string
     | null;
   renovacoes?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
+  quantidadeEmprestimo?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
   livroId?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
 };
@@ -355,6 +371,7 @@ export type EmprestimoCreateInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membro: Prisma.MembroCreateNestedOneWithoutEmprestimosInput;
   livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
@@ -366,6 +383,7 @@ export type EmprestimoUncheckedCreateInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membroId: number;
   livroId: number;
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
@@ -380,6 +398,7 @@ export type EmprestimoUpdateInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutEmprestimosNestedInput;
   livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
@@ -395,6 +414,7 @@ export type EmprestimoUncheckedUpdateInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
@@ -406,6 +426,7 @@ export type EmprestimoCreateManyInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membroId: number;
   livroId: number;
 };
@@ -419,6 +440,7 @@ export type EmprestimoUpdateManyMutationInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type EmprestimoUncheckedUpdateManyInput = {
@@ -431,6 +453,7 @@ export type EmprestimoUncheckedUpdateManyInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -451,6 +474,7 @@ export type EmprestimoCountOrderByAggregateInput = {
   dataPrevista?: Prisma.SortOrder;
   dataDevolucao?: Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -458,6 +482,7 @@ export type EmprestimoCountOrderByAggregateInput = {
 export type EmprestimoAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -468,6 +493,7 @@ export type EmprestimoMaxOrderByAggregateInput = {
   dataPrevista?: Prisma.SortOrder;
   dataDevolucao?: Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -478,6 +504,7 @@ export type EmprestimoMinOrderByAggregateInput = {
   dataPrevista?: Prisma.SortOrder;
   dataDevolucao?: Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -485,6 +512,7 @@ export type EmprestimoMinOrderByAggregateInput = {
 export type EmprestimoSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   renovacoes?: Prisma.SortOrder;
+  quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
 };
@@ -741,6 +769,7 @@ export type EmprestimoCreateWithoutMembroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
 };
@@ -751,6 +780,7 @@ export type EmprestimoUncheckedCreateWithoutMembroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   livroId: number;
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
 };
@@ -810,6 +840,7 @@ export type EmprestimoScalarWhereInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
+  quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntFilter<'Emprestimo'> | number;
   livroId?: Prisma.IntFilter<'Emprestimo'> | number;
 };
@@ -819,6 +850,7 @@ export type EmprestimoCreateWithoutLivroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membro: Prisma.MembroCreateNestedOneWithoutEmprestimosInput;
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
 };
@@ -829,6 +861,7 @@ export type EmprestimoUncheckedCreateWithoutLivroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membroId: number;
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
 };
@@ -880,6 +913,7 @@ export type EmprestimoCreateWithoutMultaInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membro: Prisma.MembroCreateNestedOneWithoutEmprestimosInput;
   livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
 };
@@ -890,6 +924,7 @@ export type EmprestimoUncheckedCreateWithoutMultaInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membroId: number;
   livroId: number;
 };
@@ -931,6 +966,7 @@ export type EmprestimoUpdateWithoutMultaInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutEmprestimosNestedInput;
   livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
 };
@@ -945,6 +981,7 @@ export type EmprestimoUncheckedUpdateWithoutMultaInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -955,6 +992,7 @@ export type EmprestimoCreateManyMembroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   livroId: number;
 };
 
@@ -967,6 +1005,7 @@ export type EmprestimoUpdateWithoutMembroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
 };
@@ -981,6 +1020,7 @@ export type EmprestimoUncheckedUpdateWithoutMembroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
 };
@@ -995,6 +1035,7 @@ export type EmprestimoUncheckedUpdateManyWithoutMembroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -1004,6 +1045,7 @@ export type EmprestimoCreateManyLivroInput = {
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
+  quantidadeEmprestimo?: number;
   membroId: number;
 };
 
@@ -1016,6 +1058,7 @@ export type EmprestimoUpdateWithoutLivroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutEmprestimosNestedInput;
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
 };
@@ -1030,6 +1073,7 @@ export type EmprestimoUncheckedUpdateWithoutLivroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
 };
@@ -1044,6 +1088,7 @@ export type EmprestimoUncheckedUpdateManyWithoutLivroInput = {
     | string
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
+  quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
@@ -1057,6 +1102,7 @@ export type EmprestimoSelect<
     dataPrevista?: boolean;
     dataDevolucao?: boolean;
     renovacoes?: boolean;
+    quantidadeEmprestimo?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -1076,6 +1122,7 @@ export type EmprestimoSelectCreateManyAndReturn<
     dataPrevista?: boolean;
     dataDevolucao?: boolean;
     renovacoes?: boolean;
+    quantidadeEmprestimo?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -1094,6 +1141,7 @@ export type EmprestimoSelectUpdateManyAndReturn<
     dataPrevista?: boolean;
     dataDevolucao?: boolean;
     renovacoes?: boolean;
+    quantidadeEmprestimo?: boolean;
     membroId?: boolean;
     livroId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
@@ -1108,6 +1156,7 @@ export type EmprestimoSelectScalar = {
   dataPrevista?: boolean;
   dataDevolucao?: boolean;
   renovacoes?: boolean;
+  quantidadeEmprestimo?: boolean;
   membroId?: boolean;
   livroId?: boolean;
 };
@@ -1121,6 +1170,7 @@ export type EmprestimoOmit<
   | 'dataPrevista'
   | 'dataDevolucao'
   | 'renovacoes'
+  | 'quantidadeEmprestimo'
   | 'membroId'
   | 'livroId',
   ExtArgs['result']['emprestimo']
@@ -1165,6 +1215,7 @@ export type $EmprestimoPayload<
       dataPrevista: Date;
       dataDevolucao: Date | null;
       renovacoes: number;
+      quantidadeEmprestimo: number;
       membroId: number;
       livroId: number;
     },
@@ -1805,6 +1856,7 @@ export interface EmprestimoFieldRefs {
   readonly dataPrevista: Prisma.FieldRef<'Emprestimo', 'DateTime'>;
   readonly dataDevolucao: Prisma.FieldRef<'Emprestimo', 'DateTime'>;
   readonly renovacoes: Prisma.FieldRef<'Emprestimo', 'Int'>;
+  readonly quantidadeEmprestimo: Prisma.FieldRef<'Emprestimo', 'Int'>;
   readonly membroId: Prisma.FieldRef<'Emprestimo', 'Int'>;
   readonly livroId: Prisma.FieldRef<'Emprestimo', 'Int'>;
 }

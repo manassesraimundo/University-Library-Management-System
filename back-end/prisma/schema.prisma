@@ -26,6 +26,12 @@ enum StatusLivro {
   RESERVADO
 }
 
+enum Etiqueta {
+  BRANCO
+  AMARELO
+  VERMELHO
+}
+
 enum TipoMembro {
   ESTUDANTE
   PROFESSOR
@@ -66,6 +72,7 @@ model Livro {
   isbn       String?     @unique
   editora    String?
   status     StatusLivro @default(DISPONIVEL)
+  etiqueta   Etiqueta    @default(BRANCO)
   quantidade Int
   criadoEm   DateTime    @default(now())
 
@@ -95,11 +102,12 @@ model Categoria {
 }
 
 model Emprestimo {
-  id             Int       @id @default(autoincrement())
-  dataEmprestimo DateTime  @default(now())
-  dataPrevista   DateTime
-  dataDevolucao  DateTime?
-  renovacoes     Int       @default(0)
+  id                   Int       @id @default(autoincrement())
+  dataEmprestimo       DateTime  @default(now())
+  dataPrevista         DateTime
+  dataDevolucao        DateTime?
+  renovacoes           Int       @default(0)
+  quantidadeEmprestimo Int       @default(0)
 
   membroId Int
   livroId  Int
@@ -111,11 +119,12 @@ model Emprestimo {
 }
 
 model Reserva {
-  id       Int      @id @default(autoincrement())
-  ativa    Boolean  @default(true)
-  posicao  Int
-  paraData DateTime?
-  criadaEm DateTime @default(now())
+  id                Int       @id @default(autoincrement())
+  ativa             Boolean   @default(true)
+  posicao           Int
+  paraData          DateTime?
+  criadaEm          DateTime  @default(now())
+  quantidadeReserva Int       @default(0)
 
   membroId Int
   livroId  Int
@@ -156,10 +165,10 @@ model ChatMensagem {
 }
 
 model Notificacao {
-  id        Int      @id @default(autoincrement())
-  mensagem  String
-  lida      Boolean  @default(false)
-  criadaEm  DateTime @default(now())
+  id       Int      @id @default(autoincrement())
+  mensagem String
+  lida     Boolean  @default(false)
+  criadaEm DateTime @default(now())
 
   membroId Int
   membro   Membro @relation(fields: [membroId], references: [id])

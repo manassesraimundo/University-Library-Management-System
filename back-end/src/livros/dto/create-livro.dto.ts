@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { StatusLivro } from 'src/generated/prisma/enums';
+import { Etiqueta, StatusLivro } from 'src/generated/prisma/enums';
 
 export class CreateLivroDto {
   @IsString({ message: 'O título do livro deve ser uma string' })
@@ -28,6 +28,10 @@ export class CreateLivroDto {
   @IsOptional()
   @IsEnum(StatusLivro, { message: 'Status inválido' })
   status: StatusLivro;
+
+  @IsOptional()
+  @IsEnum(Etiqueta, { message: 'Etiqueta inválido.' })
+  etiqueta: Etiqueta;
 
   @IsInt()
   @IsNotEmpty()

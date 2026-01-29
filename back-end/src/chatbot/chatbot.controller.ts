@@ -42,9 +42,7 @@ export class ChatbotController {
 
   @Delete('historico/limpar')
   @HttpCode(HttpStatus.OK)
-  async clearChat(
-    @Req() resques: Request,
-  ): Promise<{ message: string }> {
+  async clearChat(@Req() resques: Request): Promise<{ message: string }> {
     const id = resques['user'].sub;
     const response = await this.chatbotService.clearChat(id);
 

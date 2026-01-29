@@ -6,13 +6,13 @@ import {
     CardTitle 
 } from "./ui/card";
 
-interface CardResumeProps {
+interface ICardResumeProps {
   title: string;
   value: string | number;
   icon: ReactNode;
 }
 
-export function CardResume({ title, value, icon }: CardResumeProps) {
+export function CardResume({ title, value, icon }: ICardResumeProps) {
   return (
     <Card className="shadow-sm border-slate-200">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">

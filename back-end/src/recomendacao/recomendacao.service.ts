@@ -28,7 +28,8 @@ export class RecomendacaoService {
     this.googleAI = new GoogleGenerativeAI(apiKey);
     this.model = this.googleAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
-      systemInstruction: 'Você é um bibliotecário prestativo. Recomende apenas DOIS a TRÊS livros das opções fornecidas, justificando brevemente em uma frase.',
+      systemInstruction:
+        'Você é um bibliotecário prestativo. Recomende apenas DOIS a TRÊS livros das opções fornecidas, justificando brevemente em uma frase.',
     });
   }
 
@@ -57,9 +58,7 @@ export class RecomendacaoService {
         take: 5,
       });
 
-      const listaOpcoes = livrosDisponiveis
-        .map((l) => l.titulo)
-        .join(', ');
+      const listaOpcoes = livrosDisponiveis.map((l) => l.titulo).join(', ');
 
       const prompt = `Com base no histórico de leitura do membro (${livrosLidos}), recomende DOIS a TRÊS livros das seguintes opções disponíveis: ${listaOpcoes}. Justifique brevemente cada recomendação.`;
 
@@ -74,12 +73,11 @@ export class RecomendacaoService {
       const response = result.response;
       return response.text() || 'Nenhuma recomendação disponível.';
     } catch (error) {
-      console.error('ERRO GEMINI:', error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          error.message || 'Erro ao gerar recomendação de livro',
-        );
+            error.message || 'Erro ao gerar recomendação de livro',
+          );
     }
   }
 }

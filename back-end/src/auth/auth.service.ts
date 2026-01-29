@@ -91,7 +91,6 @@ export class AuthService {
     try {
       const membro = await this.prisma.membro.findUnique({
         where: { matricula },
-        // select: { id: true, matricula: true, tipo: true },
         include: {
           usuario: { select: { nome: true, email: true, role: true } },
         },

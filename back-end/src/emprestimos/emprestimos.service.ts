@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEmprestimoDto } from './dto/create-emprestimo.dto';
-import { StatusLivro, TipoMembro } from 'src/generated/prisma/enums';
+import { Etiqueta, StatusLivro, TipoMembro } from 'src/generated/prisma/enums';
 import { Emprestimo } from 'src/generated/prisma/client';
 import { RenovarEmprestimoDto } from './dto/renovar-emprestimo.dto';
 
@@ -44,7 +44,7 @@ export class EmprestimosService {
         }
 
         // verificar se ja tem o livro emprestado
-        const emprestadoExiste = await this.prisma.emprestimo.findFirst({
+        const emprestadoExiste = await tx.emprestimo.findFirst({
           where: {
             membroId: membroExisted.id,
             livroId: body.livroId,
@@ -52,7 +52,7 @@ export class EmprestimosService {
           },
         });
 
-        if (emprestadoExiste?.dataPrevista) {
+        if (emprestadoExiste) {
           throw new BadRequestException('Emprestimo ja existe');
         }
 
@@ -70,14 +70,6 @@ export class EmprestimosService {
           );
         }
 
-        const limite = membroExisted.tipo === TipoMembro.ESTUDANTE ? 3 : 5;
-
-        if (membroExisted._count.emprestimos >= limite) {
-          throw new BadRequestException(
-            'Membro atingiu o limite máximo de empréstimos simultâneos',
-          );
-        }
-
         const livro = await tx.livro.findUnique({
           where: { id: body.livroId },
         });
@@ -86,7 +78,12 @@ export class EmprestimosService {
           throw new NotFoundException('Livro não encontrado');
         }
 
-        if (livro.quantidade <= 1) {
+        if (livro.etiqueta === Etiqueta.VERMELHO)
+          throw new BadRequestException(
+            'Este livro nao pode sair da biblioteca.',
+          );
+
+        if (livro.quantidade < 2) {
           throw new BadRequestException(
             `Empréstimo não permitido: este é o único exemplar disponível para consulta local.`,
           );
@@ -96,8 +93,23 @@ export class EmprestimosService {
           throw new BadRequestException('Livro indisponível para empréstimo');
         }
 
+        const limite = membroExisted.tipo === TipoMembro.ESTUDANTE ? 3 : 5;
+
+        if (membroExisted._count.emprestimos >= limite) {
+          throw new BadRequestException(
+            'Membro atingiu o limite máximo de empréstimos simultâneos',
+          );
+        }
+
         const dataPrevista = new Date();
-        dataPrevista.setDate(dataPrevista.getDate() + 7); // Adiciona 7 dias para a data prevista de devolução
+        if (livro.etiqueta === Etiqueta.AMARELO)
+          dataPrevista.setHours(dataPrevista.getHours() + 24);
+        else if (
+          livro.etiqueta === Etiqueta.BRANCO &&
+          membroExisted.tipo === TipoMembro.PROFESSOR
+        )
+          dataPrevista.setDate(dataPrevista.getDate() + 15);
+        else dataPrevista.setDate(dataPrevista.getDate() + 5);
 
         await tx.emprestimo.create({
           data: {
@@ -136,17 +148,88 @@ export class EmprestimosService {
     }
   }
 
-  async getAllEmprestimos(): Promise<Emprestimo[]> {
+  async getAllEmprestimosEntreges(): Promise<Emprestimo[]> {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
         include: {
-          membro: { include: { usuario: true } },
+          membro: { include: { usuario: { omit: { senha: true } } } },
           livro: true,
           multa: true,
         },
         orderBy: { dataEmprestimo: 'desc' },
+        take: 10,
       });
-      return emprestimos;
+
+      const resul = emprestimos.filter((e) => e.dataDevolucao !== null);
+
+      return resul;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException('Erro ao carregar empréstimos');
+    }
+  }
+
+  async getAllEmprestimos(etiqueta: string): Promise<Emprestimo[]> {
+    try {
+      if (etiqueta) {
+        const emprestimos = await this.prisma.emprestimo.findMany({
+          where: {
+            dataDevolucao: null,
+            livro: { etiqueta: Etiqueta[etiqueta.toUpperCase()] },
+          },
+          include: {
+            membro: { include: { usuario: { omit: { senha: true } } } },
+            livro: {
+              include: {
+                categoria: true,
+                _count: {
+                  select: {
+                    emprestimos: {
+                      where: { dataDevolucao: null },
+                    },
+                  },
+                },
+              },
+            },
+            multa: true,
+          },
+          orderBy: { dataEmprestimo: 'desc' },
+        });
+
+        const resul = emprestimos.filter(
+          (e) => e.dataPrevista.toISOString() >= new Date().toISOString(),
+        );
+
+        return resul;
+      }
+
+      const emprestimos = await this.prisma.emprestimo.findMany({
+        where: { dataDevolucao: null },
+        include: {
+          membro: { include: { usuario: { omit: { senha: true } } } },
+          livro: {
+            include: {
+              categoria: true,
+              _count: {
+                select: {
+                  emprestimos: {
+                    where: { dataDevolucao: null },
+                  },
+                },
+              },
+            },
+          },
+          multa: true,
+        },
+        orderBy: { dataEmprestimo: 'desc' },
+      });
+
+      const resul = emprestimos.filter(
+        (e) => e.dataPrevista.toISOString() >= new Date().toISOString(),
+      );
+
+      return resul;
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -161,7 +244,7 @@ export class EmprestimosService {
         include: {
           livro: true,
           multa: true,
-          membro: { include: { usuario: true } },
+          membro: { include: { usuario: { omit: { senha: true } } } },
         },
         orderBy: { dataEmprestimo: 'desc' },
       });
@@ -176,6 +259,27 @@ export class EmprestimosService {
     }
   }
 
+  async getHistorico() {
+    try {
+      const historico = await this.prisma.emprestimo.findMany({
+        orderBy: { dataDevolucao: 'desc' },
+        include: {
+          membro: {
+            include: { usuario: { select: { nome: true, email: true } } },
+          },
+          livro: true,
+          multa: true,
+        },
+      });
+
+      return historico.filter((his) => his.dataDevolucao);
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException('Erro ao buscar Historico.');
+    }
+  }
+
   async getAllEmprestimosByMembro(matricula: string) {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
@@ -183,7 +287,7 @@ export class EmprestimosService {
         include: {
           livro: true,
           multa: true,
-          membro: { include: { usuario: true } },
+          membro: { include: { usuario: { omit: { senha: true } } } },
         },
         orderBy: { dataEmprestimo: 'desc' },
       });
@@ -207,12 +311,34 @@ export class EmprestimosService {
         include: {
           livro: true,
           multa: true,
-          membro: { include: { usuario: true } },
+          membro: { include: { usuario: { omit: { senha: true } } } },
         },
         orderBy: { dataEmprestimo: 'desc' },
       });
 
       return emprestimos;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException('Erro ao buscar empréstimos.');
+    }
+  }
+
+  async getAllEmprestimosByMembroHistorico(matricula: string) {
+    try {
+      const historico = await this.prisma.emprestimo.findMany({
+        where: { membro: { matricula } },
+        orderBy: { dataDevolucao: 'desc' },
+        include: {
+          membro: {
+            include: { usuario: { select: { nome: true, email: true } } },
+          },
+          livro: true,
+          multa: true,
+        },
+      });
+
+      return historico;
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -251,8 +377,12 @@ export class EmprestimosService {
     }
   }
 
-  async returnEmprestimo(emprestimoId: number): Promise<{ message: string }> {
+  async returnEmprestimo(
+    emprestimoId: number,
+  ): Promise<{ message: string; multa: number }> {
     try {
+      let valorMulta = 0;
+
       await this.prisma.$transaction(async (tx) => {
         const emprestimo = await tx.emprestimo.findUnique({
           where: { id: emprestimoId },
@@ -279,7 +409,7 @@ export class EmprestimosService {
         const atrasoDias = Math.ceil(atrasoMs / (1000 * 60 * 60 * 24));
 
         if (atrasoDias > 0) {
-          const valorMulta = atrasoDias * 500;
+          valorMulta = atrasoDias * 500;
 
           await tx.multa.create({
             data: {
@@ -322,7 +452,7 @@ export class EmprestimosService {
         });
       });
 
-      return { message: 'Empréstimo devolvido com sucesso' };
+      return { message: 'Empréstimo devolvido com sucesso', multa: valorMulta };
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -365,8 +495,15 @@ export class EmprestimosService {
         );
       }
 
+      const livro = await this.prisma.livro.findUnique({
+        where: { id: emprestimo.livroId },
+      });
+
       const novaDataPrevista = new Date(emprestimo.dataPrevista);
-      novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
+      if (livro?.etiqueta === Etiqueta.BRANCO)
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
+      else if (livro?.etiqueta === Etiqueta.AMARELO)
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + 7);
 
       await this.prisma.emprestimo.update({
         where: { id: emprestimo.id },
@@ -389,9 +526,33 @@ export class EmprestimosService {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { membroId },
         include: { livro: { include: { autor: true } }, multa: true },
+        orderBy: { dataEmprestimo: 'desc' },
       });
 
       return emprestimos;
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException();
+    }
+  }
+
+  async pagarMultaEmprestimo(emprestimoId: number) {
+    try {
+      const multa = await this.prisma.multa.findUnique({
+        where: { emprestimoId },
+      });
+
+      if (!multa) throw new BadRequestException();
+
+      await this.prisma.multa.update({
+        where: { emprestimoId },
+        data: {
+          paga: true,
+        },
+      });
+
+      return { message: 'Multa pago.' };
     } catch (error) {
       throw error instanceof HttpException
         ? error

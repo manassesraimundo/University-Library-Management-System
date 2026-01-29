@@ -26,15 +26,15 @@ import { CreateCategoriaModal } from "@/components/create-categoria-modal";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { api } from "@/lib/api";
+import { ICategoria } from "@/types/interface";
 
 export default function CategoriasPage() {
-  const [categorias, setCategorias] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [isAlertOpen, setIsAlertOpen] = useState(false)
-  const [idParaExcluir, setIdParaExcluir] = useState<number>(0)
-  const [tamanho, setTamanho] = useState<number>()
-
-  const [categoriaInput, setCategoriaInput] = useState("")
+  const [categorias, setCategorias] = useState<ICategoria[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const [idParaExcluir, setIdParaExcluir] = useState<number>(0);
+  const [tamanho, setTamanho] = useState<number>();
+  const [categoriaInput, setCategoriaInput] = useState<string>("");
 
   const carregarCategorias = async () => {
     try {
@@ -115,7 +115,7 @@ export default function CategoriasPage() {
                     <Loader2 className="animate-spin mx-auto" />
                   </TableCell>
                 </TableRow>
-              ) : categorias.map((cat: any, index: number) => (
+              ) : categorias.map((cat: ICategoria, index: number) => (
                 <TableRow key={cat.id}>
 
                   <TableCell className="text-muted-foreground">#{index + 1}</TableCell>

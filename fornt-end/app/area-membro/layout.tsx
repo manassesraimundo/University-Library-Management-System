@@ -3,8 +3,9 @@
 import { CardVincular } from "@/components/card-vincular";
 import { HeaderMembro } from "@/components/user-nav";
 import { useAuth } from "@/context/auth-context"
-import { api } from "@/lib/api";
+import { IMembro } from "@/types/interface";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 
 export default function AreaMembroLayout({
     children,
@@ -13,11 +14,11 @@ export default function AreaMembroLayout({
 }) {
     const { membro, loading } = useAuth();
 
-    const [dados, setDados] = useState<any>(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [dados, setDados] = useState<IMembro | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const [vincular, setVincular] = useState(true)
-    const [intervalo, setIntervalo] = useState(false)
+    const [vincular, setVincular] = useState<boolean>(true);
+    const [intervalo, setIntervalo] = useState<boolean>(false);
 
     const carregarPainelMembro = async () => {
         try {

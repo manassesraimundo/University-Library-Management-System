@@ -60,7 +60,6 @@ export class RelatoriosService {
         ),
       );
     } catch (error) {
-      console.log(error);
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(

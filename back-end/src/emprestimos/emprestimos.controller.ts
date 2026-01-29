@@ -5,7 +5,10 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -52,9 +55,28 @@ export class EmprestimosController {
   @Get('todos')
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
-  async getAllEmprestimos() {
-    const emprestimos = await this.emprestimosService.getAllEmprestimos();
+  async getAllEmprestimos(@Query('etiqueta') etiqueta?: string) {
+    const emprestimos = await this.emprestimosService.getAllEmprestimos(
+      etiqueta as string,
+    );
     return emprestimos;
+  }
+
+  @Get('todos/entreges')
+  @HttpCode(HttpStatus.OK)
+  @Roles('BIBLIOTECARIO')
+  async getAllEmprestimosEntreges() {
+    const emprestimos =
+      await this.emprestimosService.getAllEmprestimosEntreges();
+    return emprestimos;
+  }
+
+  @Get('historico')
+  @HttpCode(HttpStatus.OK)
+  @Roles('BIBLIOTECARIO')
+  async getHistorico() {
+    const historico = await this.emprestimosService.getHistorico();
+    return historico;
   }
 
   @Get('cont-emprestimos')
@@ -97,6 +119,19 @@ export class EmprestimosController {
     return emprestimos;
   }
 
+  @Get(':matricula/historico')
+  @HttpCode(HttpStatus.OK)
+  @Roles('BIBLIOTECARIO')
+  async getAllEmprestimosByMembroHistorico(
+    @Param('matricula') matricula: string,
+  ) {
+    const emprestimos =
+      await this.emprestimosService.getAllEmprestimosByMembroHistorico(
+        matricula,
+      );
+    return emprestimos;
+  }
+
   @Post('devolucao')
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
@@ -113,5 +148,14 @@ export class EmprestimosController {
   async renovarEmprestimo(@Body() body: RenovarEmprestimoDto) {
     const resultado = await this.emprestimosService.renovarEmprestimo(body);
     return resultado;
+  }
+
+  @Put('multa/pagar/:emprestimoId')
+  @HttpCode(HttpStatus.OK)
+  @Roles('BIBLIOTECARIO')
+  async pagarMultaEmprestimo(
+    @Param('emprestimoId', ParseIntPipe) emprestimoId: number,
+  ) {
+    return await this.emprestimosService.pagarMultaEmprestimo(emprestimoId);
   }
 }

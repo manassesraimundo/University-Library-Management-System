@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
-import { StatusLivro } from 'src/generated/prisma/enums';
+import { Etiqueta, StatusLivro } from 'src/generated/prisma/enums';
 import { Reserva } from 'src/generated/prisma/client';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MembrosService } from 'src/membros/membros.service';
@@ -46,6 +46,11 @@ export class ReservasService {
       if (livro.status === StatusLivro.DISPONIVEL)
         throw new BadRequestException(
           'Livro está disponível, não pode ser reservado',
+        );
+
+      if (livro.etiqueta === Etiqueta.VERMELHO)
+        throw new BadRequestException(
+          'Este livro nao pode ser reservado. Seu uso so na biblioteca',
         );
 
       const reservaExistente = await this.prisma.reserva.findFirst({
@@ -108,7 +113,11 @@ export class ReservasService {
       const reservas = await this.prisma.reserva.findMany({
         where: { ativa: status },
         include: {
-          membro: { include: { usuario: true } },
+          membro: {
+            include: {
+              usuario: { select: { nome: true, email: true, id: true } },
+            },
+          },
           livro: true,
         },
         orderBy: { criadaEm: 'desc' },
@@ -176,7 +185,6 @@ export class ReservasService {
   ): Promise<{ message: string }> {
     try {
       return await this.prisma.$transaction(async (tx) => {
-        // 1. Buscar a reserva com os dados do livro
         const reserva = await tx.reserva.findUnique({
           where: { id: reservaId },
           include: { livro: true },
@@ -186,25 +194,17 @@ export class ReservasService {
           throw new NotFoundException('Reserva não encontrada ou inativa');
         }
 
-        // 2. Regra de Negócio: Apenas o primeiro da fila pode levantar
         if (reserva.posicao !== 1) {
           throw new BadRequestException(
             'Aguarde sua vez na fila. Existem membros à sua frente.',
           );
         }
 
-        // 3. Verificar se a data já chegou (Pode ser hoje ou depois)
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
+        const livros = await tx.livro.count({
+          where: { id: reserva.livroId },
+        });
 
-        if (!reserva.paraData) {
-          throw new BadRequestException(
-            'Data de levantamento não definida para esta reserva.',
-          );
-        }
-
-        const dataReserva = new Date(reserva.paraData);
-        dataReserva.setHours(0, 0, 0, 0);
+        if (livros < 2) throw new BadRequestException('');
 
         const dataPrevista = new Date();
         dataPrevista.setDate(dataPrevista.getDate() + 7);

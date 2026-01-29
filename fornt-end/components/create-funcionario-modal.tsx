@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,31 +9,43 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogFooter
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { UserPlus, Loader2, Shield, Mail, Lock, User } from "lucide-react"
-import { api } from "@/lib/api"
-import { toast } from "sonner"
+} from "@/components/ui/select";
+import { 
+    UserPlus, 
+    Loader2, 
+    Shield, 
+    Mail, 
+    Lock, 
+    User 
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+import { Role } from "@/types/enums";
+import AlertGlobal from "./alertGlobal";
 
 export function CreateFuncionarioModal({ onSucesso }: { onSucesso: () => void }) {
-    const [open, setOpen] = useState(false)
-    const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [message, setMessage] = useState<string>("");
+    const [isError, setIsError] = useState<boolean>(false);
 
     // Estado manual do formulário
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
         senha: "",
-        role: "BIBLIOTECARIO"
+        role: Role.BIBLIOTECARIO
     })
 
     const handleCreate = async (e: React.FormEvent) => {
@@ -49,14 +61,24 @@ export function CreateFuncionarioModal({ onSucesso }: { onSucesso: () => void })
 
             toast.success("Funcionário cadastrado com sucesso!")
 
-            setFormData({ nome: "", email: "", senha: "", role: "BIBLIOTECARIO" })
+            setFormData({ nome: "", email: "", senha: "", role: Role.BIBLIOTECARIO })
             setOpen(false)
             onSucesso()
         } catch (error: any) {
-            toast.error(error.response?.data?.message || "Erro ao criar funcionário")
+            setMessage(error.response?.data?.message || "Erro ao criar funcionário");
+            setIsError(true);
         } finally {
             setLoading(false)
         }
+    }
+
+    if (isError) {
+        return <AlertGlobal 
+            isOpen={isError}
+            setIsOpen={() => setIsError(false)}
+            message={message}
+            titulo="Erro ao cadastrar funcionário"
+        />
     }
 
     return (
@@ -124,14 +146,14 @@ export function CreateFuncionarioModal({ onSucesso }: { onSucesso: () => void })
                         </Label>
                         <Select
                             value={formData.role}
-                            onValueChange={(value) => setFormData({ ...formData, role: value })}
+                            onValueChange={(value: Role) => setFormData({ ...formData, role: value })}
                         >
                             <SelectTrigger>
                                 <SelectValue placeholder="Selecione o cargo" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="ADMIN">Administrador</SelectItem>
-                                <SelectItem value="BIBLIOTECARIO">Bibliotecário</SelectItem>
+                                <SelectItem value={Role.ADMIN}>Administrador</SelectItem>
+                                <SelectItem value={Role.BIBLIOTECARIO}>Bibliotecário</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

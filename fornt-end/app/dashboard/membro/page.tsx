@@ -27,16 +27,18 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 import { MembroDetalhesModal } from "@/components/membro-detalhes-modal";
 import { api } from "@/lib/api";
+import { IMembro } from "@/types/interface";
 
 export default function MembrosPage() {
-    const router = useRouter()
-    const [membros, setMembros] = useState([])
-    const [filtroStatus, setFiltroStatus] = useState("true")
-    const [busca, setBusca] = useState("")
+    const router = useRouter();
+
+    const [membros, setMembros] = useState<IMembro[]>([]);
+    const [filtroStatus, setFiltroStatus] = useState<string>("true");
+    const [busca, setBusca] = useState<string>("");
 
     const [membroSelecionado, setMembroSelecionado] = useState<string | null>(null)
-    const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false)
-    const [isAlertOpen, setIsAlertOpen] = useState(false);
+    const [modalDetalhesAberto, setModalDetalhesAberto] = useState<boolean>(false)
+    const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
 
     const carregarMembros = async () => {
         try {
@@ -85,22 +87,22 @@ export default function MembrosPage() {
     }
 
     // Deletar membro
-    const handleDelete = async (matricula: string) => {
+    // const handleDelete = async (matricula: string) => {
 
-        try {
-            const s = await api.delete(`/membros/${matricula}`)
+    //     try {
+    //         const s = await api.delete(`/membros/${matricula}`)
 
-            console.log(s.data)
+    //         console.log(s.data)
 
-            toast.success("Membro removido com sucesso")
+    //         toast.success("Membro removido com sucesso")
 
-            setIsAlertOpen(false)
-            carregarMembros()
-        } catch (error: any) {
-            alert(error.message)
-            toast.error("Erro ao deletar membro")
-        }
-    }
+    //         setIsAlertOpen(false)
+    //         carregarMembros()
+    //     } catch (error: any) {
+    //         alert(error.message)
+    //         toast.error("Erro ao deletar membro")
+    //     }
+    // }
 
     const abrirDetalhes = (matricula: string) => {
         setMembroSelecionado(matricula)
@@ -154,7 +156,7 @@ export default function MembrosPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {membros.length > 0 ? membros.map((membro: any) => (
+                        {membros.length > 0 ? membros.map((membro: IMembro) => (
                             <TableRow key={membro.matricula}>
                                 <TableCell className="font-mono font-bold text-primary">{membro.matricula}</TableCell>
                                 <TableCell>{membro.usuario?.nome}</TableCell>
@@ -176,7 +178,10 @@ export default function MembrosPage() {
                                                 Ver detalhes do membro
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
-                                                className={`${membro.ativo ? 'text-red-600 focus:text-red-600' : 'text-green-600 focus:text-green-600'}`}
+                                                className={`
+                                                    ${membro.ativo ? 'text-red-600 focus:text-red-600'
+                                                        : 'text-green-600 focus:text-green-600'}`
+                                                }
                                                 onClick={() => handleToggleStatus(membro.matricula, membro.ativo)}
                                             >
                                                 {membro.ativo ? "Desativar" : "Ativar"} Membro

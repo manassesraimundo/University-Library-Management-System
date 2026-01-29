@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { api } from "@/lib/api"
 import { DialogDescription } from "@radix-ui/react-dialog";
 
-interface PerfilModalProps {
+interface IPerfilModalProps {
     isOpen: boolean
     onClose: () => void
 }
@@ -31,7 +31,7 @@ interface IFormData {
     confirmar: string
 }
 
-export function PerfilModal({ isOpen, onClose }: PerfilModalProps) {
+export function PerfilModal({ isOpen, onClose }: IPerfilModalProps) {
     const { user, loading } = useAuth()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [alterarSenha, setAlterarSenha] = useState<boolean>(false);
@@ -48,6 +48,7 @@ export function PerfilModal({ isOpen, onClose }: PerfilModalProps) {
         if (user) {
             setFormData({ ...formData, nome: user.nome, email: user.email })
         }
+
     }, [user, isOpen, loading])
 
     const handleUpdate = async () => {
@@ -158,8 +159,8 @@ export function PerfilModal({ isOpen, onClose }: PerfilModalProps) {
 }
 
 interface IFormSenha {
-    formData: IFormData
-    setFormData: ({ nome, email, antiga, nova, confirmar }: IFormData) => void
+    formData: IFormData;
+    setFormData: ({ nome, email, antiga, nova, confirmar }: IFormData) => void;
 }
 
 function FormSenha({ formData, setFormData }: IFormSenha) {
