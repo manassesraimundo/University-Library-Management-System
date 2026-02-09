@@ -32,8 +32,6 @@ export class ScanController {
   )
   async scanLivro(@UploadedFile() file: Express.Multer.File) {
     const response = await this.scanService.scanLivro(file);
-
-    console.log(response);
     return response;
   }
 }
