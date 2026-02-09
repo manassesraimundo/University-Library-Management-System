@@ -39,22 +39,26 @@ export default function RelatoriosPage() {
 
       // Formatando dados para o gráfico (Recharts espera { name, value })
       const dadosGrafico = resLivros.data.map((item: any) => ({
+        tituloPrint: item.titulo,
         titulo: item.titulo.length > 15
           ? item.titulo.substring(0, 15) + "..."
           : item.titulo,
         total: item._count?.emprestimos || item.total_emprestimo || 0
       }))
-
+      
       setMaisEmprestados(dadosGrafico)
       setReservasPendentes(resReservas.data)
-    } catch (error) {
-      toast.error("Erro ao carregar relatórios")
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error("Erro ao carregar relatórios");
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => { carregarDados() }, [])
+  useEffect(() => { carregarDados() }, []);
 
   return (
     <div className="p-6 space-y-6 bg-slate-50/50 min-h-screen">
@@ -63,7 +67,7 @@ export default function RelatoriosPage() {
         <div className="flex gap-2">
           <SidebarTrigger className="mt-2" />
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Relatórios & Métricas</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Relatórios & Métricas</h1>
             <p className="text-muted-foreground">Análise de desempenho do acervo e fluxo de leitores.</p>
           </div>
         </div>

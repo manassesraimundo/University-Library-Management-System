@@ -19,11 +19,13 @@ import AlertGlobal from "./alertGlobal";
 interface IAlertMultaProps {
   children: React.ReactNode;
   multa: number;
+  isOpen: boolean;
+  setIsOpen: () => void;
   emprestimoId: number;
 }
 
-export default function AlertMulta({ children, multa, emprestimoId }: IAlertMultaProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export default function AlertMulta({ children, multa, isOpen, setIsOpen, emprestimoId }: IAlertMultaProps) {
+  const [error, setError] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   const pagarMulta = async () => {
@@ -32,30 +34,28 @@ export default function AlertMulta({ children, multa, emprestimoId }: IAlertMult
       const data = res.data;
       toast.success(data.message)
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       setMessage(error.response?.data?.message)
-      setIsOpen(true);
+      setError(true);
     }
   }
 
-  if (isOpen) {
-    return <AlertGlobal 
-      isOpen={isOpen}
-      setIsOpen={() => setIsOpen(false)}
-      message={message}
-      titulo="Erro Multa"
-    />
-  }
-  
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      {error && <AlertGlobal isOpen={error} setIsOpen={() => setError(false)} message={message} titulo="Erro Multa" />}
       <AlertDialogTrigger asChild>
         {children}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+          <AlertDialogTitle>Multas</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta ação não pode ser desfeita. Isso excluirá permanentemente o livro {multa}
+            Multa no valor de {new Intl.NumberFormat('pt-AO', {
+              style: 'currency',
+              currency: 'AOA'
+            }).format(multa)}kz.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

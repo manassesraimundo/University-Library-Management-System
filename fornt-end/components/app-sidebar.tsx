@@ -9,6 +9,7 @@ import {
   Tag,
   Clock,
   NotebookIcon,
+  Bookmark,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,7 +37,7 @@ const items = [
   { title: "Categorias", url: "/dashboard/categorias", icon: Tag },
   { title: "Autores", url: "/dashboard/autores", icon: Users },
   { title: "Empréstimos", url: "/dashboard/emprestimos", icon: Book },
-  { title: "Reservas", url: "/dashboard/reservas", icon: Clock },
+  { title: "Reservas", url: "/dashboard/reservas", icon: Bookmark },
   { title: "Funcionarios", url: "/dashboard/funcionarios", icon: Users },
   { title: "Membros", url: "/dashboard/membro", icon: Users },
   { title: "Relatório", url: "/dashboard/relatorio", icon: NotebookIcon },

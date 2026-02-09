@@ -30,12 +30,14 @@ export type HistoricoLeituraAvgAggregateOutputType = {
   id: number | null;
   membroId: number | null;
   livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type HistoricoLeituraSumAggregateOutputType = {
   id: number | null;
   membroId: number | null;
   livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type HistoricoLeituraMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type HistoricoLeituraMinAggregateOutputType = {
   data: Date | null;
   membroId: number | null;
   livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type HistoricoLeituraMaxAggregateOutputType = {
@@ -50,6 +53,7 @@ export type HistoricoLeituraMaxAggregateOutputType = {
   data: Date | null;
   membroId: number | null;
   livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type HistoricoLeituraCountAggregateOutputType = {
@@ -57,6 +61,7 @@ export type HistoricoLeituraCountAggregateOutputType = {
   data: number;
   membroId: number;
   livroId: number;
+  exemplarId: number;
   _all: number;
 };
 
@@ -64,12 +69,14 @@ export type HistoricoLeituraAvgAggregateInputType = {
   id?: true;
   membroId?: true;
   livroId?: true;
+  exemplarId?: true;
 };
 
 export type HistoricoLeituraSumAggregateInputType = {
   id?: true;
   membroId?: true;
   livroId?: true;
+  exemplarId?: true;
 };
 
 export type HistoricoLeituraMinAggregateInputType = {
@@ -77,6 +84,7 @@ export type HistoricoLeituraMinAggregateInputType = {
   data?: true;
   membroId?: true;
   livroId?: true;
+  exemplarId?: true;
 };
 
 export type HistoricoLeituraMaxAggregateInputType = {
@@ -84,6 +92,7 @@ export type HistoricoLeituraMaxAggregateInputType = {
   data?: true;
   membroId?: true;
   livroId?: true;
+  exemplarId?: true;
 };
 
 export type HistoricoLeituraCountAggregateInputType = {
@@ -91,6 +100,7 @@ export type HistoricoLeituraCountAggregateInputType = {
   data?: true;
   membroId?: true;
   livroId?: true;
+  exemplarId?: true;
   _all?: true;
 };
 
@@ -196,6 +206,7 @@ export type HistoricoLeituraGroupByOutputType = {
   data: Date;
   membroId: number;
   livroId: number;
+  exemplarId: number;
   _count: HistoricoLeituraCountAggregateOutputType | null;
   _avg: HistoricoLeituraAvgAggregateOutputType | null;
   _sum: HistoricoLeituraSumAggregateOutputType | null;
@@ -225,11 +236,15 @@ export type HistoricoLeituraWhereInput = {
   data?: Prisma.DateTimeFilter<'HistoricoLeitura'> | Date | string;
   membroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
   livroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
+  exemplarId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
   membro?: Prisma.XOR<
     Prisma.MembroScalarRelationFilter,
     Prisma.MembroWhereInput
   >;
-  livro?: Prisma.XOR<Prisma.LivroScalarRelationFilter, Prisma.LivroWhereInput>;
+  exemplar?: Prisma.XOR<
+    Prisma.ExemplarScalarRelationFilter,
+    Prisma.ExemplarWhereInput
+  >;
 };
 
 export type HistoricoLeituraOrderByWithRelationInput = {
@@ -237,8 +252,9 @@ export type HistoricoLeituraOrderByWithRelationInput = {
   data?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
   membro?: Prisma.MembroOrderByWithRelationInput;
-  livro?: Prisma.LivroOrderByWithRelationInput;
+  exemplar?: Prisma.ExemplarOrderByWithRelationInput;
 };
 
 export type HistoricoLeituraWhereUniqueInput = Prisma.AtLeast<
@@ -254,13 +270,14 @@ export type HistoricoLeituraWhereUniqueInput = Prisma.AtLeast<
     data?: Prisma.DateTimeFilter<'HistoricoLeitura'> | Date | string;
     membroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
     livroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
+    exemplarId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
     membro?: Prisma.XOR<
       Prisma.MembroScalarRelationFilter,
       Prisma.MembroWhereInput
     >;
-    livro?: Prisma.XOR<
-      Prisma.LivroScalarRelationFilter,
-      Prisma.LivroWhereInput
+    exemplar?: Prisma.XOR<
+      Prisma.ExemplarScalarRelationFilter,
+      Prisma.ExemplarWhereInput
     >;
   },
   'id'
@@ -271,6 +288,7 @@ export type HistoricoLeituraOrderByWithAggregationInput = {
   data?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
   _count?: Prisma.HistoricoLeituraCountOrderByAggregateInput;
   _avg?: Prisma.HistoricoLeituraAvgOrderByAggregateInput;
   _max?: Prisma.HistoricoLeituraMaxOrderByAggregateInput;
@@ -293,12 +311,14 @@ export type HistoricoLeituraScalarWhereWithAggregatesInput = {
     | string;
   membroId?: Prisma.IntWithAggregatesFilter<'HistoricoLeitura'> | number;
   livroId?: Prisma.IntWithAggregatesFilter<'HistoricoLeitura'> | number;
+  exemplarId?: Prisma.IntWithAggregatesFilter<'HistoricoLeitura'> | number;
 };
 
 export type HistoricoLeituraCreateInput = {
   data?: Date | string;
+  livroId: number;
   membro: Prisma.MembroCreateNestedOneWithoutHistoricoInput;
-  livro: Prisma.LivroCreateNestedOneWithoutHistoricoInput;
+  exemplar: Prisma.ExemplarCreateNestedOneWithoutHistoricoLeituraInput;
 };
 
 export type HistoricoLeituraUncheckedCreateInput = {
@@ -306,12 +326,14 @@ export type HistoricoLeituraUncheckedCreateInput = {
   data?: Date | string;
   membroId: number;
   livroId: number;
+  exemplarId: number;
 };
 
 export type HistoricoLeituraUpdateInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutHistoricoNestedInput;
-  livro?: Prisma.LivroUpdateOneRequiredWithoutHistoricoNestedInput;
+  exemplar?: Prisma.ExemplarUpdateOneRequiredWithoutHistoricoLeituraNestedInput;
 };
 
 export type HistoricoLeituraUncheckedUpdateInput = {
@@ -319,6 +341,7 @@ export type HistoricoLeituraUncheckedUpdateInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type HistoricoLeituraCreateManyInput = {
@@ -326,10 +349,12 @@ export type HistoricoLeituraCreateManyInput = {
   data?: Date | string;
   membroId: number;
   livroId: number;
+  exemplarId: number;
 };
 
 export type HistoricoLeituraUpdateManyMutationInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type HistoricoLeituraUncheckedUpdateManyInput = {
@@ -337,6 +362,7 @@ export type HistoricoLeituraUncheckedUpdateManyInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type HistoricoLeituraListRelationFilter = {
@@ -354,12 +380,14 @@ export type HistoricoLeituraCountOrderByAggregateInput = {
   data?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type HistoricoLeituraAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type HistoricoLeituraMaxOrderByAggregateInput = {
@@ -367,6 +395,7 @@ export type HistoricoLeituraMaxOrderByAggregateInput = {
   data?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type HistoricoLeituraMinOrderByAggregateInput = {
@@ -374,12 +403,14 @@ export type HistoricoLeituraMinOrderByAggregateInput = {
   data?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type HistoricoLeituraSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
   livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type HistoricoLeituraCreateNestedManyWithoutMembroInput = {
@@ -492,55 +523,55 @@ export type HistoricoLeituraUncheckedUpdateManyWithoutMembroNestedInput = {
     | Prisma.HistoricoLeituraScalarWhereInput[];
 };
 
-export type HistoricoLeituraCreateNestedManyWithoutLivroInput = {
+export type HistoricoLeituraCreateNestedManyWithoutExemplarInput = {
   create?:
     | Prisma.XOR<
-        Prisma.HistoricoLeituraCreateWithoutLivroInput,
-        Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+        Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+        Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.HistoricoLeituraCreateWithoutLivroInput[]
-    | Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateWithoutExemplarInput[]
+    | Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput[];
-  createMany?: Prisma.HistoricoLeituraCreateManyLivroInputEnvelope;
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput[];
+  createMany?: Prisma.HistoricoLeituraCreateManyExemplarInputEnvelope;
   connect?:
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
 };
 
-export type HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput = {
+export type HistoricoLeituraUncheckedCreateNestedManyWithoutExemplarInput = {
   create?:
     | Prisma.XOR<
-        Prisma.HistoricoLeituraCreateWithoutLivroInput,
-        Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+        Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+        Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.HistoricoLeituraCreateWithoutLivroInput[]
-    | Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateWithoutExemplarInput[]
+    | Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput[];
-  createMany?: Prisma.HistoricoLeituraCreateManyLivroInputEnvelope;
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput[];
+  createMany?: Prisma.HistoricoLeituraCreateManyExemplarInputEnvelope;
   connect?:
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
 };
 
-export type HistoricoLeituraUpdateManyWithoutLivroNestedInput = {
+export type HistoricoLeituraUpdateManyWithoutExemplarNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.HistoricoLeituraCreateWithoutLivroInput,
-        Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+        Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+        Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.HistoricoLeituraCreateWithoutLivroInput[]
-    | Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateWithoutExemplarInput[]
+    | Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput[];
   upsert?:
-    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutLivroInput
-    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutLivroInput[];
-  createMany?: Prisma.HistoricoLeituraCreateManyLivroInputEnvelope;
+    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutExemplarInput[];
+  createMany?: Prisma.HistoricoLeituraCreateManyExemplarInputEnvelope;
   set?:
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
@@ -554,31 +585,31 @@ export type HistoricoLeituraUpdateManyWithoutLivroNestedInput = {
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
   update?:
-    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutLivroInput
-    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutLivroInput[];
+    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutExemplarInput[];
   updateMany?:
-    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutLivroInput
-    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutLivroInput[];
+    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutExemplarInput[];
   deleteMany?:
     | Prisma.HistoricoLeituraScalarWhereInput
     | Prisma.HistoricoLeituraScalarWhereInput[];
 };
 
-export type HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput = {
+export type HistoricoLeituraUncheckedUpdateManyWithoutExemplarNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.HistoricoLeituraCreateWithoutLivroInput,
-        Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+        Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+        Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.HistoricoLeituraCreateWithoutLivroInput[]
-    | Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateWithoutExemplarInput[]
+    | Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput
-    | Prisma.HistoricoLeituraCreateOrConnectWithoutLivroInput[];
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput
+    | Prisma.HistoricoLeituraCreateOrConnectWithoutExemplarInput[];
   upsert?:
-    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutLivroInput
-    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutLivroInput[];
-  createMany?: Prisma.HistoricoLeituraCreateManyLivroInputEnvelope;
+    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpsertWithWhereUniqueWithoutExemplarInput[];
+  createMany?: Prisma.HistoricoLeituraCreateManyExemplarInputEnvelope;
   set?:
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
@@ -592,11 +623,11 @@ export type HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput = {
     | Prisma.HistoricoLeituraWhereUniqueInput
     | Prisma.HistoricoLeituraWhereUniqueInput[];
   update?:
-    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutLivroInput
-    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutLivroInput[];
+    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpdateWithWhereUniqueWithoutExemplarInput[];
   updateMany?:
-    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutLivroInput
-    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutLivroInput[];
+    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutExemplarInput
+    | Prisma.HistoricoLeituraUpdateManyWithWhereWithoutExemplarInput[];
   deleteMany?:
     | Prisma.HistoricoLeituraScalarWhereInput
     | Prisma.HistoricoLeituraScalarWhereInput[];
@@ -604,13 +635,15 @@ export type HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput = {
 
 export type HistoricoLeituraCreateWithoutMembroInput = {
   data?: Date | string;
-  livro: Prisma.LivroCreateNestedOneWithoutHistoricoInput;
+  livroId: number;
+  exemplar: Prisma.ExemplarCreateNestedOneWithoutHistoricoLeituraInput;
 };
 
 export type HistoricoLeituraUncheckedCreateWithoutMembroInput = {
   id?: number;
   data?: Date | string;
   livroId: number;
+  exemplarId: number;
 };
 
 export type HistoricoLeituraCreateOrConnectWithoutMembroInput = {
@@ -667,58 +700,61 @@ export type HistoricoLeituraScalarWhereInput = {
   data?: Prisma.DateTimeFilter<'HistoricoLeitura'> | Date | string;
   membroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
   livroId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
+  exemplarId?: Prisma.IntFilter<'HistoricoLeitura'> | number;
 };
 
-export type HistoricoLeituraCreateWithoutLivroInput = {
+export type HistoricoLeituraCreateWithoutExemplarInput = {
   data?: Date | string;
+  livroId: number;
   membro: Prisma.MembroCreateNestedOneWithoutHistoricoInput;
 };
 
-export type HistoricoLeituraUncheckedCreateWithoutLivroInput = {
+export type HistoricoLeituraUncheckedCreateWithoutExemplarInput = {
   id?: number;
   data?: Date | string;
   membroId: number;
+  livroId: number;
 };
 
-export type HistoricoLeituraCreateOrConnectWithoutLivroInput = {
+export type HistoricoLeituraCreateOrConnectWithoutExemplarInput = {
   where: Prisma.HistoricoLeituraWhereUniqueInput;
   create: Prisma.XOR<
-    Prisma.HistoricoLeituraCreateWithoutLivroInput,
-    Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+    Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+    Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
   >;
 };
 
-export type HistoricoLeituraCreateManyLivroInputEnvelope = {
+export type HistoricoLeituraCreateManyExemplarInputEnvelope = {
   data:
-    | Prisma.HistoricoLeituraCreateManyLivroInput
-    | Prisma.HistoricoLeituraCreateManyLivroInput[];
+    | Prisma.HistoricoLeituraCreateManyExemplarInput
+    | Prisma.HistoricoLeituraCreateManyExemplarInput[];
 };
 
-export type HistoricoLeituraUpsertWithWhereUniqueWithoutLivroInput = {
+export type HistoricoLeituraUpsertWithWhereUniqueWithoutExemplarInput = {
   where: Prisma.HistoricoLeituraWhereUniqueInput;
   update: Prisma.XOR<
-    Prisma.HistoricoLeituraUpdateWithoutLivroInput,
-    Prisma.HistoricoLeituraUncheckedUpdateWithoutLivroInput
+    Prisma.HistoricoLeituraUpdateWithoutExemplarInput,
+    Prisma.HistoricoLeituraUncheckedUpdateWithoutExemplarInput
   >;
   create: Prisma.XOR<
-    Prisma.HistoricoLeituraCreateWithoutLivroInput,
-    Prisma.HistoricoLeituraUncheckedCreateWithoutLivroInput
+    Prisma.HistoricoLeituraCreateWithoutExemplarInput,
+    Prisma.HistoricoLeituraUncheckedCreateWithoutExemplarInput
   >;
 };
 
-export type HistoricoLeituraUpdateWithWhereUniqueWithoutLivroInput = {
+export type HistoricoLeituraUpdateWithWhereUniqueWithoutExemplarInput = {
   where: Prisma.HistoricoLeituraWhereUniqueInput;
   data: Prisma.XOR<
-    Prisma.HistoricoLeituraUpdateWithoutLivroInput,
-    Prisma.HistoricoLeituraUncheckedUpdateWithoutLivroInput
+    Prisma.HistoricoLeituraUpdateWithoutExemplarInput,
+    Prisma.HistoricoLeituraUncheckedUpdateWithoutExemplarInput
   >;
 };
 
-export type HistoricoLeituraUpdateManyWithWhereWithoutLivroInput = {
+export type HistoricoLeituraUpdateManyWithWhereWithoutExemplarInput = {
   where: Prisma.HistoricoLeituraScalarWhereInput;
   data: Prisma.XOR<
     Prisma.HistoricoLeituraUpdateManyMutationInput,
-    Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroInput
+    Prisma.HistoricoLeituraUncheckedUpdateManyWithoutExemplarInput
   >;
 };
 
@@ -726,46 +762,54 @@ export type HistoricoLeituraCreateManyMembroInput = {
   id?: number;
   data?: Date | string;
   livroId: number;
+  exemplarId: number;
 };
 
 export type HistoricoLeituraUpdateWithoutMembroInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  livro?: Prisma.LivroUpdateOneRequiredWithoutHistoricoNestedInput;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplar?: Prisma.ExemplarUpdateOneRequiredWithoutHistoricoLeituraNestedInput;
 };
 
 export type HistoricoLeituraUncheckedUpdateWithoutMembroInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type HistoricoLeituraUncheckedUpdateManyWithoutMembroInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
-export type HistoricoLeituraCreateManyLivroInput = {
+export type HistoricoLeituraCreateManyExemplarInput = {
   id?: number;
   data?: Date | string;
   membroId: number;
+  livroId: number;
 };
 
-export type HistoricoLeituraUpdateWithoutLivroInput = {
+export type HistoricoLeituraUpdateWithoutExemplarInput = {
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutHistoricoNestedInput;
 };
 
-export type HistoricoLeituraUncheckedUpdateWithoutLivroInput = {
+export type HistoricoLeituraUncheckedUpdateWithoutExemplarInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
-export type HistoricoLeituraUncheckedUpdateManyWithoutLivroInput = {
+export type HistoricoLeituraUncheckedUpdateManyWithoutExemplarInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   data?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type HistoricoLeituraSelect<
@@ -777,8 +821,9 @@ export type HistoricoLeituraSelect<
     data?: boolean;
     membroId?: boolean;
     livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['historicoLeitura']
 >;
@@ -792,8 +837,9 @@ export type HistoricoLeituraSelectCreateManyAndReturn<
     data?: boolean;
     membroId?: boolean;
     livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['historicoLeitura']
 >;
@@ -807,8 +853,9 @@ export type HistoricoLeituraSelectUpdateManyAndReturn<
     data?: boolean;
     membroId?: boolean;
     livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['historicoLeitura']
 >;
@@ -818,13 +865,14 @@ export type HistoricoLeituraSelectScalar = {
   data?: boolean;
   membroId?: boolean;
   livroId?: boolean;
+  exemplarId?: boolean;
 };
 
 export type HistoricoLeituraOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'data' | 'membroId' | 'livroId',
+  'id' | 'data' | 'membroId' | 'livroId' | 'exemplarId',
   ExtArgs['result']['historicoLeitura']
 >;
 export type HistoricoLeituraInclude<
@@ -832,21 +880,21 @@ export type HistoricoLeituraInclude<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
 };
 export type HistoricoLeituraIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
 };
 export type HistoricoLeituraIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
 };
 
 export type $HistoricoLeituraPayload<
@@ -856,7 +904,7 @@ export type $HistoricoLeituraPayload<
   name: 'HistoricoLeitura';
   objects: {
     membro: Prisma.$MembroPayload<ExtArgs>;
-    livro: Prisma.$LivroPayload<ExtArgs>;
+    exemplar: Prisma.$ExemplarPayload<ExtArgs>;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -864,6 +912,7 @@ export type $HistoricoLeituraPayload<
       data: Date;
       membroId: number;
       livroId: number;
+      exemplarId: number;
     },
     ExtArgs['result']['historicoLeitura']
   >;
@@ -1450,11 +1499,11 @@ export interface Prisma__HistoricoLeituraClient<
     ExtArgs,
     GlobalOmitOptions
   >;
-  livro<T extends Prisma.LivroDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.LivroDefaultArgs<ExtArgs>>,
-  ): Prisma.Prisma__LivroClient<
+  exemplar<T extends Prisma.ExemplarDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ExemplarDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__ExemplarClient<
     | runtime.Types.Result.GetResult<
-        Prisma.$LivroPayload<ExtArgs>,
+        Prisma.$ExemplarPayload<ExtArgs>,
         T,
         'findUniqueOrThrow',
         GlobalOmitOptions
@@ -1510,6 +1559,7 @@ export interface HistoricoLeituraFieldRefs {
   readonly data: Prisma.FieldRef<'HistoricoLeitura', 'DateTime'>;
   readonly membroId: Prisma.FieldRef<'HistoricoLeitura', 'Int'>;
   readonly livroId: Prisma.FieldRef<'HistoricoLeitura', 'Int'>;
+  readonly exemplarId: Prisma.FieldRef<'HistoricoLeitura', 'Int'>;
 }
 
 // Custom InputTypes

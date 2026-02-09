@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { RolesGuard } from './auth/decorators/roles.guard';
 import { AuthGuard } from './auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { APP_GUARD } from '@nestjs/core';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     LivrosModule,
     AutorModule,

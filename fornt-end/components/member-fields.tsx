@@ -6,6 +6,7 @@ interface IMemberFieldsProps {
   matricula: string;
   setMatricula: (e: string) => void;
 }
+
 export const MemberFields = ({ matricula, setMatricula }: IMemberFieldsProps) => (
   <div className="grid gap-2">
     <Label htmlFor="matricula">Matrícula</Label>

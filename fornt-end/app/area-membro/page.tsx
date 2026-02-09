@@ -36,7 +36,10 @@ export default function MembroDashboard() {
     try {
       const res = await api.get('/membros/meu-painel')
       setDados(res.data)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       console.log("Erro ao carregar dados do membro")
     } finally {
       setLoading(false)
@@ -50,7 +53,7 @@ export default function MembroDashboard() {
   if (loading) return <div className="p-10 text-center">Carregando seu acervo...</div>
 
   return (
-    <div className="p-6 space-y-8 bg-slate-50/30 min-h-screen">
+    <div className="p-6 space-y-8 bg-slate-50/30 min-h-screen max-w-6xl mx-auto">
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Olá, {dados?.usuario?.nome ? dados?.usuario?.nome : 'Membro'}</h1>
@@ -102,9 +105,9 @@ export default function MembroDashboard() {
                 { dados?.emprestimos && dados?.emprestimos.map((emp) => (
                   <TableRow key={emp.id}>
                     <TableCell className="font-medium">
-                      {emp.livro.titulo.length > 10
-                        ? emp.livro?.titulo.substring(0, 16) + "..."
-                        : emp.livro?.titulo
+                      {emp.exemplar.livro.titulo.length > 10
+                        ? emp.exemplar.livro?.titulo.substring(0, 16) + "..."
+                        : emp.exemplar.livro?.titulo
                       }
                     </TableCell>
                     <TableCell>{format(new Date(emp.dataPrevista), 'dd/MM/yyyy')}</TableCell>

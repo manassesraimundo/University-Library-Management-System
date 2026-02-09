@@ -75,7 +75,10 @@ export class MembrosService {
           },
           emprestimos: {
             where: { dataDevolucao: null },
-            include: { livro: true, multa: { where: { paga: false } } },
+            include: {
+              exemplar: { include: { livro: true } },
+              multa: { where: { paga: false } },
+            },
           },
           historico: true,
         },
@@ -211,7 +214,10 @@ export class MembrosService {
           },
           emprestimos: {
             where: { dataDevolucao: null },
-            include: { livro: true, multa: { where: { paga: false } } },
+            include: {
+              exemplar: { include: { livro: true } },
+              multa: { where: { paga: false } },
+            },
             orderBy: { dataEmprestimo: 'desc' },
           },
           historico: true,

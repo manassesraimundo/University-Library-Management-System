@@ -20,124 +20,117 @@ export class EmprestimosService {
   ): Promise<{ message: string }> {
     try {
       await this.prisma.$transaction(async (tx) => {
-        const membroExisted = await tx.membro.findUnique({
+        // 1. Validar Membro e Limites
+        const membro = await tx.membro.findUnique({
           where: { matricula: body.matricula },
           include: {
-            emprestimos: {
-              where: { multa: { paga: false } },
-              include: { multa: true },
-            },
             _count: {
               select: { emprestimos: { where: { dataDevolucao: null } } },
             },
           },
         });
 
-        if (!membroExisted) {
-          throw new NotFoundException('Membro não encontrado');
-        }
+        if (!membro) throw new NotFoundException('Membro não encontrado');
+        if (!membro.ativo) throw new BadRequestException('Membro inativo');
 
-        if (membroExisted.ativo === false) {
+        // Verificar Limite de Quantidade
+        const limite = membro.tipo === TipoMembro.ESTUDANTE ? 3 : 5;
+        if (membro._count.emprestimos >= limite) {
           throw new BadRequestException(
-            'Membro inativo não pode realizar empréstimos',
+            `Limite de ${limite} empréstimos atingido.`,
           );
         }
 
-        // verificar se ja tem o livro emprestado
-        const emprestadoExiste = await tx.emprestimo.findFirst({
-          where: {
-            membroId: membroExisted.id,
-            livroId: body.livroId,
-            dataDevolucao: null,
-          },
+        // Verificar Multas (Usando uma query direta mais eficiente)
+        const possuiMulta = await tx.multa.findFirst({
+          where: { emprestimo: { membroId: membro.id }, paga: false },
+        });
+        if (possuiMulta)
+          throw new BadRequestException('Membro possui multas pendentes');
+
+        // 2. Validar Exemplar e Livro
+        const exemplar = await tx.exemplar.findUnique({
+          where: { codigoBarras: body.codigoBarras },
+          include: { livro: true },
         });
 
-        if (emprestadoExiste) {
-          throw new BadRequestException('Emprestimo ja existe');
-        }
-
-        const multasPendentes = membroExisted.emprestimos
-          .filter((e) => e.multa != null)
-          .map((e) => e.multa);
-
-        if (multasPendentes.length > 0) {
-          const totalDevido = multasPendentes.reduce(
-            (sum, multa) => sum + (multa?.valor ?? 0),
-            0,
-          );
+        if (!exemplar) throw new NotFoundException('Exemplar não encontrado');
+        if (exemplar.status !== StatusLivro.DISPONIVEL) {
           throw new BadRequestException(
-            `Bloqueado: O membro possui ${multasPendentes.length} multa(s) pendente(s). Total: ${totalDevido} Kz`,
+            'Este exemplar já está emprestado ou indisponível.',
           );
         }
 
-        const livro = await tx.livro.findUnique({
-          where: { id: body.livroId },
+        const livro = exemplar.livro;
+        if (livro.etiqueta === Etiqueta.VERMELHO) {
+          throw new BadRequestException(
+            'Livros de etiqueta VERMELHA são apenas para consulta local.',
+          );
+        }
+
+        // 3. Regra do Quadrado (Mínimo 1 exemplar disponível na estante)
+        const exemplaresDisponiveis = await tx.exemplar.count({
+          where: { livroId: livro.id, status: StatusLivro.DISPONIVEL },
         });
 
-        if (!livro) {
-          throw new NotFoundException('Livro não encontrado');
-        }
+        const reservaExistente = await tx.reserva.findFirst({
+          where: { livroId: exemplar.livroId, ativa: true },
+        });
 
-        if (livro.etiqueta === Etiqueta.VERMELHO)
+        if (exemplaresDisponiveis < 2) {
           throw new BadRequestException(
-            'Este livro nao pode sair da biblioteca.',
-          );
-
-        if (livro.quantidade < 2) {
-          throw new BadRequestException(
-            `Empréstimo não permitido: este é o único exemplar disponível para consulta local.`,
+            'Este é o último exemplar disponível. Deve permanecer para consulta local.',
           );
         }
 
-        if (livro.status !== StatusLivro.DISPONIVEL) {
-          throw new BadRequestException('Livro indisponível para empréstimo');
-        }
-
-        const limite = membroExisted.tipo === TipoMembro.ESTUDANTE ? 3 : 5;
-
-        if (membroExisted._count.emprestimos >= limite) {
+        if (
+          reservaExistente &&
+          exemplaresDisponiveis === 2 &&
+          reservaExistente?.membroId !== membro.id
+        ) {
           throw new BadRequestException(
-            'Membro atingiu o limite máximo de empréstimos simultâneos',
+            'Exite reserva pendente para este livro.',
           );
         }
 
+        // 4. Lógica de Data Prevista
         const dataPrevista = new Date();
-        if (livro.etiqueta === Etiqueta.AMARELO)
-          dataPrevista.setHours(dataPrevista.getHours() + 24);
-        else if (
-          livro.etiqueta === Etiqueta.BRANCO &&
-          membroExisted.tipo === TipoMembro.PROFESSOR
-        )
-          dataPrevista.setDate(dataPrevista.getDate() + 15);
-        else dataPrevista.setDate(dataPrevista.getDate() + 5);
+        if (livro.etiqueta === Etiqueta.AMARELO) {
+          dataPrevista.setDate(dataPrevista.getDate() + 1);
+        } else {
+          const dias = membro.tipo === TipoMembro.PROFESSOR ? 15 : 5;
+          dataPrevista.setDate(dataPrevista.getDate() + dias);
+        }
 
+        // 5. Executar Operações (Ordem correta)
         await tx.emprestimo.create({
           data: {
-            membroId: membroExisted.id,
-            livroId: body.livroId,
+            membroId: membro.id,
+            exemplarId: exemplar.id,
             dataPrevista,
           },
         });
 
-        const novaQuantidade = livro.quantidade - 1;
-
-        await tx.livro.update({
-          where: { id: body.livroId },
-          data: {
-            status:
-              novaQuantidade === 1
-                ? StatusLivro.EMPRESTADO
-                : StatusLivro.DISPONIVEL,
-            quantidade: novaQuantidade,
-          },
+        // Mudar status para INDISPONIVEL
+        await tx.exemplar.update({
+          where: { id: exemplar.id },
+          data: { status: StatusLivro.INDISPONIVEL },
         });
 
         await tx.historicoLeitura.create({
           data: {
-            membroId: membroExisted.id,
-            livroId: body.livroId,
+            membroId: membro.id,
+            exemplarId: exemplar.id,
+            livroId: livro.id,
           },
         });
+
+        if (reservaExistente) {
+          await tx.reserva.update({
+            where: { id: reservaExistente.id },
+            data: { ativa: false },
+          });
+        }
       });
 
       return { message: 'Empréstimo criado com sucesso' };
@@ -153,7 +146,7 @@ export class EmprestimosService {
       const emprestimos = await this.prisma.emprestimo.findMany({
         include: {
           membro: { include: { usuario: { omit: { senha: true } } } },
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
         },
         orderBy: { dataEmprestimo: 'desc' },
@@ -170,70 +163,112 @@ export class EmprestimosService {
     }
   }
 
-  async getAllEmprestimos(etiqueta: string): Promise<Emprestimo[]> {
+  async getAllEmprestimos(etiqueta?: string): Promise<any[]> {
     try {
+      const where: any = {
+        dataDevolucao: null,
+        dataPrevista: { gte: new Date() },
+      };
+
       if (etiqueta) {
-        const emprestimos = await this.prisma.emprestimo.findMany({
-          where: {
-            dataDevolucao: null,
-            livro: { etiqueta: Etiqueta[etiqueta.toUpperCase()] },
+        where.exemplar = {
+          livro: {
+            etiqueta: Etiqueta[etiqueta.toUpperCase() as keyof typeof Etiqueta],
           },
-          include: {
-            membro: { include: { usuario: { omit: { senha: true } } } },
-            livro: {
-              include: {
-                categoria: true,
-                _count: {
-                  select: {
-                    emprestimos: {
-                      where: { dataDevolucao: null },
-                    },
-                  },
-                },
-              },
-            },
-            multa: true,
-          },
-          orderBy: { dataEmprestimo: 'desc' },
-        });
-
-        const resul = emprestimos.filter(
-          (e) => e.dataPrevista.toISOString() >= new Date().toISOString(),
-        );
-
-        return resul;
+        };
       }
 
       const emprestimos = await this.prisma.emprestimo.findMany({
-        where: { dataDevolucao: null },
+        where,
         include: {
-          membro: { include: { usuario: { omit: { senha: true } } } },
-          livro: {
+          exemplar: {
             include: {
-              categoria: true,
-              _count: {
-                select: {
-                  emprestimos: {
-                    where: { dataDevolucao: null },
+              livro: {
+                include: {
+                  categoria: true,
+                  _count: {
+                    select: {
+                      exemplares: true,
+                      reservas: { where: { ativa: true } },
+                    },
+                  },
+                  exemplares: {
+                    where: { status: StatusLivro.DISPONIVEL },
+                    select: { id: true },
                   },
                 },
               },
             },
           },
-          multa: true,
         },
         orderBy: { dataEmprestimo: 'desc' },
       });
 
-      const resul = emprestimos.filter(
-        (e) => e.dataPrevista.toISOString() >= new Date().toISOString(),
-      );
+      const livrosVistos = new Set();
 
-      return resul;
+      return emprestimos.reduce((acc: any, e) => {
+        const livro = e.exemplar.livro;
+        if (!livrosVistos.has(livro.id)) {
+          livrosVistos.add(livro.id);
+          acc.push({
+            id: e.id,
+            livroId: livro.id,
+            titulo: livro.titulo,
+            categoria: livro.categoria.nome,
+            etiqueta: livro.etiqueta,
+            quantidadeExemplares: livro._count.exemplares,
+            quantidadeDisponiveis: livro.exemplares.length,
+            quantidadeReservado: livro._count.reservas,
+          });
+        }
+        return acc;
+      }, []);
     } catch (error) {
-      throw error instanceof HttpException
-        ? error
-        : new InternalServerErrorException('Erro ao buscar empréstimos');
+      throw new InternalServerErrorException('Erro ao buscar empréstimos');
+    }
+  }
+
+  async getAllEmprestimos2(): Promise<any[]> {
+    try {
+      const where: any = {
+        dataDevolucao: null,
+        dataPrevista: { gte: new Date() },
+      };
+
+      // if (etiqueta) {
+      //   where.exemplar = { livro: { etiqueta: Etiqueta[etiqueta.toUpperCase() as keyof typeof Etiqueta] } };
+      // }
+
+      const emprestimos = await this.prisma.emprestimo.findMany({
+        where,
+        include: {
+          membro: { include: { usuario: { select: { nome: true } } } },
+          exemplar: {
+            include: {
+              livro: {
+                include: {
+                  categoria: true,
+                  _count: {
+                    select: {
+                      exemplares: true,
+                      reservas: { where: { ativa: true } },
+                    },
+                  },
+                  exemplares: {
+                    where: { status: StatusLivro.DISPONIVEL },
+                    select: { id: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: { dataEmprestimo: 'desc' },
+      });
+
+      return emprestimos;
+    } catch (error) {
+      throw new InternalServerErrorException('Erro ao buscar empréstimos');
     }
   }
 
@@ -242,7 +277,7 @@ export class EmprestimosService {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { dataPrevista: { lt: new Date() }, dataDevolucao: null },
         include: {
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
           membro: { include: { usuario: { omit: { senha: true } } } },
         },
@@ -267,7 +302,7 @@ export class EmprestimosService {
           membro: {
             include: { usuario: { select: { nome: true, email: true } } },
           },
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
         },
       });
@@ -285,14 +320,14 @@ export class EmprestimosService {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { membro: { matricula } },
         include: {
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
           membro: { include: { usuario: { omit: { senha: true } } } },
         },
         orderBy: { dataEmprestimo: 'desc' },
       });
 
-      return emprestimos;
+      return emprestimos.filter((f) => f.dataDevolucao === null);
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -309,7 +344,7 @@ export class EmprestimosService {
           dataDevolucao: null,
         },
         include: {
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
           membro: { include: { usuario: { omit: { senha: true } } } },
         },
@@ -333,12 +368,12 @@ export class EmprestimosService {
           membro: {
             include: { usuario: { select: { nome: true, email: true } } },
           },
-          livro: true,
+          exemplar: { include: { livro: true } },
           multa: true,
         },
       });
 
-      return historico;
+      return historico.filter((f) => f.dataDevolucao !== null);
     } catch (error) {
       throw error instanceof HttpException
         ? error
@@ -386,13 +421,11 @@ export class EmprestimosService {
       await this.prisma.$transaction(async (tx) => {
         const emprestimo = await tx.emprestimo.findUnique({
           where: { id: emprestimoId },
-          include: { livro: true },
+          include: { exemplar: { include: { livro: true } } },
         });
-
         if (!emprestimo) {
           throw new NotFoundException('Empréstimo não encontrado');
         }
-
         if (emprestimo.dataDevolucao) {
           throw new BadRequestException('Empréstimo já foi devolvido');
         }
@@ -419,37 +452,48 @@ export class EmprestimosService {
           });
         }
 
-        const reservaAtiva = await tx.reserva.findMany({
+        const reservasAtivas = await tx.reserva.findMany({
           where: {
-            livroId: emprestimo.livroId,
+            livroId: emprestimo.exemplar.livroId,
             ativa: true,
           },
           orderBy: { posicao: 'asc' },
           include: { membro: { include: { usuario: true } } },
         });
 
-        const reservaAtivaExists =
-          reservaAtiva.length > 0
-            ? StatusLivro.RESERVADO
-            : StatusLivro.DISPONIVEL;
+        await tx.exemplar.update({
+          where: { id: emprestimo.exemplarId },
+          data: {
+            status: StatusLivro.DISPONIVEL,
+          },
+        });
 
-        if (reservaAtiva.length > 0) {
-          const primeiraReserva = reservaAtiva[0];
+        if (reservasAtivas.length > 0) {
+          const primeiraReserva = reservasAtivas[0];
+
+          const dataLimite = new Date();
+          dataLimite.setDate(dataLimite.getDate() + 2);
+
+          await tx.reserva.update({
+            where: { id: primeiraReserva.id },
+            data: { paraData: dataLimite },
+          });
+
+          const dataFormatada = dataLimite.toLocaleString('pt-PT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
           await tx.notificacao.create({
             data: {
               membroId: primeiraReserva.membroId,
-              mensagem: `O livro "${emprestimo.livro.titulo}" que você reservou está agora disponível para levantamento.`,
+              mensagem: `O livro "${emprestimo.exemplar.livro.titulo}" está disponível! Você tem até ${dataFormatada} para levantá-lo.`,
             },
           });
         }
-
-        await tx.livro.update({
-          where: { id: emprestimo.livroId },
-          data: {
-            quantidade: { increment: 1 },
-            status: reservaAtivaExists,
-          },
-        });
       });
 
       return { message: 'Empréstimo devolvido com sucesso', multa: valorMulta };
@@ -467,24 +511,24 @@ export class EmprestimosService {
     try {
       const emprestimo = await this.prisma.emprestimo.findUnique({
         where: { id: renovar.emprestimoId },
-        include: { membro: true },
+        include: {
+          membro: true,
+          exemplar: { include: { livro: true } },
+        },
       });
-
       if (!emprestimo) {
         throw new NotFoundException('Empréstimo não encontrado');
       }
-
       if (emprestimo.dataDevolucao) {
         throw new BadRequestException('Empréstimo já foi devolvido');
       }
-
       if (emprestimo.renovacoes >= 2) {
         throw new BadRequestException('Limite máximo de renovações atingido');
       }
 
       const reservaAtiva = await this.prisma.reserva.findFirst({
         where: {
-          livroId: emprestimo.livroId,
+          livroId: emprestimo.exemplar.livroId,
           ativa: true,
         },
         orderBy: { posicao: 'asc' },
@@ -496,22 +540,19 @@ export class EmprestimosService {
         );
       }
 
-      const livro = await this.prisma.livro.findUnique({
-        where: { id: emprestimo.livroId },
-      });
-
+      const livro = emprestimo.exemplar.livro;
       const novaDataPrevista = new Date(emprestimo.dataPrevista);
-      if (
-        livro?.etiqueta === Etiqueta.BRANCO &&
-        emprestimo.membro.tipo === TipoMembro.PROFESSOR
-      )
-        novaDataPrevista.setDate(novaDataPrevista.getDate() + 15);
-      else if (
-        livro?.etiqueta === Etiqueta.BRANCO &&
-        emprestimo.membro.tipo !== TipoMembro.PROFESSOR
-      )
-        novaDataPrevista.setDate(novaDataPrevista.getDate() + 5);
-      else novaDataPrevista.setHours(novaDataPrevista.getHours() + 24);
+
+      if (livro?.etiqueta === Etiqueta.BRANCO) {
+        const diasAdicionais =
+          emprestimo.membro.tipo === TipoMembro.PROFESSOR ? 15 : 5;
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + diasAdicionais);
+      } else if (livro?.etiqueta === Etiqueta.AMARELO)
+        novaDataPrevista.setDate(novaDataPrevista.getDate() + 1);
+      else
+        throw new BadRequestException(
+          'Este tipo de livro não permite renovação.',
+        );
 
       await this.prisma.emprestimo.update({
         where: { id: emprestimo.id },
@@ -533,7 +574,12 @@ export class EmprestimosService {
     try {
       const emprestimos = await this.prisma.emprestimo.findMany({
         where: { membroId },
-        include: { livro: { include: { autor: true } }, multa: true },
+        include: {
+          exemplar: {
+            include: { livro: { include: { autor: true } } },
+          },
+          multa: true,
+        },
         orderBy: { dataEmprestimo: 'desc' },
       });
 

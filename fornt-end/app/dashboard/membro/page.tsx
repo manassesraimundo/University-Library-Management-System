@@ -36,9 +36,8 @@ export default function MembrosPage() {
   const [filtroStatus, setFiltroStatus] = useState<string>("true");
   const [busca, setBusca] = useState<string>("");
 
-  const [membroSelecionado, setMembroSelecionado] = useState<string | null>(null)
-  const [modalDetalhesAberto, setModalDetalhesAberto] = useState<boolean>(false)
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const [membroSelecionado, setMembroSelecionado] = useState<string | null>(null);
+  const [modalDetalhesAberto, setModalDetalhesAberto] = useState<boolean>(false);
 
   const carregarMembros = async () => {
     try {
@@ -49,8 +48,10 @@ export default function MembrosPage() {
       })
       setMembros(response.data)
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao carregar lista de membros")
-      if (error.response?.status === 401) router.replace('/login')
     }
   }
 
@@ -59,9 +60,9 @@ export default function MembrosPage() {
       const response = await api.get(`/membros/${busca}`)
 
       setMembros(response.data)
-
     } catch (error: any) {
-      if (error.response?.status === 401) router.replace('/login')
+      if (error.response?.status === 401)
+        window.location.href = '/login';
     }
   }
 
@@ -82,27 +83,12 @@ export default function MembrosPage() {
       toast.success(`Membro ${statusAtual ? 'desativado' : 'ativado'} com sucesso`)
       carregarMembros()
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       toast.error(error.response?.data?.message || "Erro ao atualizar status")
     }
   }
-
-  // Deletar membro
-  // const handleDelete = async (matricula: string) => {
-
-  //     try {
-  //         const s = await api.delete(`/membros/${matricula}`)
-
-  //         console.log(s.data)
-
-  //         toast.success("Membro removido com sucesso")
-
-  //         setIsAlertOpen(false)
-  //         carregarMembros()
-  //     } catch (error: any) {
-  //         alert(error.message)
-  //         toast.error("Erro ao deletar membro")
-  //     }
-  // }
 
   const abrirDetalhes = (matricula: string) => {
     setMembroSelecionado(matricula)
@@ -137,6 +123,7 @@ export default function MembrosPage() {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Ver Inativos</span>
           <Switch
+            className="cursor-pointer"
             checked={filtroStatus === "false"}
             onCheckedChange={(checked) => setFiltroStatus(checked ? "false" : "true")}
           />
@@ -169,18 +156,18 @@ export default function MembrosPage() {
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>
+                      <Button variant="ghost" size="icon" className="cursor-pointer"><MoreHorizontal size={16} /></Button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Opções</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => abrirDetalhes(membro.matricula)}>
+                      <DropdownMenuItem onClick={() => abrirDetalhes(membro.matricula)} className="cursor-pointer">
                         Ver detalhes do membro
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className={`
-                                                    ${membro.ativo ? 'text-red-600 focus:text-red-600'
-                            : 'text-green-600 focus:text-green-600'}`
+                           ${membro.ativo ? 'text-red-600 focus:text-red-600'
+                            : 'text-green-600 focus:text-green-600'} cursor-pointer`
                         }
                         onClick={() => handleToggleStatus(membro.matricula, membro.ativo)}
                       >

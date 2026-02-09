@@ -10,6 +10,7 @@
 export type * from './models/Usuario.js';
 export type * from './models/Membro.js';
 export type * from './models/Livro.js';
+export type * from './models/Exemplar.js';
 export type * from './models/Autor.js';
 export type * from './models/Categoria.js';
 export type * from './models/Emprestimo.js';

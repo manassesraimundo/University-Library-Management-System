@@ -34,17 +34,23 @@ export function NotificacoesPopover() {
       const naoLidas = todasNotificacoes.filter(n => !n.lida)
 
       setNotificacoes(naoLidas)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       console.error("Erro ao buscar notificações não lidas:", error);
     }
   }
 
   const marcarComoLidas = async (notificacaoId: number) => {
     try {
-      await api.patch(`/membros/notificacoes${notificacaoId}/mark-as-read`)
+      await api.patch(`/membros/notificacoes/${notificacaoId}/mark-as-read`)
       getNotificacaoesNaoLidas();
       toast.success("Notificação marcada como lida.")
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       console.error("Erro ao marcar todas como lidas:", error);
     }
   }
@@ -54,7 +60,10 @@ export function NotificacoesPopover() {
       await api.patch(`/membros/notificacoes/mark-all-as-read`)
       getNotificacaoesNaoLidas();
       toast.success("Todas as notificações foram marcadas como lidas.")
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       console.error("Erro ao marcar todas como lidas:", error);
     }
   }
@@ -66,7 +75,7 @@ export function NotificacoesPopover() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative cursor-pointer">
           {notificacoes.length > 0 && (
             <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>

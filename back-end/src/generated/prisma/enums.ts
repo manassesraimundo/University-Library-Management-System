@@ -18,8 +18,7 @@ export type Role = (typeof Role)[keyof typeof Role];
 
 export const StatusLivro = {
   DISPONIVEL: 'DISPONIVEL',
-  EMPRESTADO: 'EMPRESTADO',
-  RESERVADO: 'RESERVADO',
+  INDISPONIVEL: 'INDISPONIVEL',
 } as const;
 
 export type StatusLivro = (typeof StatusLivro)[keyof typeof StatusLivro];

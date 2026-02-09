@@ -25,21 +25,26 @@ export class ReservasController {
     return this.reservasService.createReserva(body);
   }
 
+  @Get('todos')
+  @Roles('BIBLIOTECARIO')
+  async getReservasByStatus(@Query('status') status?: string) {
+    const st = status === 'true' ? true : false;
+    return await this.reservasService.getReservasByStatus(st);
+  }
+
   @Put('confirmar/:reservaId')
   @Roles('BIBLIOTECARIO')
   async confirmarReservaParaEmprestimo(@Param('reservaId') reservaId: number) {
     return await this.reservasService.confirmarReservaParaEmprestimo(reservaId);
   }
 
-  @Get()
-  @Roles('BIBLIOTECARIO')
-  async getReservas(@Query('status') status?: string) {
-    const st = status === 'true' ? true : false;
-    return await this.reservasService.getReservas(st);
-  }
-
   @Get(':matricula')
   async getReservasByMatricula(@Param('matricula') matricula: string) {
+    return await this.reservasService.getReservasByMatricula(matricula);
+  }
+
+  @Get('membro/:matricula')
+  async getReservasByMembro(@Param('matricula') matricula: string) {
     return await this.reservasService.getReservasByMatricula(matricula);
   }
 

@@ -24,7 +24,7 @@ export default function AreaMembroLayout({
     try {
       const res = await api.get('/membros/meu-painel')
       setDados(res.data)
-    } catch (error) {
+    } catch (error: any) {
       console.log("Erro ao carregar dados do membro")
     } finally {
       setIsLoading(false)
@@ -61,7 +61,7 @@ export default function AreaMembroLayout({
   }
 
   return (
-    <div className="p-6 space-y-8 bg-slate-50 min-h-screen">
+    <div className="p-6 space-y-8 bg-slate-50 min-h-screen overflow-hidden">
       <HeaderMembro />
       {children}
     </div>

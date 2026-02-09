@@ -19,13 +19,16 @@ import {
   HelpCircle,
   PanelBottom,
   Book,
-  BookA
+  BookA,
+  Clock,
+  Bookmark
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { NotificacoesPopover } from "./notificacoes-popover";
+import { toast } from "sonner";
 
 export function UserNav() {
   const { membro, logout } = useAuth()
@@ -41,7 +44,7 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full border">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full border cursor-pointer">
           <Avatar className="h-9 w-9">
             <AvatarFallback className="bg-primary/10 text-primary font-semibold">
               {iniciais || "U"}
@@ -96,7 +99,16 @@ export function UserNav() {
             <span
               onClick={() => router.push('/area-membro/emprestimos')}
             >
-              Meus Empréstimos
+              Empréstimos
+            </span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer">
+           <Bookmark className="mr-2 h-4 w-4" />
+           <span
+              onClick={() => router.push('/area-membro/reservas')}
+            >
+              Reservas
             </span>
           </DropdownMenuItem>
 
@@ -143,6 +155,7 @@ export function UserNav() {
           <span
             onClick={() => {
               logout();
+              toast.success("Logout com Sucesso.")
               router.push('/login');
             }}
           >
@@ -158,8 +171,9 @@ export function HeaderMembro() {
 
   return (
     <header className="h-16 border-b bg-white flex items-center justify-between px-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 text-primary font-bold text-lg">
         {/* Logo ou Breadcrumbs aqui */}
+        BIBLIO-TECH
       </div>
 
       <div className="flex items-center gap-4">

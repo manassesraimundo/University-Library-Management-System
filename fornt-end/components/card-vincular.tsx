@@ -1,14 +1,28 @@
 'use client'
 
-import { Loader2, Mail, UserIcon, UserPlus, XCircle } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { useState } from "react";
+import { 
+  Loader2, 
+  Mail, 
+  UserIcon, 
+  UserPlus, 
+  XCircle 
+} from "lucide-react";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from "./ui/card";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useState } from "react";
 import { IMembro } from "@/types/interface";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import AlertGlobal from "./alertGlobal";
+import { useRouter } from "next/navigation";
 
 interface ICardVincularProps {
   dados: IMembro | null;
@@ -18,9 +32,14 @@ interface ICardVincularProps {
 }
 
 export function CardVincular({ dados, carregarPainelMembro, setVincular }: ICardVincularProps) {
+  const route = useRouter();
+
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const handleCriarUsuario = async () => {
     setLoading(true)
@@ -29,9 +48,15 @@ export function CardVincular({ dados, carregarPainelMembro, setVincular }: ICard
 
       toast.success("Usuário criado! Agora você pode acessar o sistema.")
 
-      carregarPainelMembro()
+      route.refresh();
+      carregarPainelMembro();
+      setVincular();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Erro ao criar conta")
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
+      setMessage(error.response?.data?.message || "Erro ao criar conta");
+      setIsOpen(true);
     } finally {
       setLoading(false)
     }
@@ -39,8 +64,8 @@ export function CardVincular({ dados, carregarPainelMembro, setVincular }: ICard
 
   return (
     <div className="flex items-center justify-center min-h-[80vh] p-6">
+      {isOpen && <AlertGlobal isOpen={isOpen} setIsOpen={() => setIsOpen(false)} message={message} titulo="Erro Multa" />}
       <Card className="max-w-[450px] w-full border-dashed border-2 border-primary/20 shadow-xl relative">
-
         {/* Botão posicionado no canto superior direito */}
         <Button
           variant="ghost"

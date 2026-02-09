@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { api } from "@/lib/api";
 import { ICategoria } from "@/types/interface";
+import AlertGlobal from "@/components/alertGlobal";
 
 export default function CategoriasPage() {
   const [categorias, setCategorias] = useState<ICategoria[]>([]);
@@ -36,12 +37,19 @@ export default function CategoriasPage() {
   const [tamanho, setTamanho] = useState<number>();
   const [categoriaInput, setCategoriaInput] = useState<string>("");
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
+  /* GARREGAR CATEGORIAS */
   const carregarCategorias = async () => {
     try {
       const response = await api.get(`/categoria?nome=${categoriaInput}`)
 
       setCategorias(response.data)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao carregar categorias")
     } finally {
       setLoading(false)
@@ -56,7 +64,12 @@ export default function CategoriasPage() {
       toast.success("Categoria excluída com sucesso")
       carregarCategorias()
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Erro ao excluir categoria")
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
+      const msm = error.response?.data?.message || "Erro ao excluir categoria";
+      setMessage(msm);
+      setIsOpen(true);
     } finally {
       setIsAlertOpen(false)
     }
@@ -66,7 +79,7 @@ export default function CategoriasPage() {
     setIdParaExcluir(id);
     setTamanho(t)
     setIsAlertOpen(true);
-    
+
   }
 
   return (
@@ -128,7 +141,7 @@ export default function CategoriasPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-destructive hover:bg-red-50"
+                      className="text-destructive hover:bg-red-50 cursor-pointer"
                       onClick={() => {
                         open(cat.id, cat.livros?.length)
                       }}
@@ -145,6 +158,9 @@ export default function CategoriasPage() {
 
       {/* Modal Único de Exclusão (Fora do Loop) */}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        {
+          isOpen && <AlertGlobal isOpen={isOpen} setIsOpen={() => setIsOpen(false)} message={message} titulo="Erro" />
+        }
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir esta categoria?</AlertDialogTitle>
@@ -157,8 +173,8 @@ export default function CategoriasPage() {
             {
               tamanho === 0 ? (
                 <AlertDialogAction
-                  className="bg-red-600 hover:bg-red-700"
-                  onClick={() =>  idParaExcluir && handleDelete(idParaExcluir, tamanho)}
+                  className="bg-red-600 hover:bg-red-700 cursor-pointer"
+                  onClick={() => idParaExcluir && handleDelete(idParaExcluir, tamanho)}
                 >
                   Confirmar Exclusão
                 </AlertDialogAction>

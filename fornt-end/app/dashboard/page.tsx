@@ -30,7 +30,10 @@ export default function DashboardPage() {
 
       const entreges = emprestimos.data;
       setEmprestimos(entreges)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       console.error("Erro ao carregar dados do dashboard:", error);
     }
   }

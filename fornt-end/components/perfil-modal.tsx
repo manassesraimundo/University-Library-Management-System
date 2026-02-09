@@ -60,6 +60,9 @@ export function PerfilModal({ isOpen, onClose }: IPerfilModalProps) {
 
       onClose()
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       toast.error(error.response?.data?.message || "Erro ao atualizar perfil")
     } finally {
       setIsLoading(false)

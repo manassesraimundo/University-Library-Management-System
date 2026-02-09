@@ -14,7 +14,7 @@ import { Printer, FileText } from "lucide-react";
 import { IReserva } from "@/types/interface";
 
 interface IBotaoImprimirRelatorioProps {
-  dadosGrafico: { titulo: string }[];
+  dadosGrafico: { tituloPrint: string }[];
   reservas: IReserva[];
 }
 export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBotaoImprimirRelatorioProps) {
@@ -30,7 +30,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBota
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="gap-2 shadow-md">
+        <Button variant="default" className="gap-2 shadow-md cursor-pointer">
           <Printer size={18} />
           Gerar Relatório
         </Button>
@@ -58,7 +58,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBota
             </div>
             <div className="p-4 border-2 border-slate-200 rounded-lg">
               <p className="text-[10px] uppercase font-black text-slate-500">Título Mais Popular</p>
-              <p className="text-md font-bold truncate">{dadosGrafico[0]?.titulo || "N/A"}</p>
+              <p className="text-md font-bold truncate">{dadosGrafico[0]?.tituloPrint || "N/A"}</p>
             </div>
           </div>
 
@@ -67,7 +67,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBota
             <p className="text-sm leading-relaxed text-justify">
               Este relatório sintetiza o estado atual do acervo. Constatamos que
               <strong> {reservas?.length || 0} </strong> solicitações de reserva aguardam atendimento.
-              O título <em>"{dadosGrafico[0]?.titulo || "N/A"}"</em> mantém-se como o mais requisitado do período.
+              O título <em>"{dadosGrafico[0]?.tituloPrint || "N/A"}"</em> mantém-se como o mais requisitado do período.
             </p>
           </div>
 
@@ -89,7 +89,7 @@ export default function BotaoImprimirRelatorio({ dadosGrafico, reservas }: IBota
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancelar
           </Button>
-          <Button onClick={acionarImpressao} className="bg-green-600 hover:bg-green-700 text-white font-bold">
+          <Button onClick={acionarImpressao} className="bg-green-600 hover:bg-green-700 text-white font-bold cursor-pointer">
             <Printer size={16} className="mr-2" />
             Confirmar Impressão
           </Button>

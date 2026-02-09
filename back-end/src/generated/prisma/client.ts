@@ -58,6 +58,11 @@ export type Membro = Prisma.MembroModel;
  */
 export type Livro = Prisma.LivroModel;
 /**
+ * Model Exemplar
+ *
+ */
+export type Exemplar = Prisma.ExemplarModel;
+/**
  * Model Autor
  *
  */

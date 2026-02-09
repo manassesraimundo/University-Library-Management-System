@@ -415,6 +415,7 @@ export const ModelName = {
   Usuario: 'Usuario',
   Membro: 'Membro',
   Livro: 'Livro',
+  Exemplar: 'Exemplar',
   Autor: 'Autor',
   Categoria: 'Categoria',
   Emprestimo: 'Emprestimo',
@@ -448,6 +449,7 @@ export type TypeMap<
       | 'usuario'
       | 'membro'
       | 'livro'
+      | 'exemplar'
       | 'autor'
       | 'categoria'
       | 'emprestimo'
@@ -683,6 +685,82 @@ export type TypeMap<
           args: Prisma.LivroCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.LivroCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    Exemplar: {
+      payload: Prisma.$ExemplarPayload<ExtArgs>;
+      fields: Prisma.ExemplarFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.ExemplarFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.ExemplarFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        findFirst: {
+          args: Prisma.ExemplarFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.ExemplarFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        findMany: {
+          args: Prisma.ExemplarFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>[];
+        };
+        create: {
+          args: Prisma.ExemplarCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        createMany: {
+          args: Prisma.ExemplarCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        createManyAndReturn: {
+          args: Prisma.ExemplarCreateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>[];
+        };
+        delete: {
+          args: Prisma.ExemplarDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        update: {
+          args: Prisma.ExemplarUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        deleteMany: {
+          args: Prisma.ExemplarDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.ExemplarUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateManyAndReturn: {
+          args: Prisma.ExemplarUpdateManyAndReturnArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>[];
+        };
+        upsert: {
+          args: Prisma.ExemplarUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExemplarPayload>;
+        };
+        aggregate: {
+          args: Prisma.ExemplarAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExemplar>;
+        };
+        groupBy: {
+          args: Prisma.ExemplarGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.ExemplarGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.ExemplarCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.ExemplarCountAggregateOutputType>
             | number;
         };
       };
@@ -1361,9 +1439,7 @@ export const LivroScalarFieldEnum = {
   titulo: 'titulo',
   isbn: 'isbn',
   editora: 'editora',
-  status: 'status',
   etiqueta: 'etiqueta',
-  quantidade: 'quantidade',
   criadoEm: 'criadoEm',
   autorId: 'autorId',
   categoriaId: 'categoriaId',
@@ -1371,6 +1447,17 @@ export const LivroScalarFieldEnum = {
 
 export type LivroScalarFieldEnum =
   (typeof LivroScalarFieldEnum)[keyof typeof LivroScalarFieldEnum];
+
+export const ExemplarScalarFieldEnum = {
+  id: 'id',
+  codigoBarras: 'codigoBarras',
+  status: 'status',
+  observacoes: 'observacoes',
+  livroId: 'livroId',
+} as const;
+
+export type ExemplarScalarFieldEnum =
+  (typeof ExemplarScalarFieldEnum)[keyof typeof ExemplarScalarFieldEnum];
 
 export const AutorScalarFieldEnum = {
   id: 'id',
@@ -1396,7 +1483,7 @@ export const EmprestimoScalarFieldEnum = {
   renovacoes: 'renovacoes',
   quantidadeEmprestimo: 'quantidadeEmprestimo',
   membroId: 'membroId',
-  livroId: 'livroId',
+  exemplarId: 'exemplarId',
 } as const;
 
 export type EmprestimoScalarFieldEnum =
@@ -1432,6 +1519,7 @@ export const HistoricoLeituraScalarFieldEnum = {
   data: 'data',
   membroId: 'membroId',
   livroId: 'livroId',
+  exemplarId: 'exemplarId',
 } as const;
 
 export type HistoricoLeituraScalarFieldEnum =
@@ -1526,19 +1614,19 @@ export type EnumTipoMembroFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
- * Reference to a field of type 'StatusLivro'
- */
-export type EnumStatusLivroFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  'StatusLivro'
->;
-
-/**
  * Reference to a field of type 'Etiqueta'
  */
 export type EnumEtiquetaFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'Etiqueta'
+>;
+
+/**
+ * Reference to a field of type 'StatusLivro'
+ */
+export type EnumStatusLivroFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  'StatusLivro'
 >;
 
 /**
@@ -1655,6 +1743,7 @@ export type GlobalOmitConfig = {
   usuario?: Prisma.UsuarioOmit;
   membro?: Prisma.MembroOmit;
   livro?: Prisma.LivroOmit;
+  exemplar?: Prisma.ExemplarOmit;
   autor?: Prisma.AutorOmit;
   categoria?: Prisma.CategoriaOmit;
   emprestimo?: Prisma.EmprestimoOmit;

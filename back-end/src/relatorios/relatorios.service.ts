@@ -11,95 +11,71 @@ export class RelatoriosService {
 
   async getLivrosMaisEmprestados() {
     try {
+      // Ajustado para passar pela tabela Exemplar
       const result = await this.prisma.$queryRaw`
-        SELECT livro.titulo, COUNT(emprestimo.id) AS total_emprestimo
-        FROM emprestimo
-        JOIN livro ON emprestimo.livroId = livro.id
-        GROUP BY livro.titulo
+        SELECT l.titulo, COUNT(e.id) AS total_emprestimo
+        FROM Emprestimo e
+        JOIN Exemplar ex ON e.exemplarId = ex.id
+        JOIN Livro l ON ex.livroId = l.id
+        GROUP BY l.titulo
         ORDER BY total_emprestimo DESC
         LIMIT 10;
-    `;
+      `;
 
-      // Converte BigInt para Number ou String
-      return JSON.parse(
-        JSON.stringify(result, (key, value) =>
-          typeof value === 'bigint' ? value.toString() : value,
-        ),
-      );
+      return this.serializeBigInt(result);
     } catch (error) {
-      console.error(error);
-      throw error instanceof HttpException
-        ? error
-        : new InternalServerErrorException(
-            'Erro ao gerar relatório de livros mais emprestados.',
-          );
+      throw new InternalServerErrorException('Erro ao gerar relatório.');
     }
   }
 
   async getLivrosMaisEmprestadosMes() {
-    const dataAtual = new Date();
     const primeiroDiaMes = new Date(
-      dataAtual.getFullYear(),
-      dataAtual.getMonth(),
+      new Date().getFullYear(),
+      new Date().getMonth(),
       1,
     );
 
     try {
       const result = await this.prisma.$queryRaw`
-                SELECT livro.titulo, COUNT(emprestimo.id) AS total_emprestimo
-                FROM emprestimo
-                JOIN livro ON emprestimo.livroId = livro.id
-                WHERE emprestimo.dataEmprestimo >= ${primeiroDiaMes}
-                GROUP BY livro.titulo
-                ORDER BY total_emprestimo DESC
-                LIMIT 10;
-            `;
-      return JSON.parse(
-        JSON.stringify(result, (key, value) =>
-          typeof value === 'bigint' ? value.toString() : value,
-        ),
-      );
+        SELECT l.titulo, COUNT(e.id) AS total_emprestimo
+        FROM Emprestimo e
+        JOIN Exemplar ex ON e.exemplarId = ex.id
+        JOIN Livro l ON ex.livroId = l.id
+        WHERE e.dataEmprestimo >= ${primeiroDiaMes}
+        GROUP BY l.titulo
+        ORDER BY total_emprestimo DESC
+        LIMIT 10;
+      `;
+      return this.serializeBigInt(result);
     } catch (error) {
-      throw error instanceof HttpException
-        ? error
-        : new InternalServerErrorException(
-            'Erro ao gerar relatório de livros mais emprestados no mês.',
-          );
+      throw new InternalServerErrorException('Erro ao gerar relatório mensal.');
     }
   }
 
   async getLivrosMaisEmprestadosByCategoriaPorMes(categoria: string) {
-    const dataAtual = new Date();
     const primeiroDiaMes = new Date(
-      dataAtual.getFullYear(),
-      dataAtual.getMonth(),
+      new Date().getFullYear(),
+      new Date().getMonth(),
       1,
     );
 
     try {
-      // Usamos await para capturar o resultado antes de retornar
       const report = await this.prisma.$queryRaw`
-                SELECT c.nome AS categoria, l.titulo, COUNT(e.id) AS total_emprestimo
-                FROM emprestimo e
-                JOIN livro l ON e.livroId = l.id
-                JOIN categoria c ON l.categoriaId = c.id
-                WHERE e.data_emprestimo >= ${primeiroDiaMes}
-                AND c.nome = ${categoria}
-                GROUP BY c.nome, l.titulo
-                ORDER BY total_emprestimo DESC
-                LIMIT 10;
-            `;
-
-      // Se você não colocou a solução global no main.ts, converta o BigInt aqui:
-      return JSON.parse(
-        JSON.stringify(report, (key, value) =>
-          typeof value === 'bigint' ? value.toString() : value,
-        ),
-      );
+        SELECT c.nome AS categoria, l.titulo, COUNT(e.id) AS total_emprestimo
+        FROM Emprestimo e
+        JOIN Exemplar ex ON e.exemplarId = ex.id
+        JOIN Livro l ON ex.livroId = l.id
+        JOIN Categoria c ON l.categoriaId = c.id
+        WHERE e.dataEmprestimo >= ${primeiroDiaMes}
+        AND c.nome = ${categoria}
+        GROUP BY l.titulo
+        ORDER BY total_emprestimo DESC
+        LIMIT 10;
+      `;
+      return this.serializeBigInt(report);
     } catch (error) {
-      console.error('Erro Detalhado:', error); // Log para debug
       throw new InternalServerErrorException(
-        'Erro ao gerar relatório de livros mais emprestados por categoria no mês.',
+        'Erro ao gerar relatório por categoria.',
       );
     }
   }
@@ -123,5 +99,13 @@ export class RelatoriosService {
         criadaEm: 'desc',
       },
     });
+  }
+
+  private serializeBigInt(data: any) {
+    return JSON.parse(
+      JSON.stringify(data, (key, value) =>
+        typeof value === 'bigint' ? value.toString() : value,
+      ),
+    );
   }
 }

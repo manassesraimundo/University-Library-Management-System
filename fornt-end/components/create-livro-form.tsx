@@ -73,8 +73,11 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
       ])
       setAutores(resAutores.data)
       setCategorias(resCategorias.data)
-    } catch (error) {
-      console.error("Erro ao carregar dados auxiliares", error)
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
+      console.error("Erro ao carregar dados auxiliares")
     }
   }
 
@@ -104,22 +107,24 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
       onLivroCriado();
       closeModal(false)
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       setIsOpen(true)
       setMessage(error.response?.data?.message || "Erro ao salvar livro");
     }
   }
 
-  if (isOpen) {
-    return <AlertGlobal 
-      isOpen={isOpen}
-      setIsOpen={() => setIsOpen(false)}
-      message={message}
-      titulo="Erro ao cadastra livro."
-    />
-  }
-
   return (
     <form className="grid gap-6 py-4">
+      {
+        isOpen && <AlertGlobal
+          isOpen={isOpen}
+          setIsOpen={() => setIsOpen(false)}
+          message={message}
+          titulo="Erro ao cadastra livro."
+        />
+      }
       {/* TÍTULO */}
       <div className="grid gap-2">
         <Label htmlFor="titulo" className="font-semibold">Título do Livro</Label>
@@ -161,8 +166,7 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={StatusLivro.DISPONIVEL}>DISPONÍVEL</SelectItem>
-              <SelectItem value={StatusLivro.RESERVADO}>RESERVADO</SelectItem>
-              <SelectItem value={StatusLivro.EMPRESTADO}>EMPRESTADO</SelectItem>
+              <SelectItem value={'INDISPONIVEL'}>INDISPONIVEL</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -219,7 +223,7 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
             <SearchableSelect
               items={autores}
               selected={autorSel}
-              setSelected={() => setAutorSel}
+              setSelected={(e) => setAutorSel(e)}
               open={openAutor}
               setOpen={setOpenAutor}
               placeholder="Selecionar autor..."
@@ -251,7 +255,7 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
             <SearchableSelect
               items={categorias}
               selected={catSel}
-              setSelected={() => setCatSel}
+              setSelected={(e) => setCatSel(e)}
               open={openCat}
               setOpen={setOpenCat}
               placeholder="Selecionar categoria..."
@@ -293,7 +297,15 @@ interface ISearchableSelectProps {
   value?: any;
 }
 
-export function SearchableSelect({ items, selected, setSelected, open, setOpen, placeholder, onChangeCapture }: ISearchableSelectProps) {
+export function SearchableSelect({ 
+  items, 
+  selected, 
+  setSelected, 
+  open, 
+  setOpen, 
+  placeholder, 
+  onChangeCapture 
+}: ISearchableSelectProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

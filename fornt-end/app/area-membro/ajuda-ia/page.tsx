@@ -34,13 +34,17 @@ export default function ChatIAPage() {
     try {
       const res = await api.get('/chatbot/conversas');
       setMessages(res.data);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       toast.error("Não foi possível carregar o histórico de mensagens.");
     }
   }
 
+  useEffect(() => { getMessages() }, []);
+
   useEffect(() => {
-    getMessages();
     if (scrollRef.current) {
       const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
@@ -65,7 +69,10 @@ export default function ChatIAPage() {
       })
 
       setMessages(prev => [...prev, { role: 'model', content: res.data.response }])
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Ops! Tive um problema técnico. Tente novamente.")
     } finally {
       setLoading(false)
@@ -74,16 +81,19 @@ export default function ChatIAPage() {
 
   const limparMensagens = async () => {
     try {
-      await api.delete('/chatbot/historico/limpar/')
+      await api.delete('/chatbot/historico/limpar')
       setMessages([])
       toast.success("Histórico de mensagens limpo com sucesso.")
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Não foi possível limpar as mensagens.")
     }
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] max-w-4xl mx-auto p-4 space-y-4">
+    <div className="flex flex-col h-full max-w-4xl mx-auto p-4 space-y-4">
       {/* Header Estilizado */}
       <div className="flex items-center justify-between bg-gradient-to-r from-primary to-primary/80 p-4 rounded-2xl shadow-lg text-white">
         <div className="flex items-center gap-3">
@@ -102,14 +112,14 @@ export default function ChatIAPage() {
           variant="ghost"
           size="icon"
           onClick={limparMensagens}
-          className="hover:bg-white/10 text-white"
+          className="hover:bg-white/10 text-white cursor-pointer"
         >
           <Trash2 size={20} />
         </Button>
       </div>
 
       {/* Área de Mensagens */}
-      <ScrollArea className="flex-1 px-4 border rounded-2xl bg-slate-50/50 shadow-inner" ref={scrollRef}>
+      <ScrollArea className="sm:h-[550px] h-[450px]  px-4 border rounded-2xl bg-slate-50/50 shadow-inner" ref={scrollRef}>
         <div className="py-6 space-y-6">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -133,8 +143,8 @@ export default function ChatIAPage() {
                 </Avatar>
 
                 <div className={`prose prose-sm max-w-none p-4 rounded-2xl shadow-sm ${msg.role === 'user'
-                    ? 'bg-primary text-white text-brounded-tr-none'
-                    : 'bg-white text-slate-800 rounded-tl-none border border-slate-200'
+                  ? 'bg-primary text-white text-brounded-tr-none'
+                  : 'bg-white text-slate-800 rounded-tl-none border border-slate-200'
                   }`}>
                   {/* O ReactMarkdown transforma o texto em HTML bonito */}
                   <ReactMarkdown
@@ -175,7 +185,7 @@ export default function ChatIAPage() {
           onChange={(e) => setInput(e.target.value)}
           className="flex-1 border-none focus-visible:ring-0 shadow-none h-12 text-base"
         />
-        <Button type="submit" size="icon" className="h-11 w-11 rounded-xl shrink-0" disabled={loading || !input.trim()}>
+        <Button type="submit" size="icon" className="h-11 w-11 rounded-xl shrink-0 cursor-pointer" disabled={loading || !input.trim()}>
           <Send size={18} />
         </Button>
       </form>

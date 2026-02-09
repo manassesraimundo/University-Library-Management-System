@@ -24,12 +24,16 @@ import { UserPlus, Loader2, Filter } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { TipoMembro } from "@/types/enums";
+import AlertGlobal from "./alertGlobal";
 
 export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => void }) {
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [matricula, setMatricula] = useState<string>("");
   const [tipoMembro, setTipoMembro] = useState<string>(TipoMembro.ESTUDANTE);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const onSubmit = async () => {
     setLoading(true)
@@ -45,11 +49,12 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
       onMembroCriado()
     } catch (error: any) {
       const mensagem = error.response?.data?.message || "Erro ao cadastrar membro"
-      toast.error(mensagem)
-
       if (error.response?.status === 401) {
         window.location.href = '/login'
       }
+
+      setMessage(mensagem);
+      setIsOpen(true)
     } finally {
       setLoading(false)
     }
@@ -57,8 +62,16 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {
+        isOpen && <AlertGlobal
+          isOpen={isOpen}
+          setIsOpen={() => setIsOpen(false)}
+          message={message}
+          titulo="Error"
+        />
+      }
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-primary hover:bg-primary/90">
+        <Button className="gap-2 bg-primary hover:bg-primary/90 cursor-pointer">
           <UserPlus className="h-4 w-4" /> Novo Membro
         </Button>
       </DialogTrigger>
@@ -83,7 +96,7 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
 
           <div className="flex flex-1 justify-end">
             <Select value={tipoMembro} onValueChange={setTipoMembro}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] cursor-pointer">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -106,7 +119,7 @@ export function CreateMembroModal({ onMembroCriado }: { onMembroCriado: () => vo
             <Button
               onClick={onSubmit}
               disabled={loading}
-              className="min-w-[100px] bg-emerald-600 hover:bg-emerald-700"
+              className="min-w-[100px] bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirmar Cadastro"}
             </Button>

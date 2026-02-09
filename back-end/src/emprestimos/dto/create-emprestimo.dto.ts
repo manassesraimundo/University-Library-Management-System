@@ -6,4 +6,7 @@ export class CreateEmprestimoDto {
 
   @IsInt()
   livroId: number;
+
+  @IsString()
+  codigoBarras: string;
 }

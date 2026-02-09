@@ -39,21 +39,27 @@ export default function FuncionariosPage() {
 
   const carregarFuncionarios = async () => {
     try {
-      const res = await api.get(`/usuarios?status=${filtroStatus}`)
+      const res = await api.get(`/usuarios?status=${filtroStatus}`);
       setFuncionarios(res.data)
-    } catch (error) {
-      toast.error("Erro ao carregar funcionários")
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error("Erro ao carregar funcionários");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const buscarPorNomeOuEmail = async () => {
     try {
-      const funcio = await api.get(`/usuarios?nome=${busca}`)
-      setFuncionarios(funcio.data)
-    } catch (error) {
-      toast.error("Erro ao buscar funcionários")
+      const funcio = await api.get(`/usuarios?nome=${busca}`);
+      setFuncionarios(funcio.data);
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error("Erro ao buscar funcionários");
     }
   };
 
@@ -63,7 +69,10 @@ export default function FuncionariosPage() {
 
       toast.success(statusAtual ? "Acesso revogado!" : "Acesso restaurado!");
       carregarFuncionarios();
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Não foi possível alterar o status.");
     }
   };
@@ -103,6 +112,7 @@ export default function FuncionariosPage() {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Ver Inativos</span>
           <Switch
+            className="cursor-pointer"
             checked={filtroStatus === false}
             onCheckedChange={(checked) => setFiltroStatus(checked ? false : true)}
           />
@@ -157,13 +167,13 @@ export default function FuncionariosPage() {
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0 cursor-pointer">
                           <span className="sr-only">Abrir menu</span>
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
 
-                      <DropdownMenuContent align="end" className="w-48 p-1">
+                      <DropdownMenuContent align="end" className="w-48 p-1 ">
                         <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                           Ações de Gestão
                         </DropdownMenuLabel>

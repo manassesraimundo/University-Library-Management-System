@@ -46,13 +46,14 @@ export class ChatbotService {
           this.prisma.emprestimo.findMany({
             where: { membroId: dto.membroId, dataDevolucao: null },
             include: {
-              livro: true,
+              exemplar: { include: { livro: true } },
             },
             take: 10,
             orderBy: { dataEmprestimo: 'desc' },
           }),
-          this.prisma.livro.findMany({
+          this.prisma.exemplar.findMany({
             where: { status: StatusLivro.DISPONIVEL },
+            include: { livro: true },
             take: 10,
           }),
           this.prisma.chatMensagem.findMany({
@@ -73,7 +74,7 @@ export class ChatbotService {
           ? emprestimos
               .map(
                 (e) =>
-                  `- ${e.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
+                  `- ${e.exemplar.livro.titulo} (Devolver em: ${e.dataPrevista.toLocaleDateString('pt-BR')})`,
               )
               .join('\n')
           : 'O membro não possui livros emprestados no momento.';
@@ -86,7 +87,7 @@ Empréstimos Ativos:
 ${listaEmprestimos}
 
 Catálogo Disponível (Sugestões):
-${livrosDisponiveis.map((l) => `- ${l.titulo}`).join('\n')}
+${livrosDisponiveis.map((l) => `- ${l.livro.titulo}`).join('\n')}
 
 IMPORTANTE: Se o usuário perguntar sobre renovação ou multas, informe que ele deve procurar o balcão físico ou usar o menu do sistema.`;
 

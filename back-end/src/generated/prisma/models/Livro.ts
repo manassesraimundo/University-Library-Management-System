@@ -28,14 +28,12 @@ export type AggregateLivro = {
 
 export type LivroAvgAggregateOutputType = {
   id: number | null;
-  quantidade: number | null;
   autorId: number | null;
   categoriaId: number | null;
 };
 
 export type LivroSumAggregateOutputType = {
   id: number | null;
-  quantidade: number | null;
   autorId: number | null;
   categoriaId: number | null;
 };
@@ -45,9 +43,7 @@ export type LivroMinAggregateOutputType = {
   titulo: string | null;
   isbn: string | null;
   editora: string | null;
-  status: $Enums.StatusLivro | null;
   etiqueta: $Enums.Etiqueta | null;
-  quantidade: number | null;
   criadoEm: Date | null;
   autorId: number | null;
   categoriaId: number | null;
@@ -58,9 +54,7 @@ export type LivroMaxAggregateOutputType = {
   titulo: string | null;
   isbn: string | null;
   editora: string | null;
-  status: $Enums.StatusLivro | null;
   etiqueta: $Enums.Etiqueta | null;
-  quantidade: number | null;
   criadoEm: Date | null;
   autorId: number | null;
   categoriaId: number | null;
@@ -71,9 +65,7 @@ export type LivroCountAggregateOutputType = {
   titulo: number;
   isbn: number;
   editora: number;
-  status: number;
   etiqueta: number;
-  quantidade: number;
   criadoEm: number;
   autorId: number;
   categoriaId: number;
@@ -82,14 +74,12 @@ export type LivroCountAggregateOutputType = {
 
 export type LivroAvgAggregateInputType = {
   id?: true;
-  quantidade?: true;
   autorId?: true;
   categoriaId?: true;
 };
 
 export type LivroSumAggregateInputType = {
   id?: true;
-  quantidade?: true;
   autorId?: true;
   categoriaId?: true;
 };
@@ -99,9 +89,7 @@ export type LivroMinAggregateInputType = {
   titulo?: true;
   isbn?: true;
   editora?: true;
-  status?: true;
   etiqueta?: true;
-  quantidade?: true;
   criadoEm?: true;
   autorId?: true;
   categoriaId?: true;
@@ -112,9 +100,7 @@ export type LivroMaxAggregateInputType = {
   titulo?: true;
   isbn?: true;
   editora?: true;
-  status?: true;
   etiqueta?: true;
-  quantidade?: true;
   criadoEm?: true;
   autorId?: true;
   categoriaId?: true;
@@ -125,9 +111,7 @@ export type LivroCountAggregateInputType = {
   titulo?: true;
   isbn?: true;
   editora?: true;
-  status?: true;
   etiqueta?: true;
-  quantidade?: true;
   criadoEm?: true;
   autorId?: true;
   categoriaId?: true;
@@ -232,9 +216,7 @@ export type LivroGroupByOutputType = {
   titulo: string;
   isbn: string | null;
   editora: string | null;
-  status: $Enums.StatusLivro;
   etiqueta: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm: Date;
   autorId: number;
   categoriaId: number;
@@ -265,9 +247,7 @@ export type LivroWhereInput = {
   titulo?: Prisma.StringFilter<'Livro'> | string;
   isbn?: Prisma.StringNullableFilter<'Livro'> | string | null;
   editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
-  status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntFilter<'Livro'> | number;
   categoriaId?: Prisma.IntFilter<'Livro'> | number;
@@ -276,9 +256,8 @@ export type LivroWhereInput = {
     Prisma.CategoriaScalarRelationFilter,
     Prisma.CategoriaWhereInput
   >;
-  emprestimos?: Prisma.EmprestimoListRelationFilter;
+  exemplares?: Prisma.ExemplarListRelationFilter;
   reservas?: Prisma.ReservaListRelationFilter;
-  historico?: Prisma.HistoricoLeituraListRelationFilter;
 };
 
 export type LivroOrderByWithRelationInput = {
@@ -286,17 +265,14 @@ export type LivroOrderByWithRelationInput = {
   titulo?: Prisma.SortOrder;
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder;
   editora?: Prisma.SortOrderInput | Prisma.SortOrder;
-  status?: Prisma.SortOrder;
   etiqueta?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
   autor?: Prisma.AutorOrderByWithRelationInput;
   categoria?: Prisma.CategoriaOrderByWithRelationInput;
-  emprestimos?: Prisma.EmprestimoOrderByRelationAggregateInput;
+  exemplares?: Prisma.ExemplarOrderByRelationAggregateInput;
   reservas?: Prisma.ReservaOrderByRelationAggregateInput;
-  historico?: Prisma.HistoricoLeituraOrderByRelationAggregateInput;
 };
 
 export type LivroWhereUniqueInput = Prisma.AtLeast<
@@ -308,9 +284,7 @@ export type LivroWhereUniqueInput = Prisma.AtLeast<
     NOT?: Prisma.LivroWhereInput | Prisma.LivroWhereInput[];
     titulo?: Prisma.StringFilter<'Livro'> | string;
     editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
-    status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
     etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
-    quantidade?: Prisma.IntFilter<'Livro'> | number;
     criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
     autorId?: Prisma.IntFilter<'Livro'> | number;
     categoriaId?: Prisma.IntFilter<'Livro'> | number;
@@ -322,9 +296,8 @@ export type LivroWhereUniqueInput = Prisma.AtLeast<
       Prisma.CategoriaScalarRelationFilter,
       Prisma.CategoriaWhereInput
     >;
-    emprestimos?: Prisma.EmprestimoListRelationFilter;
+    exemplares?: Prisma.ExemplarListRelationFilter;
     reservas?: Prisma.ReservaListRelationFilter;
-    historico?: Prisma.HistoricoLeituraListRelationFilter;
   },
   'id' | 'isbn'
 >;
@@ -334,9 +307,7 @@ export type LivroOrderByWithAggregationInput = {
   titulo?: Prisma.SortOrder;
   isbn?: Prisma.SortOrderInput | Prisma.SortOrder;
   editora?: Prisma.SortOrderInput | Prisma.SortOrder;
-  status?: Prisma.SortOrder;
   etiqueta?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
@@ -359,11 +330,7 @@ export type LivroScalarWhereWithAggregatesInput = {
   titulo?: Prisma.StringWithAggregatesFilter<'Livro'> | string;
   isbn?: Prisma.StringNullableWithAggregatesFilter<'Livro'> | string | null;
   editora?: Prisma.StringNullableWithAggregatesFilter<'Livro'> | string | null;
-  status?:
-    | Prisma.EnumStatusLivroWithAggregatesFilter<'Livro'>
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaWithAggregatesFilter<'Livro'> | $Enums.Etiqueta;
-  quantidade?: Prisma.IntWithAggregatesFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeWithAggregatesFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntWithAggregatesFilter<'Livro'> | number;
   categoriaId?: Prisma.IntWithAggregatesFilter<'Livro'> | number;
@@ -373,15 +340,12 @@ export type LivroCreateInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
   categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
-  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroUncheckedCreateInput = {
@@ -389,32 +353,24 @@ export type LivroUncheckedCreateInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
   categoriaId: number;
-  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarUncheckedCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroUpdateInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
-  emprestimos?: Prisma.EmprestimoUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateInput = {
@@ -422,17 +378,12 @@ export type LivroUncheckedUpdateInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
-  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUncheckedUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroCreateManyInput = {
@@ -440,9 +391,7 @@ export type LivroCreateManyInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
   categoriaId: number;
@@ -452,11 +401,7 @@ export type LivroUpdateManyMutationInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
@@ -465,11 +410,7 @@ export type LivroUncheckedUpdateManyInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -480,9 +421,7 @@ export type LivroCountOrderByAggregateInput = {
   titulo?: Prisma.SortOrder;
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
-  status?: Prisma.SortOrder;
   etiqueta?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
@@ -490,7 +429,6 @@ export type LivroCountOrderByAggregateInput = {
 
 export type LivroAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
 };
@@ -500,9 +438,7 @@ export type LivroMaxOrderByAggregateInput = {
   titulo?: Prisma.SortOrder;
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
-  status?: Prisma.SortOrder;
   etiqueta?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
@@ -513,9 +449,7 @@ export type LivroMinOrderByAggregateInput = {
   titulo?: Prisma.SortOrder;
   isbn?: Prisma.SortOrder;
   editora?: Prisma.SortOrder;
-  status?: Prisma.SortOrder;
   etiqueta?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   criadoEm?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
@@ -523,9 +457,13 @@ export type LivroMinOrderByAggregateInput = {
 
 export type LivroSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  quantidade?: Prisma.SortOrder;
   autorId?: Prisma.SortOrder;
   categoriaId?: Prisma.SortOrder;
+};
+
+export type LivroScalarRelationFilter = {
+  is?: Prisma.LivroWhereInput;
+  isNot?: Prisma.LivroWhereInput;
 };
 
 export type LivroListRelationFilter = {
@@ -538,17 +476,34 @@ export type LivroOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder;
 };
 
-export type LivroScalarRelationFilter = {
-  is?: Prisma.LivroWhereInput;
-  isNot?: Prisma.LivroWhereInput;
-};
-
-export type EnumStatusLivroFieldUpdateOperationsInput = {
-  set?: $Enums.StatusLivro;
-};
-
 export type EnumEtiquetaFieldUpdateOperationsInput = {
   set?: $Enums.Etiqueta;
+};
+
+export type LivroCreateNestedOneWithoutExemplaresInput = {
+  create?: Prisma.XOR<
+    Prisma.LivroCreateWithoutExemplaresInput,
+    Prisma.LivroUncheckedCreateWithoutExemplaresInput
+  >;
+  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutExemplaresInput;
+  connect?: Prisma.LivroWhereUniqueInput;
+};
+
+export type LivroUpdateOneRequiredWithoutExemplaresNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.LivroCreateWithoutExemplaresInput,
+    Prisma.LivroUncheckedCreateWithoutExemplaresInput
+  >;
+  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutExemplaresInput;
+  upsert?: Prisma.LivroUpsertWithoutExemplaresInput;
+  connect?: Prisma.LivroWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.LivroUpdateToOneWithWhereWithoutExemplaresInput,
+      Prisma.LivroUpdateWithoutExemplaresInput
+    >,
+    Prisma.LivroUncheckedUpdateWithoutExemplaresInput
+  >;
 };
 
 export type LivroCreateNestedManyWithoutAutorInput = {
@@ -723,32 +678,6 @@ export type LivroUncheckedUpdateManyWithoutCategoriaNestedInput = {
   deleteMany?: Prisma.LivroScalarWhereInput | Prisma.LivroScalarWhereInput[];
 };
 
-export type LivroCreateNestedOneWithoutEmprestimosInput = {
-  create?: Prisma.XOR<
-    Prisma.LivroCreateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedCreateWithoutEmprestimosInput
-  >;
-  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutEmprestimosInput;
-  connect?: Prisma.LivroWhereUniqueInput;
-};
-
-export type LivroUpdateOneRequiredWithoutEmprestimosNestedInput = {
-  create?: Prisma.XOR<
-    Prisma.LivroCreateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedCreateWithoutEmprestimosInput
-  >;
-  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutEmprestimosInput;
-  upsert?: Prisma.LivroUpsertWithoutEmprestimosInput;
-  connect?: Prisma.LivroWhereUniqueInput;
-  update?: Prisma.XOR<
-    Prisma.XOR<
-      Prisma.LivroUpdateToOneWithWhereWithoutEmprestimosInput,
-      Prisma.LivroUpdateWithoutEmprestimosInput
-    >,
-    Prisma.LivroUncheckedUpdateWithoutEmprestimosInput
-  >;
-};
-
 export type LivroCreateNestedOneWithoutReservasInput = {
   create?: Prisma.XOR<
     Prisma.LivroCreateWithoutReservasInput,
@@ -775,44 +704,89 @@ export type LivroUpdateOneRequiredWithoutReservasNestedInput = {
   >;
 };
 
-export type LivroCreateNestedOneWithoutHistoricoInput = {
-  create?: Prisma.XOR<
-    Prisma.LivroCreateWithoutHistoricoInput,
-    Prisma.LivroUncheckedCreateWithoutHistoricoInput
-  >;
-  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutHistoricoInput;
-  connect?: Prisma.LivroWhereUniqueInput;
+export type LivroCreateWithoutExemplaresInput = {
+  titulo: string;
+  isbn?: string | null;
+  editora?: string | null;
+  etiqueta?: $Enums.Etiqueta;
+  criadoEm?: Date | string;
+  autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
+  categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
+  reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
 };
 
-export type LivroUpdateOneRequiredWithoutHistoricoNestedInput = {
-  create?: Prisma.XOR<
-    Prisma.LivroCreateWithoutHistoricoInput,
-    Prisma.LivroUncheckedCreateWithoutHistoricoInput
+export type LivroUncheckedCreateWithoutExemplaresInput = {
+  id?: number;
+  titulo: string;
+  isbn?: string | null;
+  editora?: string | null;
+  etiqueta?: $Enums.Etiqueta;
+  criadoEm?: Date | string;
+  autorId: number;
+  categoriaId: number;
+  reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
+};
+
+export type LivroCreateOrConnectWithoutExemplaresInput = {
+  where: Prisma.LivroWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.LivroCreateWithoutExemplaresInput,
+    Prisma.LivroUncheckedCreateWithoutExemplaresInput
   >;
-  connectOrCreate?: Prisma.LivroCreateOrConnectWithoutHistoricoInput;
-  upsert?: Prisma.LivroUpsertWithoutHistoricoInput;
-  connect?: Prisma.LivroWhereUniqueInput;
-  update?: Prisma.XOR<
-    Prisma.XOR<
-      Prisma.LivroUpdateToOneWithWhereWithoutHistoricoInput,
-      Prisma.LivroUpdateWithoutHistoricoInput
-    >,
-    Prisma.LivroUncheckedUpdateWithoutHistoricoInput
+};
+
+export type LivroUpsertWithoutExemplaresInput = {
+  update: Prisma.XOR<
+    Prisma.LivroUpdateWithoutExemplaresInput,
+    Prisma.LivroUncheckedUpdateWithoutExemplaresInput
   >;
+  create: Prisma.XOR<
+    Prisma.LivroCreateWithoutExemplaresInput,
+    Prisma.LivroUncheckedCreateWithoutExemplaresInput
+  >;
+  where?: Prisma.LivroWhereInput;
+};
+
+export type LivroUpdateToOneWithWhereWithoutExemplaresInput = {
+  where?: Prisma.LivroWhereInput;
+  data: Prisma.XOR<
+    Prisma.LivroUpdateWithoutExemplaresInput,
+    Prisma.LivroUncheckedUpdateWithoutExemplaresInput
+  >;
+};
+
+export type LivroUpdateWithoutExemplaresInput = {
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
+  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
+  reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
+};
+
+export type LivroUncheckedUpdateWithoutExemplaresInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number;
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
+  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  autorId?: Prisma.IntFieldUpdateOperationsInput | number;
+  categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
+  reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroCreateWithoutAutorInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
-  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroUncheckedCreateWithoutAutorInput = {
@@ -820,14 +794,11 @@ export type LivroUncheckedCreateWithoutAutorInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   categoriaId: number;
-  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarUncheckedCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroCreateOrConnectWithoutAutorInput = {
@@ -878,9 +849,7 @@ export type LivroScalarWhereInput = {
   titulo?: Prisma.StringFilter<'Livro'> | string;
   isbn?: Prisma.StringNullableFilter<'Livro'> | string | null;
   editora?: Prisma.StringNullableFilter<'Livro'> | string | null;
-  status?: Prisma.EnumStatusLivroFilter<'Livro'> | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFilter<'Livro'> | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFilter<'Livro'> | number;
   criadoEm?: Prisma.DateTimeFilter<'Livro'> | Date | string;
   autorId?: Prisma.IntFilter<'Livro'> | number;
   categoriaId?: Prisma.IntFilter<'Livro'> | number;
@@ -890,14 +859,11 @@ export type LivroCreateWithoutCategoriaInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
-  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroUncheckedCreateWithoutCategoriaInput = {
@@ -905,14 +871,11 @@ export type LivroUncheckedCreateWithoutCategoriaInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
-  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarUncheckedCreateNestedManyWithoutLivroInput;
   reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroCreateOrConnectWithoutCategoriaInput = {
@@ -957,108 +920,15 @@ export type LivroUpdateManyWithWhereWithoutCategoriaInput = {
   >;
 };
 
-export type LivroCreateWithoutEmprestimosInput = {
-  titulo: string;
-  isbn?: string | null;
-  editora?: string | null;
-  status?: $Enums.StatusLivro;
-  etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
-  criadoEm?: Date | string;
-  autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
-  categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
-  reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutLivroInput;
-};
-
-export type LivroUncheckedCreateWithoutEmprestimosInput = {
-  id?: number;
-  titulo: string;
-  isbn?: string | null;
-  editora?: string | null;
-  status?: $Enums.StatusLivro;
-  etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
-  criadoEm?: Date | string;
-  autorId: number;
-  categoriaId: number;
-  reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput;
-};
-
-export type LivroCreateOrConnectWithoutEmprestimosInput = {
-  where: Prisma.LivroWhereUniqueInput;
-  create: Prisma.XOR<
-    Prisma.LivroCreateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedCreateWithoutEmprestimosInput
-  >;
-};
-
-export type LivroUpsertWithoutEmprestimosInput = {
-  update: Prisma.XOR<
-    Prisma.LivroUpdateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedUpdateWithoutEmprestimosInput
-  >;
-  create: Prisma.XOR<
-    Prisma.LivroCreateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedCreateWithoutEmprestimosInput
-  >;
-  where?: Prisma.LivroWhereInput;
-};
-
-export type LivroUpdateToOneWithWhereWithoutEmprestimosInput = {
-  where?: Prisma.LivroWhereInput;
-  data: Prisma.XOR<
-    Prisma.LivroUpdateWithoutEmprestimosInput,
-    Prisma.LivroUncheckedUpdateWithoutEmprestimosInput
-  >;
-};
-
-export type LivroUpdateWithoutEmprestimosInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
-  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
-  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
-  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
-  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
-  reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUpdateManyWithoutLivroNestedInput;
-};
-
-export type LivroUncheckedUpdateWithoutEmprestimosInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number;
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
-  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
-  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
-  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  autorId?: Prisma.IntFieldUpdateOperationsInput | number;
-  categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
-  reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput;
-};
-
 export type LivroCreateWithoutReservasInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
   categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
-  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroUncheckedCreateWithoutReservasInput = {
@@ -1066,14 +936,11 @@ export type LivroUncheckedCreateWithoutReservasInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
   categoriaId: number;
-  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutLivroInput;
-  historico?: Prisma.HistoricoLeituraUncheckedCreateNestedManyWithoutLivroInput;
+  exemplares?: Prisma.ExemplarUncheckedCreateNestedManyWithoutLivroInput;
 };
 
 export type LivroCreateOrConnectWithoutReservasInput = {
@@ -1108,16 +975,11 @@ export type LivroUpdateWithoutReservasInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
-  emprestimos?: Prisma.EmprestimoUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateWithoutReservasInput = {
@@ -1125,106 +987,11 @@ export type LivroUncheckedUpdateWithoutReservasInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
-  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput;
-};
-
-export type LivroCreateWithoutHistoricoInput = {
-  titulo: string;
-  isbn?: string | null;
-  editora?: string | null;
-  status?: $Enums.StatusLivro;
-  etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
-  criadoEm?: Date | string;
-  autor: Prisma.AutorCreateNestedOneWithoutLivrosInput;
-  categoria: Prisma.CategoriaCreateNestedOneWithoutLivrosInput;
-  emprestimos?: Prisma.EmprestimoCreateNestedManyWithoutLivroInput;
-  reservas?: Prisma.ReservaCreateNestedManyWithoutLivroInput;
-};
-
-export type LivroUncheckedCreateWithoutHistoricoInput = {
-  id?: number;
-  titulo: string;
-  isbn?: string | null;
-  editora?: string | null;
-  status?: $Enums.StatusLivro;
-  etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
-  criadoEm?: Date | string;
-  autorId: number;
-  categoriaId: number;
-  emprestimos?: Prisma.EmprestimoUncheckedCreateNestedManyWithoutLivroInput;
-  reservas?: Prisma.ReservaUncheckedCreateNestedManyWithoutLivroInput;
-};
-
-export type LivroCreateOrConnectWithoutHistoricoInput = {
-  where: Prisma.LivroWhereUniqueInput;
-  create: Prisma.XOR<
-    Prisma.LivroCreateWithoutHistoricoInput,
-    Prisma.LivroUncheckedCreateWithoutHistoricoInput
-  >;
-};
-
-export type LivroUpsertWithoutHistoricoInput = {
-  update: Prisma.XOR<
-    Prisma.LivroUpdateWithoutHistoricoInput,
-    Prisma.LivroUncheckedUpdateWithoutHistoricoInput
-  >;
-  create: Prisma.XOR<
-    Prisma.LivroCreateWithoutHistoricoInput,
-    Prisma.LivroUncheckedCreateWithoutHistoricoInput
-  >;
-  where?: Prisma.LivroWhereInput;
-};
-
-export type LivroUpdateToOneWithWhereWithoutHistoricoInput = {
-  where?: Prisma.LivroWhereInput;
-  data: Prisma.XOR<
-    Prisma.LivroUpdateWithoutHistoricoInput,
-    Prisma.LivroUncheckedUpdateWithoutHistoricoInput
-  >;
-};
-
-export type LivroUpdateWithoutHistoricoInput = {
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
-  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
-  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
-  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
-  categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
-  emprestimos?: Prisma.EmprestimoUpdateManyWithoutLivroNestedInput;
-  reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
-};
-
-export type LivroUncheckedUpdateWithoutHistoricoInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number;
-  titulo?: Prisma.StringFieldUpdateOperationsInput | string;
-  isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
-  etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
-  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  autorId?: Prisma.IntFieldUpdateOperationsInput | number;
-  categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
-  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutLivroNestedInput;
-  reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUncheckedUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroCreateManyAutorInput = {
@@ -1232,9 +999,7 @@ export type LivroCreateManyAutorInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   categoriaId: number;
 };
@@ -1243,16 +1008,11 @@ export type LivroUpdateWithoutAutorInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoria?: Prisma.CategoriaUpdateOneRequiredWithoutLivrosNestedInput;
-  emprestimos?: Prisma.EmprestimoUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateWithoutAutorInput = {
@@ -1260,16 +1020,11 @@ export type LivroUncheckedUpdateWithoutAutorInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
-  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUncheckedUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateManyWithoutAutorInput = {
@@ -1277,11 +1032,7 @@ export type LivroUncheckedUpdateManyWithoutAutorInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   categoriaId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -1291,9 +1042,7 @@ export type LivroCreateManyCategoriaInput = {
   titulo: string;
   isbn?: string | null;
   editora?: string | null;
-  status?: $Enums.StatusLivro;
   etiqueta?: $Enums.Etiqueta;
-  quantidade: number;
   criadoEm?: Date | string;
   autorId: number;
 };
@@ -1302,16 +1051,11 @@ export type LivroUpdateWithoutCategoriaInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autor?: Prisma.AutorUpdateOneRequiredWithoutLivrosNestedInput;
-  emprestimos?: Prisma.EmprestimoUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateWithoutCategoriaInput = {
@@ -1319,16 +1063,11 @@ export type LivroUncheckedUpdateWithoutCategoriaInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
-  emprestimos?: Prisma.EmprestimoUncheckedUpdateManyWithoutLivroNestedInput;
+  exemplares?: Prisma.ExemplarUncheckedUpdateManyWithoutLivroNestedInput;
   reservas?: Prisma.ReservaUncheckedUpdateManyWithoutLivroNestedInput;
-  historico?: Prisma.HistoricoLeituraUncheckedUpdateManyWithoutLivroNestedInput;
 };
 
 export type LivroUncheckedUpdateManyWithoutCategoriaInput = {
@@ -1336,11 +1075,7 @@ export type LivroUncheckedUpdateManyWithoutCategoriaInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string;
   isbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   editora?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    | Prisma.EnumStatusLivroFieldUpdateOperationsInput
-    | $Enums.StatusLivro;
   etiqueta?: Prisma.EnumEtiquetaFieldUpdateOperationsInput | $Enums.Etiqueta;
-  quantidade?: Prisma.IntFieldUpdateOperationsInput | number;
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   autorId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
@@ -1350,18 +1085,16 @@ export type LivroUncheckedUpdateManyWithoutCategoriaInput = {
  */
 
 export type LivroCountOutputType = {
-  emprestimos: number;
+  exemplares: number;
   reservas: number;
-  historico: number;
 };
 
 export type LivroCountOutputTypeSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  emprestimos?: boolean | LivroCountOutputTypeCountEmprestimosArgs;
+  exemplares?: boolean | LivroCountOutputTypeCountExemplaresArgs;
   reservas?: boolean | LivroCountOutputTypeCountReservasArgs;
-  historico?: boolean | LivroCountOutputTypeCountHistoricoArgs;
 };
 
 /**
@@ -1380,11 +1113,11 @@ export type LivroCountOutputTypeDefaultArgs<
 /**
  * LivroCountOutputType without action
  */
-export type LivroCountOutputTypeCountEmprestimosArgs<
+export type LivroCountOutputTypeCountExemplaresArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  where?: Prisma.EmprestimoWhereInput;
+  where?: Prisma.ExemplarWhereInput;
 };
 
 /**
@@ -1397,16 +1130,6 @@ export type LivroCountOutputTypeCountReservasArgs<
   where?: Prisma.ReservaWhereInput;
 };
 
-/**
- * LivroCountOutputType without action
- */
-export type LivroCountOutputTypeCountHistoricoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  where?: Prisma.HistoricoLeituraWhereInput;
-};
-
 export type LivroSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -1416,17 +1139,14 @@ export type LivroSelect<
     titulo?: boolean;
     isbn?: boolean;
     editora?: boolean;
-    status?: boolean;
     etiqueta?: boolean;
-    quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
     categoriaId?: boolean;
     autor?: boolean | Prisma.AutorDefaultArgs<ExtArgs>;
     categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>;
-    emprestimos?: boolean | Prisma.Livro$emprestimosArgs<ExtArgs>;
+    exemplares?: boolean | Prisma.Livro$exemplaresArgs<ExtArgs>;
     reservas?: boolean | Prisma.Livro$reservasArgs<ExtArgs>;
-    historico?: boolean | Prisma.Livro$historicoArgs<ExtArgs>;
     _count?: boolean | Prisma.LivroCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['livro']
@@ -1441,9 +1161,7 @@ export type LivroSelectCreateManyAndReturn<
     titulo?: boolean;
     isbn?: boolean;
     editora?: boolean;
-    status?: boolean;
     etiqueta?: boolean;
-    quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
     categoriaId?: boolean;
@@ -1462,9 +1180,7 @@ export type LivroSelectUpdateManyAndReturn<
     titulo?: boolean;
     isbn?: boolean;
     editora?: boolean;
-    status?: boolean;
     etiqueta?: boolean;
-    quantidade?: boolean;
     criadoEm?: boolean;
     autorId?: boolean;
     categoriaId?: boolean;
@@ -1479,9 +1195,7 @@ export type LivroSelectScalar = {
   titulo?: boolean;
   isbn?: boolean;
   editora?: boolean;
-  status?: boolean;
   etiqueta?: boolean;
-  quantidade?: boolean;
   criadoEm?: boolean;
   autorId?: boolean;
   categoriaId?: boolean;
@@ -1495,9 +1209,7 @@ export type LivroOmit<
   | 'titulo'
   | 'isbn'
   | 'editora'
-  | 'status'
   | 'etiqueta'
-  | 'quantidade'
   | 'criadoEm'
   | 'autorId'
   | 'categoriaId',
@@ -1509,9 +1221,8 @@ export type LivroInclude<
 > = {
   autor?: boolean | Prisma.AutorDefaultArgs<ExtArgs>;
   categoria?: boolean | Prisma.CategoriaDefaultArgs<ExtArgs>;
-  emprestimos?: boolean | Prisma.Livro$emprestimosArgs<ExtArgs>;
+  exemplares?: boolean | Prisma.Livro$exemplaresArgs<ExtArgs>;
   reservas?: boolean | Prisma.Livro$reservasArgs<ExtArgs>;
-  historico?: boolean | Prisma.Livro$historicoArgs<ExtArgs>;
   _count?: boolean | Prisma.LivroCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type LivroIncludeCreateManyAndReturn<
@@ -1537,9 +1248,8 @@ export type $LivroPayload<
   objects: {
     autor: Prisma.$AutorPayload<ExtArgs>;
     categoria: Prisma.$CategoriaPayload<ExtArgs>;
-    emprestimos: Prisma.$EmprestimoPayload<ExtArgs>[];
+    exemplares: Prisma.$ExemplarPayload<ExtArgs>[];
     reservas: Prisma.$ReservaPayload<ExtArgs>[];
-    historico: Prisma.$HistoricoLeituraPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1547,9 +1257,7 @@ export type $LivroPayload<
       titulo: string;
       isbn: string | null;
       editora: string | null;
-      status: $Enums.StatusLivro;
       etiqueta: $Enums.Etiqueta;
-      quantidade: number;
       criadoEm: Date;
       autorId: number;
       categoriaId: number;
@@ -2131,11 +1839,11 @@ export interface Prisma__LivroClient<
     ExtArgs,
     GlobalOmitOptions
   >;
-  emprestimos<T extends Prisma.Livro$emprestimosArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.Livro$emprestimosArgs<ExtArgs>>,
+  exemplares<T extends Prisma.Livro$exemplaresArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Livro$exemplaresArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
-        Prisma.$EmprestimoPayload<ExtArgs>,
+        Prisma.$ExemplarPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -2147,17 +1855,6 @@ export interface Prisma__LivroClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$ReservaPayload<ExtArgs>,
-        T,
-        'findMany',
-        GlobalOmitOptions
-      >
-    | Null
-  >;
-  historico<T extends Prisma.Livro$historicoArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.Livro$historicoArgs<ExtArgs>>,
-  ): Prisma.PrismaPromise<
-    | runtime.Types.Result.GetResult<
-        Prisma.$HistoricoLeituraPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -2210,9 +1907,7 @@ export interface LivroFieldRefs {
   readonly titulo: Prisma.FieldRef<'Livro', 'String'>;
   readonly isbn: Prisma.FieldRef<'Livro', 'String'>;
   readonly editora: Prisma.FieldRef<'Livro', 'String'>;
-  readonly status: Prisma.FieldRef<'Livro', 'StatusLivro'>;
   readonly etiqueta: Prisma.FieldRef<'Livro', 'Etiqueta'>;
-  readonly quantidade: Prisma.FieldRef<'Livro', 'Int'>;
   readonly criadoEm: Prisma.FieldRef<'Livro', 'DateTime'>;
   readonly autorId: Prisma.FieldRef<'Livro', 'Int'>;
   readonly categoriaId: Prisma.FieldRef<'Livro', 'Int'>;
@@ -2663,34 +2358,32 @@ export type LivroDeleteManyArgs<
 };
 
 /**
- * Livro.emprestimos
+ * Livro.exemplares
  */
-export type Livro$emprestimosArgs<
+export type Livro$exemplaresArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
   /**
-   * Select specific fields to fetch from the Emprestimo
+   * Select specific fields to fetch from the Exemplar
    */
-  select?: Prisma.EmprestimoSelect<ExtArgs> | null;
+  select?: Prisma.ExemplarSelect<ExtArgs> | null;
   /**
-   * Omit specific fields from the Emprestimo
+   * Omit specific fields from the Exemplar
    */
-  omit?: Prisma.EmprestimoOmit<ExtArgs> | null;
+  omit?: Prisma.ExemplarOmit<ExtArgs> | null;
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EmprestimoInclude<ExtArgs> | null;
-  where?: Prisma.EmprestimoWhereInput;
+  include?: Prisma.ExemplarInclude<ExtArgs> | null;
+  where?: Prisma.ExemplarWhereInput;
   orderBy?:
-    | Prisma.EmprestimoOrderByWithRelationInput
-    | Prisma.EmprestimoOrderByWithRelationInput[];
-  cursor?: Prisma.EmprestimoWhereUniqueInput;
+    | Prisma.ExemplarOrderByWithRelationInput
+    | Prisma.ExemplarOrderByWithRelationInput[];
+  cursor?: Prisma.ExemplarWhereUniqueInput;
   take?: number;
   skip?: number;
-  distinct?:
-    | Prisma.EmprestimoScalarFieldEnum
-    | Prisma.EmprestimoScalarFieldEnum[];
+  distinct?: Prisma.ExemplarScalarFieldEnum | Prisma.ExemplarScalarFieldEnum[];
 };
 
 /**
@@ -2720,37 +2413,6 @@ export type Livro$reservasArgs<
   take?: number;
   skip?: number;
   distinct?: Prisma.ReservaScalarFieldEnum | Prisma.ReservaScalarFieldEnum[];
-};
-
-/**
- * Livro.historico
- */
-export type Livro$historicoArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  /**
-   * Select specific fields to fetch from the HistoricoLeitura
-   */
-  select?: Prisma.HistoricoLeituraSelect<ExtArgs> | null;
-  /**
-   * Omit specific fields from the HistoricoLeitura
-   */
-  omit?: Prisma.HistoricoLeituraOmit<ExtArgs> | null;
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.HistoricoLeituraInclude<ExtArgs> | null;
-  where?: Prisma.HistoricoLeituraWhereInput;
-  orderBy?:
-    | Prisma.HistoricoLeituraOrderByWithRelationInput
-    | Prisma.HistoricoLeituraOrderByWithRelationInput[];
-  cursor?: Prisma.HistoricoLeituraWhereUniqueInput;
-  take?: number;
-  skip?: number;
-  distinct?:
-    | Prisma.HistoricoLeituraScalarFieldEnum
-    | Prisma.HistoricoLeituraScalarFieldEnum[];
 };
 
 /**

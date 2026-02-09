@@ -4,12 +4,12 @@ import { AdminFields } from "@/components/admin-fields"
 import { MemberFields } from "@/components/member-fields"
 import { Button } from "@/components/ui/button"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card"
 import { useAuth } from "@/context/auth-context"
 import { api } from "@/lib/api"
@@ -19,105 +19,105 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 export default function LoginPage() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const [email, setEmail] = useState<string>('');
-    const [senha, setSenha] = useState<string>('');
-    const [matricula, setMatricula] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    
-    const [isMembro, setIsMembro] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [senha, setSenha] = useState<string>('');
+  const [matricula, setMatricula] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-    const { user, loading, setUser, setMembro } = useAuth();
+  const [isMembro, setIsMembro] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const toggleMode = () => {
-        setIsMembro(!isMembro);
-        setEmail(''); setSenha(''); setMatricula('');
-        setError('');
-    };
+  const { user, loading, setUser, setMembro } = useAuth();
 
-    const handleLogin = async () => {
-        setIsLoading(true);
-        setError('');
+  const toggleMode = () => {
+    setIsMembro(!isMembro);
+    setEmail(''); setSenha(''); setMatricula('');
+    setError('');
+  };
 
-        try {
-            const endpoint = isMembro ? '/auth/membro/login' : '/auth/usuario/login';
-            const payload = isMembro ? { matricula } : { email, senha };
+  const handleLogin = async () => {
+    setIsLoading(true);
+    setError('');
 
-            const response = await api.post(endpoint, payload);
+    try {
+      const endpoint = isMembro ? '/auth/membro/login' : '/auth/usuario/login';
+      const payload = isMembro ? { matricula } : { email, senha };
 
-            toast.success(response.data.message)
+      const response = await api.post(endpoint, payload);
 
-            const res = await api.get('/auth/me')
-            const data = res.data;
-            
-            if (data?.matricula) {
-                setUser(null);
-                setMembro(data);
+      toast.success(response.data.message)
+
+      const res = await api.get('/auth/me')
+      const data = res.data;
+
+      if (data?.matricula) {
+        setUser(null);
+        setMembro(data);
+      }
+      else {
+        setMembro(null)
+        setUser(data);
+      }
+
+      if (response.data.role !== Role.MEMBRO)
+        router.replace('/dashboard');
+      else
+        router.replace('/area-membro')
+    } catch (err: any) {
+      const message = err.response?.data?.message || "Erro ao realizar login. Tente novamente.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-slate-50/50">
+      <div className="w-full max-w-md p-4">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center">
+              {isMembro ? "Área do Membro" : "Portal Administrativo"}
+            </CardTitle>
+            <CardDescription className="text-center">
+              {isMembro ? "Use sua matrícula para entrar." : "Entre com suas credenciais de funcionário."}
+            </CardDescription>
+
+            {
+              error ? (
+                <span className="text-red-600 text-sm">{error}</span>
+              ) : (null)
             }
-            else {
-                setMembro(null)
-                setUser(data);
-            }
-         
-            if (response.data.role !== Role.MEMBRO)
-                router.replace('/dashboard');
-            else
-                router.replace('/area-membro')
-        } catch (err: any) {
-            const message = err.response?.data?.message || "Erro ao realizar login. Tente novamente.";
-            setError(message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+          </CardHeader>
 
-    return (
-        <div className="relative flex min-h-screen flex-col items-center justify-center bg-slate-50/50">
-            <div className="w-full max-w-md p-4">
-                <Card className="border-none shadow-lg">
-                    <CardHeader className="space-y-1">
-                        <CardTitle className="text-2xl font-bold text-center">
-                            {isMembro ? "Área do Membro" : "Portal Administrativo"}
-                        </CardTitle>
-                        <CardDescription className="text-center">
-                            {isMembro ? "Use sua matrícula para entrar." : "Entre com suas credenciais de funcionário."}
-                        </CardDescription>
+          <CardContent className="grid gap-4">
+            {isMembro ? (
+              <MemberFields matricula={matricula} setMatricula={setMatricula} />
+            ) : (
+              <AdminFields email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} />
+            )}
+          </CardContent>
 
-                        {
-                            error ? (
-                                <span className="text-red-600 text-sm">{error}</span>
-                            ) : (null)
-                        }
-                    </CardHeader>
+          <CardFooter className="flex flex-col gap-4">
+            <Button onClick={handleLogin} className="w-full hover:cursor-pointer">Acessar Sistema</Button>
 
-                    <CardContent className="grid gap-4">
-                        {isMembro ? (
-                            <MemberFields matricula={matricula} setMatricula={setMatricula} />
-                        ) : (
-                            <AdminFields email={email} setEmail={setEmail} senha={senha} setSenha={setSenha} />
-                        )}
-                    </CardContent>
-
-                    <CardFooter className="flex flex-col gap-4">
-                        <Button onClick={handleLogin} className="w-full hover:cursor-pointer">Acessar Sistema</Button>
-
-                        <div className="flex items-center w-full my-2">
-                            <div className="flex-1 border-b border-slate-200"></div>
-                            <span className="px-2 text-[10px] uppercase text-slate-400 font-bold">ou</span>
-                            <div className="flex-1 border-b border-slate-200"></div>
-                        </div>
-
-                        <button
-                            onClick={toggleMode}
-                            className="w-full py-2 text-sm font-medium text-blue-100 bg-blue-500 hover:bg-blue-600 rounded-md border border-blue-200 transition-colors hover:cursor-pointer"
-                        >
-                            {isMembro ? "Entrar como funcionário" : "Entrar como membro"}
-                        </button>
-                    </CardFooter>
-                </Card>
+            <div className="flex items-center w-full my-2">
+              <div className="flex-1 border-b border-slate-200"></div>
+              <span className="px-2 text-[10px] uppercase text-slate-400 font-bold">ou</span>
+              <div className="flex-1 border-b border-slate-200"></div>
             </div>
-        </div>
-    )
+
+            <button
+              onClick={toggleMode}
+              className="w-full py-2 text-sm font-medium text-blue-100 bg-blue-500 hover:bg-blue-600 rounded-md border border-blue-200 transition-colors hover:cursor-pointer"
+            >
+              {isMembro ? "Entrar como funcionário" : "Entrar como membro"}
+            </button>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  )
 }

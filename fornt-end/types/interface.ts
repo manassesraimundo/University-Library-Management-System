@@ -46,13 +46,27 @@ export interface ILivro {
     categoriaId: number;
     autor: IAutor;
     categoria: ICategoria;
-    _count?: { reservas: number, emprestimos: number };
+    _count?: { reservas: number, emprestimos: number, exemplares: number };
+    exemplares: IExemplar[];
+    disponiveis: number;
     emprestimos: IEmprestimo[];
     reservas: IReserva[];
     historico: IHistoricoLeitura[]
 }
 
+export interface IExemplar {
+    id: number;
+    codigoBarras: string
+    status: StatusLivro;
+    observacoes?: string;
+    livroId: number;
+    livro: ILivro;
+    emprestimos: IEmprestimo[]
+    historicoLeitura: IHistoricoLeitura[]
+}
+
 export interface IEmprestimo {
+    tituloPrint: string;
     id: number;
     dataEmprestimo: Date;
     dataPrevista: Date;
@@ -64,6 +78,8 @@ export interface IEmprestimo {
     membro?: IMembro;
     livro: ILivro;
     multa?: IMulta;
+    exemplar: IExemplar
+    quantidadeDisponivel: number;
 }
 
 export interface IReserva {
@@ -75,7 +91,7 @@ export interface IReserva {
     quantidadeReserva: number;
     membroId: number;
     livroId: number;
-    membro?: IMembro;
+    membro?: { usuario: IUsuario, matricula: string };
     livro: ILivro
 }
 
@@ -113,4 +129,15 @@ export interface INotificacao {
     criadaEm: Date;
     membroId: number;
     membro?: IMembro;
+}
+
+export interface IEmp {
+    id:number;
+    livroId: number;
+    titulo: string;
+    categoria: string;
+    etiqueta: Etiqueta;
+    quantidadeExemplares: number;
+    quantidadeDisponiveis: number;
+    quantidadeReservado: number;
 }

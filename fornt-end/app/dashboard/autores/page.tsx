@@ -48,10 +48,10 @@ export default function AutoresPage() {
 
       setAutores(response.data)
     } catch (error: any) {
-      toast.error("Erro ao carregar autores")
+      if (error.response?.status === 401)
+        window.location.href = '/login';
 
-      if (error.response?.status === 401) 
-        router.push('/login')
+      toast.error("Erro ao carregar autores")
     } finally {
       setLoading(false)
     }
@@ -66,7 +66,6 @@ export default function AutoresPage() {
   }, [busca])
 
   const handleDeletar = async (id: number) => {
-
     try {
       const re = await api.delete(`/autor/${id}`)
 
@@ -75,11 +74,13 @@ export default function AutoresPage() {
 
       carregarAutores()
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       const msg = error.response?.data?.message || "Erro ao remover autor"
       toast.error(msg)
     }
   }
-
 
   return (
     <div className="p-6 space-y-6">
@@ -135,7 +136,7 @@ export default function AutoresPage() {
                   <TableCell className="text-right">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-destructive hover:bg-red-50">
+                        <Button variant="ghost" size="icon" className="text-destructive hover:bg-red-50 cursor-pointer">
                           <Trash2 size={18} />
                         </Button>
                       </AlertDialogTrigger>
@@ -151,7 +152,7 @@ export default function AutoresPage() {
                           {
                             !autor.livros.length && (
                             <AlertDialogAction
-                              className="bg-red-600 hover:bg-red-700"
+                              className="bg-red-600 hover:bg-red-700 cursor-pointer"
                               onClick={() => handleDeletar(autor.id)}
                             >
                               Confirmar

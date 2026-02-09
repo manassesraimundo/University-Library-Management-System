@@ -2,11 +2,13 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MembrosService } from 'src/membros/membros.service';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import { StatusLivro } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class RecomendacaoService {
@@ -36,47 +38,69 @@ export class RecomendacaoService {
   async gerarRecomendacao(membroId: number) {
     try {
       const membro = await this.membroService.getMembroById(membroId);
+      if (!membro) throw new NotFoundException('Membro não encontrado');
 
-      if (!membro) {
-        throw new Error('Membro não encontrado');
-      }
-
-      const historicoEmprestimos = await this.prisma.emprestimo.findMany({
+      const historicoLeitura = await this.prisma.historicoLeitura.findMany({
         where: { membroId },
-        include: { livro: true },
+        include: {
+          exemplar: {
+            include: {
+              livro: { include: { autor: true, categoria: true } },
+            },
+          },
+        },
+        orderBy: { data: 'desc' },
         take: 10,
       });
 
-      const livrosLidos = historicoEmprestimos
-        .map((e) => e.livro.titulo)
+      const idsLivrosLidos = historicoLeitura.map((h) => h.exemplar.livro.id);
+      const livrosLidosInfo = historicoLeitura
+        .map(
+          (h) =>
+            `"${h.exemplar.livro.titulo}" (Gênero: ${h.exemplar.livro.categoria.nome})`,
+        )
         .join(', ');
 
-      const livrosDisponiveis = await this.prisma.livro.findMany({
+      const livrosParaOpcoes = await this.prisma.livro.findMany({
         where: {
-          id: { notIn: historicoEmprestimos.map((e) => e.livroId) },
+          id: { notIn: idsLivrosLidos },
+          exemplares: {
+            some: { status: StatusLivro.DISPONIVEL },
+          },
         },
-        take: 5,
+        include: { autor: true, categoria: true },
+        take: 8,
       });
 
-      const listaOpcoes = livrosDisponiveis.map((l) => l.titulo).join(', ');
+      if (livrosParaOpcoes.length === 0) {
+        return 'No momento não temos livros disponíveis para recomendação baseada no seu perfil.';
+      }
 
-      const prompt = `Com base no histórico de leitura do membro (${livrosLidos}), recomende DOIS a TRÊS livros das seguintes opções disponíveis: ${listaOpcoes}. Justifique brevemente cada recomendação.`;
+      const listaOpcoesPrompt = livrosParaOpcoes
+        .map((l) => `- "${l.titulo}"`)
+        .join('\n');
+
+      const prompt = `
+      Você é um bibliotecário inteligente. 
+      Com base no histórico de leitura do membro: ${livrosLidosInfo || 'Ainda não possui histórico (recomende sucessos gerais)'}.
+      
+      Recomende DOIS a TRÊS livros das seguintes opções disponíveis:
+      ${listaOpcoesPrompt}
+      
+      Justifique cada escolha com base no gênero ou autor.
+    `;
 
       const result = await this.model.generateContent({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-          maxOutputTokens: 20900,
-          temperature: 0.7,
-        },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 23900 },
       });
 
-      const response = result.response;
-      return response.text() || 'Nenhuma recomendação disponível.';
+      return result.response.text() || 'Nenhuma recomendação disponível.';
     } catch (error) {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-            error.message || 'Erro ao gerar recomendação de livro',
+            'Erro ao gerar recomendação inteligente',
           );
     }
   }

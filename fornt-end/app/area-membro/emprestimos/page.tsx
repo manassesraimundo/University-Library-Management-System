@@ -18,16 +18,23 @@ import { format } from "date-fns"
 import { toast } from "sonner"
 import { api } from "@/lib/api";
 import { IEmprestimo } from "@/types/interface"
+import AlertGlobal from "@/components/alertGlobal"
 
 export default function MeusEmprestimosPage() {
   const [emprestimos, setEmprestimos] = useState<IEmprestimo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const carregarEmprestimos = async () => {
     try {
       const res = await api.get('/emprestimos/meus-emprestimos');
       setEmprestimos(res.data);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao carregar seus empréstimos.");
     } finally {
       setLoading(false);
@@ -40,12 +47,21 @@ export default function MeusEmprestimosPage() {
   const historico = emprestimos.filter((e) => e.dataDevolucao);
 
   const handleRenovar = async (id: string) => {
-    toast.message("Renovando empréstimo é na bibiloteca");
+    setIsOpen(true)
+    setMessage("Renovação de empréstimo é na bibiloteca!");
     return ;
   }
-
+  
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
+      {
+        isOpen && <AlertGlobal
+          isOpen={isOpen}
+          setIsOpen={() => setIsOpen(false)}
+          message={message}
+          titulo="Aviso"
+        />
+      }
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Meus Empréstimos</h1>
         <p className="text-muted-foreground">Consulte o prazo de devolução e seu histórico de leituras.</p>
@@ -79,8 +95,8 @@ export default function MeusEmprestimosPage() {
                             <Book size={24} />
                           </div>
                           <div>
-                            <h3 className="font-bold text-lg">{emp.livro?.titulo}</h3>
-                            <p className="text-sm text-muted-foreground">{emp.livro?.autor?.nome}</p>
+                            <h3 className="font-bold text-lg">{emp.exemplar.livro.titulo}</h3>
+                            <p className="text-sm text-muted-foreground">{emp.exemplar.livro?.autor?.nome}</p>
                             <div className="flex items-center gap-4 mt-2">
                               <div className="flex items-center gap-1 text-xs">
                                 <Calendar size={14} className="text-primary" />
@@ -106,7 +122,7 @@ export default function MeusEmprestimosPage() {
                                         return `${diffMint}min`;                                      }
                                       return `${diffHours}h`;
                                     }
-                                    return prevista.toLocaleDateString();
+                                    return diffDays;
                                   })()}
                                 </span>
                               </div>
@@ -123,7 +139,7 @@ export default function MeusEmprestimosPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="gap-2 w-full md:w-auto"
+                            className="gap-2 w-full md:w-auto cursor-pointer"
                             onClick={() => handleRenovar(String(emp.id))}
                             disabled={isAtrasado} // Geralmente não permite renovar se já estiver atrasado
                           >
@@ -154,7 +170,7 @@ export default function MeusEmprestimosPage() {
               <TableBody>
                 {historico.map((emp: any) => (
                   <TableRow key={emp.id}>
-                    <TableCell className="font-medium">{emp.livro?.titulo}</TableCell>
+                    <TableCell className="font-medium">{emp.exemplar.livro?.titulo}</TableCell>
                     <TableCell>{format(new Date(emp.dataEmprestimo), 'dd/MM/yyy')}</TableCell>
                     <TableCell>{format(new Date(emp.dataDevolucao), 'dd/MM/yyy')}</TableCell>
                     <TableCell className="text-right">

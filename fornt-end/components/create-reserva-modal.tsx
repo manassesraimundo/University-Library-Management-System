@@ -39,14 +39,17 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
   const carregarLivros = async () => {
     try {
       const [resEmprestados, resReservados] = await Promise.all([
-        api.get(`/livros?titulo=${tituloLivro}&status=EMPRESTADO`),
+        api.get(`/livros?titulo=${tituloLivro}`),
         api.get(`/livros?titulo=${tituloLivro}&status=RESERVADO`)
       ]);
       const formatados1 = resEmprestados.data.map((l: any) => ({ id: l.id, nome: l.titulo }));
       const formatados2 = resReservados.data.map((l: any) => ({ id: l.id, nome: l.titulo }));
-      setLivros([...formatados1, ...formatados2])
-    } catch (error) {
-      toast.error("")
+      setLivros([...formatados1])
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error(error.response?.data?.message || "Erro ao criar reserva")
     }
   }
 
@@ -77,6 +80,9 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
       setMatricula("");
       setLivroSel("");
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       setError(true)
       setMessage(error.response?.data?.message || "Erro ao criar reserva")
     } finally {
@@ -84,19 +90,18 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
     }
   }
 
-  if (error) {
-    return <AlertGlobal
-      isOpen={error}
-      setIsOpen={() => setError(false)}
-      message={message}
-      titulo="Error ao Reservar"
-    />
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {
+        error && <AlertGlobal
+          isOpen={error}
+          setIsOpen={() => setError(false)}
+          message={message}
+          titulo="Erro ao Reservar"
+        />
+      }
       <DialogTrigger asChild>
-        <Button className="gap-2"><CalendarClock size={18} /> Nova Reserva</Button>
+        <Button className="gap-2 cursor-pointer"><CalendarClock size={18} /> Nova Reserva</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -138,7 +143,7 @@ export function CreateReservaModal({ onSucesso }: { onSucesso: () => void }) {
             <Button
               onClick={handleCriar}
               disabled={loading}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 hover:bg-green-700 cursor-pointer"
             >
               {loading ? <Loader2 className="animate-spin mr-2" size={16} /> : "Confirmar Reserva"}
             </Button>

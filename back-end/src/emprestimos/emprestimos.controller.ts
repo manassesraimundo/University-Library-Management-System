@@ -56,10 +56,13 @@ export class EmprestimosController {
   @HttpCode(HttpStatus.OK)
   @Roles('BIBLIOTECARIO')
   async getAllEmprestimos(@Query('etiqueta') etiqueta?: string) {
-    const emprestimos = await this.emprestimosService.getAllEmprestimos(
-      etiqueta as string,
-    );
-    return emprestimos;
+    if (etiqueta) {
+      const emprestimos =
+        await this.emprestimosService.getAllEmprestimos(etiqueta);
+      return emprestimos;
+    }
+
+    return await this.emprestimosService.getAllEmprestimos2();
   }
 
   @Get('todos/entreges')

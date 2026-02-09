@@ -22,8 +22,7 @@ enum Role {
 
 enum StatusLivro {
   DISPONIVEL
-  EMPRESTADO
-  RESERVADO
+  INDISPONIVEL
 }
 
 enum Etiqueta {
@@ -67,14 +66,12 @@ model Membro {
 }
 
 model Livro {
-  id         Int         @id @default(autoincrement())
-  titulo     String
-  isbn       String?     @unique
-  editora    String?
-  status     StatusLivro @default(DISPONIVEL)
-  etiqueta   Etiqueta    @default(BRANCO)
-  quantidade Int
-  criadoEm   DateTime    @default(now())
+  id       Int      @id @default(autoincrement())
+  titulo   String
+  isbn     String?  @unique
+  editora  String?
+  etiqueta Etiqueta @default(BRANCO)
+  criadoEm DateTime @default(now())
 
   autorId     Int
   categoriaId Int
@@ -82,9 +79,21 @@ model Livro {
   autor     Autor     @relation(fields: [autorId], references: [id])
   categoria Categoria @relation(fields: [categoriaId], references: [id])
 
-  emprestimos Emprestimo[]
-  reservas    Reserva[]
-  historico   HistoricoLeitura[]
+  exemplares Exemplar[]
+  reservas   Reserva[]
+}
+
+model Exemplar {
+  id           Int         @id @default(autoincrement())
+  codigoBarras String      @unique
+  status       StatusLivro @default(DISPONIVEL)
+  observacoes  String?
+
+  livroId Int
+  livro   Livro @relation(fields: [livroId], references: [id])
+
+  emprestimos      Emprestimo[]
+  historicoLeitura HistoricoLeitura[]
 }
 
 model Autor {
@@ -109,11 +118,11 @@ model Emprestimo {
   renovacoes           Int       @default(0)
   quantidadeEmprestimo Int       @default(0)
 
-  membroId Int
-  livroId  Int
+  membroId   Int
+  exemplarId Int
 
-  membro Membro @relation(fields: [membroId], references: [id])
-  livro  Livro  @relation(fields: [livroId], references: [id])
+  membro   Membro   @relation(fields: [membroId], references: [id])
+  exemplar Exemplar @relation(fields: [exemplarId], references: [id])
 
   multa Multa?
 }
@@ -147,11 +156,12 @@ model HistoricoLeitura {
   id   Int      @id @default(autoincrement())
   data DateTime @default(now())
 
-  membroId Int
-  livroId  Int
+  membroId   Int
+  livroId    Int
+  exemplarId Int
 
-  membro Membro @relation(fields: [membroId], references: [id])
-  livro  Livro  @relation(fields: [livroId], references: [id])
+  membro   Membro   @relation(fields: [membroId], references: [id])
+  exemplar Exemplar @relation(fields: [exemplarId], references: [id])
 }
 
 model ChatMensagem {

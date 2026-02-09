@@ -33,7 +33,10 @@ export default function NotificacoesPage() {
         setNotificacoes(naoLidas) 
       else
         setNotificacoes(res.data)
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao carregar seu histórico.")
     } finally {
       setLoading(false)
@@ -46,7 +49,10 @@ export default function NotificacoesPage() {
     try {
       await api.patch(`membros/notificacoes/${id}/mark-as-read`)
       carregarNotificacoes()
-    } catch (error) { 
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao marcar notificação como lida.")
     }
   }
@@ -56,7 +62,10 @@ export default function NotificacoesPage() {
       await api.patch(`membros/notificacoes/mark-all-as-read`)
       carregarNotificacoes()
       toast.success("Todas as notificações foram marcadas como lidas.")
-    } catch (error) { 
+    } catch (error: any) { 
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error("Erro ao marcar todas as notificações como lidas.")
     }
   }
@@ -66,7 +75,10 @@ export default function NotificacoesPage() {
       await api.delete(`membros/notificacoes/clear-history`)
       carregarNotificacoes()
       toast.success("Histórico de notificações limpo com sucesso.")
-    } catch (error) { 
+    } catch (error: any) { 
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       toast.error("Erro ao limpar o histórico de notificações.")
     }
   }
@@ -82,7 +94,7 @@ export default function NotificacoesPage() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-2"
+            className="gap-2 cursor-pointer"
             onClick={marcarTodasComoLidas}
             disabled={notificacoes.length === 0 ? true : false}
           >
@@ -91,7 +103,7 @@ export default function NotificacoesPage() {
           <Button 
             variant="destructive" 
             size="sm" 
-            className="gap-2"
+            className="gap-2 cursor-pointer"
             onClick={limparHistorico}
             disabled={notificacoes.length === 0 ? true : false}
           >
@@ -102,8 +114,8 @@ export default function NotificacoesPage() {
 
       <Tabs defaultValue={filtro} onValueChange={setFiltro} className="w-full">
         <TabsList className="grid w-full max-w-[400px] grid-cols-3">
-          <TabsTrigger value="todas">Todas</TabsTrigger>
-          <TabsTrigger value="nao-lidas">Não Lidas</TabsTrigger>
+          <TabsTrigger value="todas" className="cursor-pointer">Todas</TabsTrigger>
+          <TabsTrigger value="nao-lidas" className="cursor-pointer">Não Lidas</TabsTrigger>
         </TabsList>
 
         <TabsContent value={filtro} className="mt-6 space-y-4">
@@ -139,7 +151,7 @@ export default function NotificacoesPage() {
                     {!notif.lida && (
                       <Button 
                         variant="link" 
-                        className="p-0 h-auto text-xs text-primary font-bold"
+                        className="p-0 h-auto text-xs text-primary font-bold cursor-pointer"
                         onClick={() => marcarLida(notif.id)}
                       >
                         Marcar como lida
@@ -147,7 +159,7 @@ export default function NotificacoesPage() {
                     )}
                   </div>
 
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
                     <MoreVertical size={14} />
                   </Button>
                 </div>

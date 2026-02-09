@@ -57,6 +57,7 @@ export const ModelName = {
   Usuario: 'Usuario',
   Membro: 'Membro',
   Livro: 'Livro',
+  Exemplar: 'Exemplar',
   Autor: 'Autor',
   Categoria: 'Categoria',
   Emprestimo: 'Emprestimo',
@@ -110,9 +111,7 @@ export const LivroScalarFieldEnum = {
   titulo: 'titulo',
   isbn: 'isbn',
   editora: 'editora',
-  status: 'status',
   etiqueta: 'etiqueta',
-  quantidade: 'quantidade',
   criadoEm: 'criadoEm',
   autorId: 'autorId',
   categoriaId: 'categoriaId',
@@ -120,6 +119,17 @@ export const LivroScalarFieldEnum = {
 
 export type LivroScalarFieldEnum =
   (typeof LivroScalarFieldEnum)[keyof typeof LivroScalarFieldEnum];
+
+export const ExemplarScalarFieldEnum = {
+  id: 'id',
+  codigoBarras: 'codigoBarras',
+  status: 'status',
+  observacoes: 'observacoes',
+  livroId: 'livroId',
+} as const;
+
+export type ExemplarScalarFieldEnum =
+  (typeof ExemplarScalarFieldEnum)[keyof typeof ExemplarScalarFieldEnum];
 
 export const AutorScalarFieldEnum = {
   id: 'id',
@@ -145,7 +155,7 @@ export const EmprestimoScalarFieldEnum = {
   renovacoes: 'renovacoes',
   quantidadeEmprestimo: 'quantidadeEmprestimo',
   membroId: 'membroId',
-  livroId: 'livroId',
+  exemplarId: 'exemplarId',
 } as const;
 
 export type EmprestimoScalarFieldEnum =
@@ -181,6 +191,7 @@ export const HistoricoLeituraScalarFieldEnum = {
   data: 'data',
   membroId: 'membroId',
   livroId: 'livroId',
+  exemplarId: 'exemplarId',
 } as const;
 
 export type HistoricoLeituraScalarFieldEnum =

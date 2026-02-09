@@ -31,7 +31,7 @@ export type EmprestimoAvgAggregateOutputType = {
   renovacoes: number | null;
   quantidadeEmprestimo: number | null;
   membroId: number | null;
-  livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type EmprestimoSumAggregateOutputType = {
@@ -39,7 +39,7 @@ export type EmprestimoSumAggregateOutputType = {
   renovacoes: number | null;
   quantidadeEmprestimo: number | null;
   membroId: number | null;
-  livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type EmprestimoMinAggregateOutputType = {
@@ -50,7 +50,7 @@ export type EmprestimoMinAggregateOutputType = {
   renovacoes: number | null;
   quantidadeEmprestimo: number | null;
   membroId: number | null;
-  livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type EmprestimoMaxAggregateOutputType = {
@@ -61,7 +61,7 @@ export type EmprestimoMaxAggregateOutputType = {
   renovacoes: number | null;
   quantidadeEmprestimo: number | null;
   membroId: number | null;
-  livroId: number | null;
+  exemplarId: number | null;
 };
 
 export type EmprestimoCountAggregateOutputType = {
@@ -72,7 +72,7 @@ export type EmprestimoCountAggregateOutputType = {
   renovacoes: number;
   quantidadeEmprestimo: number;
   membroId: number;
-  livroId: number;
+  exemplarId: number;
   _all: number;
 };
 
@@ -81,7 +81,7 @@ export type EmprestimoAvgAggregateInputType = {
   renovacoes?: true;
   quantidadeEmprestimo?: true;
   membroId?: true;
-  livroId?: true;
+  exemplarId?: true;
 };
 
 export type EmprestimoSumAggregateInputType = {
@@ -89,7 +89,7 @@ export type EmprestimoSumAggregateInputType = {
   renovacoes?: true;
   quantidadeEmprestimo?: true;
   membroId?: true;
-  livroId?: true;
+  exemplarId?: true;
 };
 
 export type EmprestimoMinAggregateInputType = {
@@ -100,7 +100,7 @@ export type EmprestimoMinAggregateInputType = {
   renovacoes?: true;
   quantidadeEmprestimo?: true;
   membroId?: true;
-  livroId?: true;
+  exemplarId?: true;
 };
 
 export type EmprestimoMaxAggregateInputType = {
@@ -111,7 +111,7 @@ export type EmprestimoMaxAggregateInputType = {
   renovacoes?: true;
   quantidadeEmprestimo?: true;
   membroId?: true;
-  livroId?: true;
+  exemplarId?: true;
 };
 
 export type EmprestimoCountAggregateInputType = {
@@ -122,7 +122,7 @@ export type EmprestimoCountAggregateInputType = {
   renovacoes?: true;
   quantidadeEmprestimo?: true;
   membroId?: true;
-  livroId?: true;
+  exemplarId?: true;
   _all?: true;
 };
 
@@ -227,7 +227,7 @@ export type EmprestimoGroupByOutputType = {
   renovacoes: number;
   quantidadeEmprestimo: number;
   membroId: number;
-  livroId: number;
+  exemplarId: number;
   _count: EmprestimoCountAggregateOutputType | null;
   _avg: EmprestimoAvgAggregateOutputType | null;
   _sum: EmprestimoSumAggregateOutputType | null;
@@ -263,12 +263,15 @@ export type EmprestimoWhereInput = {
   renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
   quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntFilter<'Emprestimo'> | number;
-  livroId?: Prisma.IntFilter<'Emprestimo'> | number;
+  exemplarId?: Prisma.IntFilter<'Emprestimo'> | number;
   membro?: Prisma.XOR<
     Prisma.MembroScalarRelationFilter,
     Prisma.MembroWhereInput
   >;
-  livro?: Prisma.XOR<Prisma.LivroScalarRelationFilter, Prisma.LivroWhereInput>;
+  exemplar?: Prisma.XOR<
+    Prisma.ExemplarScalarRelationFilter,
+    Prisma.ExemplarWhereInput
+  >;
   multa?: Prisma.XOR<
     Prisma.MultaNullableScalarRelationFilter,
     Prisma.MultaWhereInput
@@ -283,9 +286,9 @@ export type EmprestimoOrderByWithRelationInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
   membro?: Prisma.MembroOrderByWithRelationInput;
-  livro?: Prisma.LivroOrderByWithRelationInput;
+  exemplar?: Prisma.ExemplarOrderByWithRelationInput;
   multa?: Prisma.MultaOrderByWithRelationInput;
 };
 
@@ -305,14 +308,14 @@ export type EmprestimoWhereUniqueInput = Prisma.AtLeast<
     renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
     quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
     membroId?: Prisma.IntFilter<'Emprestimo'> | number;
-    livroId?: Prisma.IntFilter<'Emprestimo'> | number;
+    exemplarId?: Prisma.IntFilter<'Emprestimo'> | number;
     membro?: Prisma.XOR<
       Prisma.MembroScalarRelationFilter,
       Prisma.MembroWhereInput
     >;
-    livro?: Prisma.XOR<
-      Prisma.LivroScalarRelationFilter,
-      Prisma.LivroWhereInput
+    exemplar?: Prisma.XOR<
+      Prisma.ExemplarScalarRelationFilter,
+      Prisma.ExemplarWhereInput
     >;
     multa?: Prisma.XOR<
       Prisma.MultaNullableScalarRelationFilter,
@@ -330,7 +333,7 @@ export type EmprestimoOrderByWithAggregationInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
   _count?: Prisma.EmprestimoCountOrderByAggregateInput;
   _avg?: Prisma.EmprestimoAvgOrderByAggregateInput;
   _max?: Prisma.EmprestimoMaxOrderByAggregateInput;
@@ -363,7 +366,7 @@ export type EmprestimoScalarWhereWithAggregatesInput = {
   renovacoes?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
   quantidadeEmprestimo?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
-  livroId?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
+  exemplarId?: Prisma.IntWithAggregatesFilter<'Emprestimo'> | number;
 };
 
 export type EmprestimoCreateInput = {
@@ -373,7 +376,7 @@ export type EmprestimoCreateInput = {
   renovacoes?: number;
   quantidadeEmprestimo?: number;
   membro: Prisma.MembroCreateNestedOneWithoutEmprestimosInput;
-  livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
+  exemplar: Prisma.ExemplarCreateNestedOneWithoutEmprestimosInput;
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
 };
 
@@ -385,7 +388,7 @@ export type EmprestimoUncheckedCreateInput = {
   renovacoes?: number;
   quantidadeEmprestimo?: number;
   membroId: number;
-  livroId: number;
+  exemplarId: number;
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
 };
 
@@ -400,7 +403,7 @@ export type EmprestimoUpdateInput = {
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutEmprestimosNestedInput;
-  livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
+  exemplar?: Prisma.ExemplarUpdateOneRequiredWithoutEmprestimosNestedInput;
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
 };
 
@@ -416,7 +419,7 @@ export type EmprestimoUncheckedUpdateInput = {
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
-  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
 };
 
@@ -428,7 +431,7 @@ export type EmprestimoCreateManyInput = {
   renovacoes?: number;
   quantidadeEmprestimo?: number;
   membroId: number;
-  livroId: number;
+  exemplarId: number;
 };
 
 export type EmprestimoUpdateManyMutationInput = {
@@ -455,7 +458,7 @@ export type EmprestimoUncheckedUpdateManyInput = {
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
-  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type EmprestimoListRelationFilter = {
@@ -476,7 +479,7 @@ export type EmprestimoCountOrderByAggregateInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type EmprestimoAvgOrderByAggregateInput = {
@@ -484,7 +487,7 @@ export type EmprestimoAvgOrderByAggregateInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type EmprestimoMaxOrderByAggregateInput = {
@@ -495,7 +498,7 @@ export type EmprestimoMaxOrderByAggregateInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type EmprestimoMinOrderByAggregateInput = {
@@ -506,7 +509,7 @@ export type EmprestimoMinOrderByAggregateInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type EmprestimoSumOrderByAggregateInput = {
@@ -514,7 +517,7 @@ export type EmprestimoSumOrderByAggregateInput = {
   renovacoes?: Prisma.SortOrder;
   quantidadeEmprestimo?: Prisma.SortOrder;
   membroId?: Prisma.SortOrder;
-  livroId?: Prisma.SortOrder;
+  exemplarId?: Prisma.SortOrder;
 };
 
 export type EmprestimoScalarRelationFilter = {
@@ -628,55 +631,55 @@ export type EmprestimoUncheckedUpdateManyWithoutMembroNestedInput = {
     | Prisma.EmprestimoScalarWhereInput[];
 };
 
-export type EmprestimoCreateNestedManyWithoutLivroInput = {
+export type EmprestimoCreateNestedManyWithoutExemplarInput = {
   create?:
     | Prisma.XOR<
-        Prisma.EmprestimoCreateWithoutLivroInput,
-        Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+        Prisma.EmprestimoCreateWithoutExemplarInput,
+        Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.EmprestimoCreateWithoutLivroInput[]
-    | Prisma.EmprestimoUncheckedCreateWithoutLivroInput[];
+    | Prisma.EmprestimoCreateWithoutExemplarInput[]
+    | Prisma.EmprestimoUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput[];
-  createMany?: Prisma.EmprestimoCreateManyLivroInputEnvelope;
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput[];
+  createMany?: Prisma.EmprestimoCreateManyExemplarInputEnvelope;
   connect?:
     | Prisma.EmprestimoWhereUniqueInput
     | Prisma.EmprestimoWhereUniqueInput[];
 };
 
-export type EmprestimoUncheckedCreateNestedManyWithoutLivroInput = {
+export type EmprestimoUncheckedCreateNestedManyWithoutExemplarInput = {
   create?:
     | Prisma.XOR<
-        Prisma.EmprestimoCreateWithoutLivroInput,
-        Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+        Prisma.EmprestimoCreateWithoutExemplarInput,
+        Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.EmprestimoCreateWithoutLivroInput[]
-    | Prisma.EmprestimoUncheckedCreateWithoutLivroInput[];
+    | Prisma.EmprestimoCreateWithoutExemplarInput[]
+    | Prisma.EmprestimoUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput[];
-  createMany?: Prisma.EmprestimoCreateManyLivroInputEnvelope;
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput[];
+  createMany?: Prisma.EmprestimoCreateManyExemplarInputEnvelope;
   connect?:
     | Prisma.EmprestimoWhereUniqueInput
     | Prisma.EmprestimoWhereUniqueInput[];
 };
 
-export type EmprestimoUpdateManyWithoutLivroNestedInput = {
+export type EmprestimoUpdateManyWithoutExemplarNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.EmprestimoCreateWithoutLivroInput,
-        Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+        Prisma.EmprestimoCreateWithoutExemplarInput,
+        Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.EmprestimoCreateWithoutLivroInput[]
-    | Prisma.EmprestimoUncheckedCreateWithoutLivroInput[];
+    | Prisma.EmprestimoCreateWithoutExemplarInput[]
+    | Prisma.EmprestimoUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput[];
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput[];
   upsert?:
-    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutLivroInput
-    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutLivroInput[];
-  createMany?: Prisma.EmprestimoCreateManyLivroInputEnvelope;
+    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutExemplarInput
+    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutExemplarInput[];
+  createMany?: Prisma.EmprestimoCreateManyExemplarInputEnvelope;
   set?: Prisma.EmprestimoWhereUniqueInput | Prisma.EmprestimoWhereUniqueInput[];
   disconnect?:
     | Prisma.EmprestimoWhereUniqueInput
@@ -688,31 +691,31 @@ export type EmprestimoUpdateManyWithoutLivroNestedInput = {
     | Prisma.EmprestimoWhereUniqueInput
     | Prisma.EmprestimoWhereUniqueInput[];
   update?:
-    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutLivroInput
-    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutLivroInput[];
+    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutExemplarInput
+    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutExemplarInput[];
   updateMany?:
-    | Prisma.EmprestimoUpdateManyWithWhereWithoutLivroInput
-    | Prisma.EmprestimoUpdateManyWithWhereWithoutLivroInput[];
+    | Prisma.EmprestimoUpdateManyWithWhereWithoutExemplarInput
+    | Prisma.EmprestimoUpdateManyWithWhereWithoutExemplarInput[];
   deleteMany?:
     | Prisma.EmprestimoScalarWhereInput
     | Prisma.EmprestimoScalarWhereInput[];
 };
 
-export type EmprestimoUncheckedUpdateManyWithoutLivroNestedInput = {
+export type EmprestimoUncheckedUpdateManyWithoutExemplarNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.EmprestimoCreateWithoutLivroInput,
-        Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+        Prisma.EmprestimoCreateWithoutExemplarInput,
+        Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
       >
-    | Prisma.EmprestimoCreateWithoutLivroInput[]
-    | Prisma.EmprestimoUncheckedCreateWithoutLivroInput[];
+    | Prisma.EmprestimoCreateWithoutExemplarInput[]
+    | Prisma.EmprestimoUncheckedCreateWithoutExemplarInput[];
   connectOrCreate?:
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput
-    | Prisma.EmprestimoCreateOrConnectWithoutLivroInput[];
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput
+    | Prisma.EmprestimoCreateOrConnectWithoutExemplarInput[];
   upsert?:
-    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutLivroInput
-    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutLivroInput[];
-  createMany?: Prisma.EmprestimoCreateManyLivroInputEnvelope;
+    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutExemplarInput
+    | Prisma.EmprestimoUpsertWithWhereUniqueWithoutExemplarInput[];
+  createMany?: Prisma.EmprestimoCreateManyExemplarInputEnvelope;
   set?: Prisma.EmprestimoWhereUniqueInput | Prisma.EmprestimoWhereUniqueInput[];
   disconnect?:
     | Prisma.EmprestimoWhereUniqueInput
@@ -724,11 +727,11 @@ export type EmprestimoUncheckedUpdateManyWithoutLivroNestedInput = {
     | Prisma.EmprestimoWhereUniqueInput
     | Prisma.EmprestimoWhereUniqueInput[];
   update?:
-    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutLivroInput
-    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutLivroInput[];
+    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutExemplarInput
+    | Prisma.EmprestimoUpdateWithWhereUniqueWithoutExemplarInput[];
   updateMany?:
-    | Prisma.EmprestimoUpdateManyWithWhereWithoutLivroInput
-    | Prisma.EmprestimoUpdateManyWithWhereWithoutLivroInput[];
+    | Prisma.EmprestimoUpdateManyWithWhereWithoutExemplarInput
+    | Prisma.EmprestimoUpdateManyWithWhereWithoutExemplarInput[];
   deleteMany?:
     | Prisma.EmprestimoScalarWhereInput
     | Prisma.EmprestimoScalarWhereInput[];
@@ -770,7 +773,7 @@ export type EmprestimoCreateWithoutMembroInput = {
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
   quantidadeEmprestimo?: number;
-  livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
+  exemplar: Prisma.ExemplarCreateNestedOneWithoutEmprestimosInput;
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
 };
 
@@ -781,7 +784,7 @@ export type EmprestimoUncheckedCreateWithoutMembroInput = {
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
   quantidadeEmprestimo?: number;
-  livroId: number;
+  exemplarId: number;
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
 };
 
@@ -842,10 +845,10 @@ export type EmprestimoScalarWhereInput = {
   renovacoes?: Prisma.IntFilter<'Emprestimo'> | number;
   quantidadeEmprestimo?: Prisma.IntFilter<'Emprestimo'> | number;
   membroId?: Prisma.IntFilter<'Emprestimo'> | number;
-  livroId?: Prisma.IntFilter<'Emprestimo'> | number;
+  exemplarId?: Prisma.IntFilter<'Emprestimo'> | number;
 };
 
-export type EmprestimoCreateWithoutLivroInput = {
+export type EmprestimoCreateWithoutExemplarInput = {
   dataEmprestimo?: Date | string;
   dataPrevista: Date | string;
   dataDevolucao?: Date | string | null;
@@ -855,7 +858,7 @@ export type EmprestimoCreateWithoutLivroInput = {
   multa?: Prisma.MultaCreateNestedOneWithoutEmprestimoInput;
 };
 
-export type EmprestimoUncheckedCreateWithoutLivroInput = {
+export type EmprestimoUncheckedCreateWithoutExemplarInput = {
   id?: number;
   dataEmprestimo?: Date | string;
   dataPrevista: Date | string;
@@ -866,45 +869,45 @@ export type EmprestimoUncheckedCreateWithoutLivroInput = {
   multa?: Prisma.MultaUncheckedCreateNestedOneWithoutEmprestimoInput;
 };
 
-export type EmprestimoCreateOrConnectWithoutLivroInput = {
+export type EmprestimoCreateOrConnectWithoutExemplarInput = {
   where: Prisma.EmprestimoWhereUniqueInput;
   create: Prisma.XOR<
-    Prisma.EmprestimoCreateWithoutLivroInput,
-    Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+    Prisma.EmprestimoCreateWithoutExemplarInput,
+    Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
   >;
 };
 
-export type EmprestimoCreateManyLivroInputEnvelope = {
+export type EmprestimoCreateManyExemplarInputEnvelope = {
   data:
-    | Prisma.EmprestimoCreateManyLivroInput
-    | Prisma.EmprestimoCreateManyLivroInput[];
+    | Prisma.EmprestimoCreateManyExemplarInput
+    | Prisma.EmprestimoCreateManyExemplarInput[];
 };
 
-export type EmprestimoUpsertWithWhereUniqueWithoutLivroInput = {
+export type EmprestimoUpsertWithWhereUniqueWithoutExemplarInput = {
   where: Prisma.EmprestimoWhereUniqueInput;
   update: Prisma.XOR<
-    Prisma.EmprestimoUpdateWithoutLivroInput,
-    Prisma.EmprestimoUncheckedUpdateWithoutLivroInput
+    Prisma.EmprestimoUpdateWithoutExemplarInput,
+    Prisma.EmprestimoUncheckedUpdateWithoutExemplarInput
   >;
   create: Prisma.XOR<
-    Prisma.EmprestimoCreateWithoutLivroInput,
-    Prisma.EmprestimoUncheckedCreateWithoutLivroInput
+    Prisma.EmprestimoCreateWithoutExemplarInput,
+    Prisma.EmprestimoUncheckedCreateWithoutExemplarInput
   >;
 };
 
-export type EmprestimoUpdateWithWhereUniqueWithoutLivroInput = {
+export type EmprestimoUpdateWithWhereUniqueWithoutExemplarInput = {
   where: Prisma.EmprestimoWhereUniqueInput;
   data: Prisma.XOR<
-    Prisma.EmprestimoUpdateWithoutLivroInput,
-    Prisma.EmprestimoUncheckedUpdateWithoutLivroInput
+    Prisma.EmprestimoUpdateWithoutExemplarInput,
+    Prisma.EmprestimoUncheckedUpdateWithoutExemplarInput
   >;
 };
 
-export type EmprestimoUpdateManyWithWhereWithoutLivroInput = {
+export type EmprestimoUpdateManyWithWhereWithoutExemplarInput = {
   where: Prisma.EmprestimoScalarWhereInput;
   data: Prisma.XOR<
     Prisma.EmprestimoUpdateManyMutationInput,
-    Prisma.EmprestimoUncheckedUpdateManyWithoutLivroInput
+    Prisma.EmprestimoUncheckedUpdateManyWithoutExemplarInput
   >;
 };
 
@@ -915,7 +918,7 @@ export type EmprestimoCreateWithoutMultaInput = {
   renovacoes?: number;
   quantidadeEmprestimo?: number;
   membro: Prisma.MembroCreateNestedOneWithoutEmprestimosInput;
-  livro: Prisma.LivroCreateNestedOneWithoutEmprestimosInput;
+  exemplar: Prisma.ExemplarCreateNestedOneWithoutEmprestimosInput;
 };
 
 export type EmprestimoUncheckedCreateWithoutMultaInput = {
@@ -926,7 +929,7 @@ export type EmprestimoUncheckedCreateWithoutMultaInput = {
   renovacoes?: number;
   quantidadeEmprestimo?: number;
   membroId: number;
-  livroId: number;
+  exemplarId: number;
 };
 
 export type EmprestimoCreateOrConnectWithoutMultaInput = {
@@ -968,7 +971,7 @@ export type EmprestimoUpdateWithoutMultaInput = {
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membro?: Prisma.MembroUpdateOneRequiredWithoutEmprestimosNestedInput;
-  livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
+  exemplar?: Prisma.ExemplarUpdateOneRequiredWithoutEmprestimosNestedInput;
 };
 
 export type EmprestimoUncheckedUpdateWithoutMultaInput = {
@@ -983,7 +986,7 @@ export type EmprestimoUncheckedUpdateWithoutMultaInput = {
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
   membroId?: Prisma.IntFieldUpdateOperationsInput | number;
-  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
 export type EmprestimoCreateManyMembroInput = {
@@ -993,7 +996,7 @@ export type EmprestimoCreateManyMembroInput = {
   dataDevolucao?: Date | string | null;
   renovacoes?: number;
   quantidadeEmprestimo?: number;
-  livroId: number;
+  exemplarId: number;
 };
 
 export type EmprestimoUpdateWithoutMembroInput = {
@@ -1006,7 +1009,7 @@ export type EmprestimoUpdateWithoutMembroInput = {
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
-  livro?: Prisma.LivroUpdateOneRequiredWithoutEmprestimosNestedInput;
+  exemplar?: Prisma.ExemplarUpdateOneRequiredWithoutEmprestimosNestedInput;
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
 };
 
@@ -1021,7 +1024,7 @@ export type EmprestimoUncheckedUpdateWithoutMembroInput = {
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
-  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
 };
 
@@ -1036,10 +1039,10 @@ export type EmprestimoUncheckedUpdateManyWithoutMembroInput = {
     | null;
   renovacoes?: Prisma.IntFieldUpdateOperationsInput | number;
   quantidadeEmprestimo?: Prisma.IntFieldUpdateOperationsInput | number;
-  livroId?: Prisma.IntFieldUpdateOperationsInput | number;
+  exemplarId?: Prisma.IntFieldUpdateOperationsInput | number;
 };
 
-export type EmprestimoCreateManyLivroInput = {
+export type EmprestimoCreateManyExemplarInput = {
   id?: number;
   dataEmprestimo?: Date | string;
   dataPrevista: Date | string;
@@ -1049,7 +1052,7 @@ export type EmprestimoCreateManyLivroInput = {
   membroId: number;
 };
 
-export type EmprestimoUpdateWithoutLivroInput = {
+export type EmprestimoUpdateWithoutExemplarInput = {
   dataEmprestimo?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   dataPrevista?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   dataDevolucao?:
@@ -1063,7 +1066,7 @@ export type EmprestimoUpdateWithoutLivroInput = {
   multa?: Prisma.MultaUpdateOneWithoutEmprestimoNestedInput;
 };
 
-export type EmprestimoUncheckedUpdateWithoutLivroInput = {
+export type EmprestimoUncheckedUpdateWithoutExemplarInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   dataEmprestimo?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   dataPrevista?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1078,7 +1081,7 @@ export type EmprestimoUncheckedUpdateWithoutLivroInput = {
   multa?: Prisma.MultaUncheckedUpdateOneWithoutEmprestimoNestedInput;
 };
 
-export type EmprestimoUncheckedUpdateManyWithoutLivroInput = {
+export type EmprestimoUncheckedUpdateManyWithoutExemplarInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   dataEmprestimo?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   dataPrevista?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1104,9 +1107,9 @@ export type EmprestimoSelect<
     renovacoes?: boolean;
     quantidadeEmprestimo?: boolean;
     membroId?: boolean;
-    livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
     multa?: boolean | Prisma.Emprestimo$multaArgs<ExtArgs>;
   },
   ExtArgs['result']['emprestimo']
@@ -1124,9 +1127,9 @@ export type EmprestimoSelectCreateManyAndReturn<
     renovacoes?: boolean;
     quantidadeEmprestimo?: boolean;
     membroId?: boolean;
-    livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['emprestimo']
 >;
@@ -1143,9 +1146,9 @@ export type EmprestimoSelectUpdateManyAndReturn<
     renovacoes?: boolean;
     quantidadeEmprestimo?: boolean;
     membroId?: boolean;
-    livroId?: boolean;
+    exemplarId?: boolean;
     membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-    livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+    exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['emprestimo']
 >;
@@ -1158,7 +1161,7 @@ export type EmprestimoSelectScalar = {
   renovacoes?: boolean;
   quantidadeEmprestimo?: boolean;
   membroId?: boolean;
-  livroId?: boolean;
+  exemplarId?: boolean;
 };
 
 export type EmprestimoOmit<
@@ -1172,7 +1175,7 @@ export type EmprestimoOmit<
   | 'renovacoes'
   | 'quantidadeEmprestimo'
   | 'membroId'
-  | 'livroId',
+  | 'exemplarId',
   ExtArgs['result']['emprestimo']
 >;
 export type EmprestimoInclude<
@@ -1180,7 +1183,7 @@ export type EmprestimoInclude<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
   multa?: boolean | Prisma.Emprestimo$multaArgs<ExtArgs>;
 };
 export type EmprestimoIncludeCreateManyAndReturn<
@@ -1188,14 +1191,14 @@ export type EmprestimoIncludeCreateManyAndReturn<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
 };
 export type EmprestimoIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
   membro?: boolean | Prisma.MembroDefaultArgs<ExtArgs>;
-  livro?: boolean | Prisma.LivroDefaultArgs<ExtArgs>;
+  exemplar?: boolean | Prisma.ExemplarDefaultArgs<ExtArgs>;
 };
 
 export type $EmprestimoPayload<
@@ -1205,7 +1208,7 @@ export type $EmprestimoPayload<
   name: 'Emprestimo';
   objects: {
     membro: Prisma.$MembroPayload<ExtArgs>;
-    livro: Prisma.$LivroPayload<ExtArgs>;
+    exemplar: Prisma.$ExemplarPayload<ExtArgs>;
     multa: Prisma.$MultaPayload<ExtArgs> | null;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
@@ -1217,7 +1220,7 @@ export type $EmprestimoPayload<
       renovacoes: number;
       quantidadeEmprestimo: number;
       membroId: number;
-      livroId: number;
+      exemplarId: number;
     },
     ExtArgs['result']['emprestimo']
   >;
@@ -1782,11 +1785,11 @@ export interface Prisma__EmprestimoClient<
     ExtArgs,
     GlobalOmitOptions
   >;
-  livro<T extends Prisma.LivroDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.LivroDefaultArgs<ExtArgs>>,
-  ): Prisma.Prisma__LivroClient<
+  exemplar<T extends Prisma.ExemplarDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ExemplarDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__ExemplarClient<
     | runtime.Types.Result.GetResult<
-        Prisma.$LivroPayload<ExtArgs>,
+        Prisma.$ExemplarPayload<ExtArgs>,
         T,
         'findUniqueOrThrow',
         GlobalOmitOptions
@@ -1858,7 +1861,7 @@ export interface EmprestimoFieldRefs {
   readonly renovacoes: Prisma.FieldRef<'Emprestimo', 'Int'>;
   readonly quantidadeEmprestimo: Prisma.FieldRef<'Emprestimo', 'Int'>;
   readonly membroId: Prisma.FieldRef<'Emprestimo', 'Int'>;
-  readonly livroId: Prisma.FieldRef<'Emprestimo', 'Int'>;
+  readonly exemplarId: Prisma.FieldRef<'Emprestimo', 'Int'>;
 }
 
 // Custom InputTypes

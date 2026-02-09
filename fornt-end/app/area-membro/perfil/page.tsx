@@ -1,7 +1,13 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription 
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +40,10 @@ export default function PerfilMembroPage() {
       setMembro(response.data);
       setEmail(response.data.usuario?.email || "");
       setNome(response.data.usuario?.nome || "");
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       console.error('Erro ao buscar dados do membro:', error);
     }
   }
@@ -45,14 +54,17 @@ export default function PerfilMembroPage() {
     try {
       if (membro?.usuario) {
         console.log(membro.usuario);
-        await api.put('/membros/perfil/atualizar', { nome })
+        await api.put('/membros/perfil/atualizar', { nome });
       } else {
-        await api.post(`/membros/vincular-usuario`, { nome, email })
+        await api.post(`/membros/vincular-usuario`, { nome, email });
       }
       router.refresh();
       toast.success("Perfil atualizado com sucesso!")
-    } catch (error) {
-      toast.error("Erro ao atualizar perfil.")
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error("Erro ao atualizar perfil.");
     } finally {
       setIsLoading(false)
     }
@@ -159,7 +171,7 @@ export default function PerfilMembroPage() {
                   </div>
                 </div>
                 <div className="flex justify-end pt-2">
-                  <Button type="submit" className="gap-2" disabled={isLoading}>
+                  <Button type="submit" className="gap-2 cursor-pointer" disabled={isLoading}>
                     {
                       isLoading ? "Salvando..." : <>
                         <Save size={16} /> {membro?.usuario ? "Salvar Alterações" : "Vincular Conta"}

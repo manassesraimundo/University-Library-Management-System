@@ -15,7 +15,7 @@ export class CreateLivroDto {
 
   @IsInt({ message: 'O ID do autor deve ser um número inteiro' })
   @IsNotEmpty({ message: 'O autorId é obrigatório' })
-  autorId: number;
+  autorId?: number;
 
   @IsString({ message: 'O nome da editora deve ser uma string' })
   @IsOptional()
@@ -39,7 +39,7 @@ export class CreateLivroDto {
 
   @IsNumber({}, { message: 'O ID da categoria deve ser um número' })
   @IsNotEmpty({ message: 'O categoriaId é obrigatório' })
-  categoriaId: number;
+  categoriaId?: number;
 
   @IsString()
   @IsOptional()

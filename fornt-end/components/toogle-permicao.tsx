@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from "react";
-import { 
-    Dialog, 
-    DialogContent, 
-    DialogDescription, 
-    DialogFooter, 
-    DialogHeader, 
-    DialogTitle, 
-    DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Role } from "@/types/enums";
 import { toast } from "sonner";
 import { api } from "@/lib/api"
+import AlertGlobal from "./alertGlobal";
 
 interface TooglePermicaoProps {
   funcionario: any;
@@ -27,6 +28,9 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
   const [loading, setLoading] = useState<boolean>(false);
   const [role, setRole] = useState<string>(funcionario?.role || Role.BIBLIOTECARIO);
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
   const handleUpdateRole = async () => {
     setLoading(true)
     try {
@@ -34,8 +38,13 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
       toast.success("Permissão atualizada!")
       onSucesso()
       setOpen(false)
-    } catch (error) {
-      toast.error("Erro ao alterar permissão.")
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
+      const mensagem = error.response?.data?.message || "Erro ao alterar permissão.";
+      setMessage(mensagem);
+      setIsOpen(true)
     } finally {
       setLoading(false)
     }
@@ -43,6 +52,7 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {isOpen && <AlertGlobal isOpen={isOpen} setIsOpen={() => setIsOpen(false)} message={message} titulo="Erro Multa" />}
       <DialogTrigger asChild>
         <div className="flex items-center gap-2 cursor-pointer">
           <UserCog size={14} className="text-slate-500" />
@@ -105,7 +115,7 @@ export function TooglePermicao({ funcionario, onSucesso }: TooglePermicaoProps) 
           <Button
             onClick={handleUpdateRole}
             disabled={loading || role === funcionario?.role}
-            className="gap-2"
+            className="gap-2 cursor-pointer"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             Confirmar Alteração

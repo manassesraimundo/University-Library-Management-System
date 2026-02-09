@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,19 +12,22 @@ export default function RecomendacoesPage() {
   const [textoBruto, setTextoBruto] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
-  const carregarRecomendacoes = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await api.get('/recomendacao');
       setTextoBruto(res.data);
       toast.success("");
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+      
       toast.error("Não conseguimos carregar suas sugestões agora.")
     } finally {
       setLoading(false)
     }
-  }
+  }, []);
 
-  useEffect(() => { carregarRecomendacoes() }, [])
+  useEffect(() => { fetchData() }, [fetchData])
 
   // Função para limpar e separar o texto (Lógica simples de parser)
   const processarRecomendacoes = () => {
@@ -65,7 +68,7 @@ export default function RecomendacoesPage() {
         <div className="relative z-10 max-w-2xl">
           <div className="flex items-center gap-2 mb-4">
             <Badge className="bg-primary hover:bg-primary text-white border-none px-3 py-1">
-              SISTEMA IA
+              BIBLIO-TECH IA
             </Badge>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">

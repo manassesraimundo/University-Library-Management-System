@@ -41,6 +41,9 @@ export function MembroDetalhesModal({ matricula, isOpen, onClose }: IMembroDetal
           // Ajustado para pegar o primeiro item se for um array
           setMembro(Array.isArray(response.data) ? response.data[0] : response.data)
         } catch (error: any) {
+          if (error.response?.status === 401)
+            window.location.href = '/login';
+          
           toast.error("Não foi possível carregar os detalhes.")
           onClose()
         } finally {
@@ -115,7 +118,7 @@ export function MembroDetalhesModal({ matricula, isOpen, onClose }: IMembroDetal
                     {membro.emprestimos?.length > 0 ? (
                       membro.emprestimos.map((emp: IEmprestimo) => (
                         <TableRow key={emp.id}>
-                          <TableCell className="text-xs font-medium">{emp.livro.titulo}</TableCell>
+                          <TableCell className="text-xs font-medium">{emp.exemplar.livro.titulo}</TableCell>
                           <TableCell className="text-right text-xs text-muted-foreground">
                             {emp.dataPrevista ? new Date(emp.dataPrevista).toLocaleDateString('pt-BR') : "---"}
                           </TableCell>

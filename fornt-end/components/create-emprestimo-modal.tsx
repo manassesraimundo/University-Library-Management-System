@@ -20,10 +20,16 @@ import AlertGlobal from "./alertGlobal";
 
 export function CreateEmprestimoModal({ onSucesso }: { onSucesso: () => void }) {
   const [livros, setLivros] = useState<{ id: number, nome: string }[]>([]);
-  const [livroNomeSel, setLivroNomeSel] = useState<string>("");
+  const [exemplares, setExemplares] = useState<{id: string, nome: string}[]>([]);
   const [membroMatricula, setMembroMatricula] = useState<string>("");
-  const [titulo, setTitulo] = useState<string>("");
+
+  const [livroNomeSel, setLivroNomeSel] = useState<string>("");
   const [openLivro, setOpenLivro] = useState<boolean>(false);
+
+  const [openExpempr, setOpenExemplar] = useState<boolean>(false);
+  const [codigoBarras, setCodigoBarras] = useState<string>("");
+
+  const [titulo, setTitulo] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // Controle manual do Dialog
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -43,13 +49,35 @@ export function CreateEmprestimoModal({ onSucesso }: { onSucesso: () => void }) 
       }))
       setLivros(formatados)
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error('Erro ao carregar acervo.')
+    }
+  }
+
+  const pegarExemplaresByLivro = async () => {
+    try {
+      const response = await api.get(`/livros/${Number(livroNomeSel)}/exemplares`)
+
+      const formatados: { id: string, nome: string }[] = response.data.map((l: any) => ({
+        id: l.codigoBarras,
+        nome: l.codigoBarras,
+      }));
+      setExemplares(formatados)
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error(error.response?.data?.message || 'Erro ao carregar exemplares.')
     }
   }
 
   useEffect(() => {
     pegarLivrosDisponiveis()
   }, [isDialogOpen, titulo, isOpen])
+
+  useEffect(() => { pegarExemplaresByLivro() }, [livroNomeSel])
 
   const handleSubmit = async () => {
     if (!livroNomeSel || !membroMatricula) {
@@ -60,42 +88,44 @@ export function CreateEmprestimoModal({ onSucesso }: { onSucesso: () => void }) 
     try {
       await api.post('/emprestimos', {
         livroId: Number(livroNomeSel),
-        matricula: membroMatricula
+        matricula: membroMatricula,
+        codigoBarras
       })
 
       toast.success("Empréstimo registrado com sucesso!")
 
       // Limpar estados
       setLivroNomeSel("")
+      setCodigoBarras("")
       setMembroMatricula("")
       setIsDialogOpen(false) // Fecha o modal
 
       if (onSucesso)
         onSucesso() // Atualiza a lista na página pai
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       const msg = error.response?.data?.message || "Erro ao registrar empréstimo"
       setMessage(msg)
       setIsOpen(true)
-
-      // toast.error(msg)
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  if (isOpen) {
-    return <AlertGlobal
-      isOpen={isOpen}
-      setIsOpen={() => setIsOpen(false)}
-      message={message}
-      titulo="Empréstimo"
-    />
-  }
-
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      {
+        isOpen && <AlertGlobal
+          isOpen={isOpen}
+          setIsOpen={() => setIsOpen(false)}
+          message={message}
+          titulo="Empréstimo"
+        />
+      }
       <DialogTrigger asChild>
-        <Button className="gap-2"><Plus size={18} /> Novo Empréstimo</Button>
+        <Button className="gap-2 cursor-pointer"><Plus size={18} /> Novo Empréstimo</Button>
       </DialogTrigger>
       <DialogContent aria-describedby="">
         <DialogHeader>
@@ -118,6 +148,20 @@ export function CreateEmprestimoModal({ onSucesso }: { onSucesso: () => void }) 
           </div>
 
           <div className="grid gap-2">
+            <Label>Codígo do Exemplar</Label>
+            <SearchableSelect
+              items={exemplares}
+              selected={codigoBarras}
+              setSelected={(e: string) => setCodigoBarras(e)}
+              open={openExpempr}
+              setOpen={setOpenExemplar}
+              placeholder="Pesquisar por codego de exemplar..."
+              value={codigoBarras}
+              onChangeCapture={() => setCodigoBarras}
+            />
+          </div>
+
+          <div className="grid gap-2">
             <Label>Matrícula do Membro</Label>
             <Input
               placeholder="Ex: 2023001"
@@ -129,7 +173,7 @@ export function CreateEmprestimoModal({ onSucesso }: { onSucesso: () => void }) 
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 cursor-pointer"
           >
             {isSubmitting ? "Processando..." : "Finalizar Empréstimo"}
           </Button>

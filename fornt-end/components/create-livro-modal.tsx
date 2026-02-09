@@ -20,7 +20,7 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2 cursor-pointer">
           <Plus className="h-4 w-4" /> Novo Livro
         </Button>
       </DialogTrigger>

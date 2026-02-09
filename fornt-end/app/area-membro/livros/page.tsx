@@ -1,24 +1,36 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { api } from "@/lib/api"
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select"
+import { 
+  Card, 
+  CardContent, 
+  CardFooter, 
+  CardHeader 
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Search, BookMarked, Info, Filter } from "lucide-react"
-import { toast } from "sonner"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/context/auth-context"
-import { ILivro } from "@/types/interface"
-import { Etiqueta, StatusLivro } from "@/types/enums"
+import { ICategoria, ILivro } from "@/types/interface"
+import { Etiqueta } from "@/types/enums"
 import AlertGlobal from "@/components/alertGlobal"
+import { toast } from "sonner"
+import { api } from "@/lib/api"
 
 export default function ExplorarLivrosPage() {
   const [livros, setLivros] = useState<ILivro[]>([]);
+  const [caterorias, setCategorias] = useState<ICategoria[]>([]);
+  const [categoriaInput, setCategoriaInput] = useState<string>('null');
   const [busca, setBusca] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [statusFiltro, setStatusFiltro] = useState<string>(StatusLivro.DISPONIVEL);
   const [etiqueta, setEtiqueta] = useState<string>(Etiqueta.BRANCO);
   const [page, setPage] = useState<number>(1);
 
@@ -29,41 +41,48 @@ export default function ExplorarLivrosPage() {
 
   const carregarLivros = async () => {
     try {
-      if (statusFiltro === "INDISPUNIVEIS") {
-        const [resEmprestados, resReservados] = await Promise.all([
-          api.get(`/livros?titulo=${busca}`, {
-            params: {
-              status: 'EMPRESTADO',
-              page: page,
-              limit: 20
-            }
-          }),
-          api.get(`/livros?titulo=${busca}`, {
-            params: {
-              status: 'RESERVADO',
-              page: page,
-              limit: 20
-            }
-          })
-        ]);
+      if (categoriaInput !== 'null') {
+        const res = await api.get(`/livros/categoria/${categoriaInput}?etiqueta=${etiqueta}`, {
+          params: {
+            page: page,
+            limit: 20
+          }
+        });
+        const data = res.data;
 
-        const combinados = [...resEmprestados.data, ...resReservados.data]
-        setLivros(combinados)
+        setLivros(data);
+        console.log(data);
         return;
       }
-
       const res = await api.get(`/livros?titulo=${busca}`, {
         params: {
-          status: statusFiltro,
+          etiqueta,
           page: page,
           limit: 20
         }
-      })
-      setLivros(res.data)
+      });
+      setLivros(res.data);
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       toast.error(error.response?.data?.message || "Erro ao carregar acervo")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const carregarCategorias = async () => {
+    try {
+      const response = await api.get('/categoria');
+      const data = response.data;
+
+      setCategorias(data);
+    } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
+      toast.error(error.response?.data?.message || "Erro ao carregar caterorias")
     }
   }
 
@@ -78,24 +97,29 @@ export default function ExplorarLivrosPage() {
       toast.success("Livro reservado com sucesso!")
 
     } catch (error: any) {
+      if (error.response?.status === 401)
+        window.location.href = '/login';
+
       setMessage(error.response?.data?.message || "Erro ao reservar livro");
       setIsOpen(true);
     }
   }
 
-  useEffect(() => { carregarLivros() }, [busca, statusFiltro, isOpen]);
-
-  if (isOpen) {
-    return <AlertGlobal 
-      isOpen={isOpen}
-      setIsOpen={() => setIsOpen(false)}
-      message={message}
-      titulo="Erro ao Realizar Reserva"
-    />
-  }
+  useEffect(() => {
+    carregarLivros();
+    carregarCategorias();
+  }, [busca, etiqueta, isOpen, categoriaInput]);
 
   return (
-    <div className="p-6 space-y-6 bg-slate-50/30 min-h-screen">
+    <div className="p-6 space-y-6 bg-slate-50/30 min-h-screen max-w-7xl mx-auto">
+      {
+        isOpen && <AlertGlobal
+          isOpen={isOpen}
+          setIsOpen={() => setIsOpen(false)}
+          message={message}
+          titulo="Aviso"
+        />
+      }
       {/* Cabeçalho de Busca */}
       <div className="flex flex-col gap-4">
         <div>
@@ -103,26 +127,55 @@ export default function ExplorarLivrosPage() {
           <p className="text-muted-foreground">Explore milhares de títulos disponíveis para empréstimo.</p>
         </div>
 
-        <div className="flex gap-4 items-center bg-white p-4 rounded-lg shadow-sm border">
+        <div className="flex gap-4 items-center justify-center bg-white p-4 rounded-lg shadow-sm border">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 text-muted-foreground" size={18} />
-            <Input
-              placeholder="Buscar por título, autor ou ISBN..."
-              className="pl-10"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-            />
+            {/* <Label htmlFor="input" className="font-semibold mb-2">Pesquisar</Label> */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-3 text-muted-foreground" size={18} />
+              <Input
+                id="input"
+                placeholder="Buscar por título, autor ou ISBN..."
+                className="pl-10"
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+              />
+            </div>
           </div>
-          <Select value={statusFiltro} onValueChange={setStatusFiltro}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={StatusLivro.DISPONIVEL}>DISPONIVEL</SelectItem>
-              <SelectItem value="INDISPUNIVEIS">INDISPUNIVEIS</SelectItem>
-            </SelectContent>
-          </Select>
+
+          <div>
+            {/* <Label htmlFor="etiqueta" className="font-semibold mb-2">Etiqueta</Label> */}
+            <Select value={categoriaInput} onValueChange={setCategoriaInput}>
+              <SelectTrigger className="w-[180px] cursor-pointer">
+                <Filter className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='null'>Selecionar categoria</SelectItem>
+                {
+                  caterorias.map(cat => (
+                    <SelectItem key={cat.id} value={cat.nome}>
+                      {cat.nome}
+                    </SelectItem>
+                  ))
+                }
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            {/* <Label htmlFor="etiqueta" className="font-semibold mb-2">Etiqueta</Label> */}
+            <Select value={etiqueta} onValueChange={setEtiqueta}>
+              <SelectTrigger className="w-[180px] cursor-pointer">
+                <Filter className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={Etiqueta.BRANCO}>BRANCO</SelectItem>
+                <SelectItem value={Etiqueta.AMARELO}>AMARELO</SelectItem>
+                <SelectItem value={Etiqueta.VERMELHO}>VERMELHO</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
@@ -151,11 +204,11 @@ export default function ExplorarLivrosPage() {
                   </Badge>
                   <Badge
                     variant={
-                      livro.status === StatusLivro.DISPONIVEL ? "success"
+                      livro._count && livro._count.exemplares > 1 ? "success"
                         : "destructive"
                     }
                   >
-                    {livro.status === StatusLivro.DISPONIVEL ? "Disponível" : "Indisponível"}
+                    {livro._count && livro._count.exemplares > 1 ? "Disponível" : "Indisponível"}
                   </Badge>
                 </div>
 
@@ -173,7 +226,7 @@ export default function ExplorarLivrosPage() {
 
               <CardHeader className="p-4 pb-0">
                 <h3 className="font-bold text-sm leading-none truncate">{livro.titulo}</h3>
-                <p className="text-xs text-muted-foreground truncate">{livro.autor.nome}</p>
+                <p className="text-xs text-muted-foreground truncate">{livro.autor?.nome}</p>
               </CardHeader>
 
               <CardContent className="p-4 pt-2">
@@ -185,10 +238,10 @@ export default function ExplorarLivrosPage() {
               <CardFooter className="p-4 pt-0">
                 <Button
                   className="w-full"
-                  variant={livro.quantidade > 1 ? "default" : "outline"}
+                  variant={livro._count && livro._count.exemplares > 1 ? "outline" : "default"}
                   onClick={() => realizarReserva(livro.id)}
                 >
-                  {"Reservar Livro"}
+                  {livro._count && livro._count.exemplares > 1 ? "Emprestar Livro" : "Reservar Livro"}
                 </Button>
               </CardFooter>
             </Card>
