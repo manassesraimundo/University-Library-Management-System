@@ -249,6 +249,7 @@ export class ReservasService {
         : new InternalServerErrorException('Erro ao cancelar reserva');
     }
   }
+  
   async confirmarReservaParaEmprestimo(
     reservaId: number,
   ): Promise<{ message: string }> {

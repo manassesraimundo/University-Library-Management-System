@@ -16,6 +16,7 @@ import { RolesGuard } from './auth/decorators/roles.guard';
 import { AuthGuard } from './auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ScanModule } from './scan/scan.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     RecomendacaoModule,
     ChatbotModule,
     AuthModule,
+    ScanModule,
   ],
   providers: [
     {
