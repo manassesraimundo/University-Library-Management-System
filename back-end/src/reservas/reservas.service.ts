@@ -22,7 +22,7 @@ export class ReservasService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly membroService: MembrosService,
-  ) { }
+  ) {}
 
   async createReserva(body: CreateReservaDto): Promise<{ message: string }> {
     try {
@@ -149,7 +149,19 @@ export class ReservasService {
       const reservas = await this.prisma.reserva.findMany({
         where: { membro: { matricula } },
         include: {
-          membro: { include: { usuario: { select: { nome: true, email: true, role: true, ativo: true, criadoEm: true } } } },
+          membro: {
+            include: {
+              usuario: {
+                select: {
+                  nome: true,
+                  email: true,
+                  role: true,
+                  ativo: true,
+                  criadoEm: true,
+                },
+              },
+            },
+          },
           livro: true,
         },
         orderBy: { criadaEm: 'desc' },
@@ -179,7 +191,7 @@ export class ReservasService {
 
         await tx.reserva.update({
           where: { id: reservaId },
-          data: { ativa: false, posicao: 0, paraData: null }, 
+          data: { ativa: false, posicao: 0, paraData: null },
         });
 
         await tx.reserva.updateMany({
@@ -249,7 +261,7 @@ export class ReservasService {
         : new InternalServerErrorException('Erro ao cancelar reserva');
     }
   }
-  
+
   async confirmarReservaParaEmprestimo(
     reservaId: number,
   ): Promise<{ message: string }> {
@@ -358,8 +370,8 @@ export class ReservasService {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException(
-          'Erro ao processar levantamento de reserva',
-        );
+            'Erro ao processar levantamento de reserva',
+          );
     }
   }
 
@@ -377,7 +389,7 @@ export class ReservasService {
           posicao: 1,
           paraData: {
             not: null,
-           lte: new Date(),
+            lte: new Date(),
           },
         },
       });
@@ -395,7 +407,7 @@ export class ReservasService {
       await this.prisma.$transaction(async (tx) => {
         const reserva = await tx.reserva.findUnique({
           where: { id: reservaId },
-          include: {livro: {select: {titulo: true}}}
+          include: { livro: { select: { titulo: true } } },
         });
         if (!reserva) return;
 

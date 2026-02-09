@@ -38,7 +38,7 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import AlertGlobal from "./alertGlobal";
 
-export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
+export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) {
   // Estados para Autores
   const [autores, setAutores] = useState<IAutor[]>([]);
   const [autorSel, setAutorSel] = useState<string>("");
@@ -54,10 +54,10 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
   const [novaCat, setNovaCat] = useState<boolean>(false);
   const [openCat, setOpenCat] = useState<boolean>(false);
 
-  const [titulo, setTitulo] = useState<string>("");
+  const [titulo, setTitulo] = useState<string>(scanResult.titulo || "");
   const [quantiade, setQuantidade] = useState<number>(1);
-  const [editora, setEditora] = useState<string>("");
-  const [isbn, setIsbn] = useState<string>("");
+  const [editora, setEditora] = useState<string>(scanResult.editora || "");
+  const [isbn, setIsbn] = useState<string>(scanResult.isbn || "");
   const [status, setStatus] = useState<string>(StatusLivro.DISPONIVEL);
   const [etiqueta, setEtiqueta] = useState<string>(Etiqueta.BRANCO);
 
@@ -76,10 +76,27 @@ export function CreateLivroForm({ closeModal, onLivroCriado }: any) {
     } catch (error: any) {
       if (error.response?.status === 401)
         window.location.href = '/login';
-      
+
       console.error("Erro ao carregar dados auxiliares")
     }
   }
+
+  useEffect(() => {
+    if (scanResult.titulo) {
+      setTitulo(scanResult.titulo);
+    }
+    if (scanResult.editora) {
+      setEditora(scanResult.editora);
+    }
+    if (scanResult.isbn) {
+      setIsbn(scanResult.isbn);
+    }
+    if (scanResult.autores) {
+      setNovoAutor(true);
+      setNomeNovoAutor(scanResult.autores);
+    }
+
+  }, [scanResult.titulo, scanResult.editora, scanResult.isbn, scanResult.autor])
 
   useEffect(() => {
     fetchData()
@@ -297,14 +314,14 @@ interface ISearchableSelectProps {
   value?: any;
 }
 
-export function SearchableSelect({ 
-  items, 
-  selected, 
-  setSelected, 
-  open, 
-  setOpen, 
-  placeholder, 
-  onChangeCapture 
+export function SearchableSelect({
+  items,
+  selected,
+  setSelected,
+  open,
+  setOpen,
+  placeholder,
+  onChangeCapture
 }: ISearchableSelectProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
