@@ -38,7 +38,7 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
         },
       });
       setScanResult(result.data);
-      toast.success("Dados extraido com sucesso.")
+      toast.success("Dados estraido com sucesso.")
     } catch (error) {
       console.error(error);
       alert('Erro ao processar imagem');

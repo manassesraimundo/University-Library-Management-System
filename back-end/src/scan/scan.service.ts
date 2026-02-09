@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
 
@@ -9,11 +13,12 @@ export class ScanService {
   private model: any;
 
   constructor(private configService: ConfigService) {
-    // Substitua pela sua chave de API ou use ConfigService
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
-    
+
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY não encontrada nas variáveis de ambiente');
+      throw new Error(
+        'GEMINI_API_KEY não encontrada nas variáveis de ambiente',
+      );
     }
 
     this.genAI = new GoogleGenerativeAI(apiKey);
@@ -51,9 +56,17 @@ export class ScanService {
 
       // Se o Gemini não encontrar o ISBN (comum em capas), usamos o título para buscar na API
       if (!extracao.isbn && extracao.titulo) {
-        this.logger.log(`ISBN não encontrado na imagem. Buscando dados para: ${extracao.titulo}`);
-        const infoCompleta = await this.buscarNoGoogleBooks(extracao.titulo, extracao.autores?.[0], extracao.isbn);
-        return infoCompleta ? { ...infoCompleta, encontrado: true } : { ...extracao, encontrado: true };
+        this.logger.log(
+          `ISBN não encontrado na imagem. Buscando dados para: ${extracao.titulo}`,
+        );
+        const infoCompleta = await this.buscarNoGoogleBooks(
+          extracao.titulo,
+          extracao.autores?.[0],
+          extracao.isbn,
+        );
+        return infoCompleta
+          ? { ...infoCompleta, encontrado: true }
+          : { ...extracao, encontrado: true };
       }
 
       return { ...extracao, encontrado: true };
@@ -63,13 +76,19 @@ export class ScanService {
     }
   }
 
-  private async buscarNoGoogleBooks(titulo: string, autor?: string, isbn?: string) {
-    const query = autor ? `intitle:${titulo}+inauthor:${autor}` : `intitle:${titulo}`;
+  private async buscarNoGoogleBooks(
+    titulo: string,
+    autor?: string,
+    isbn?: string,
+  ) {
+    const query = autor
+      ? `intitle:${titulo}+inauthor:${autor}`
+      : `intitle:${titulo}`;
     const res = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`
+      `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`,
     );
     const data = await res.json();
-    
+
     if (!data.items?.length) return null;
 
     const v = data.items[0].volumeInfo;
@@ -77,7 +96,10 @@ export class ScanService {
       titulo: v.title,
       autores: v.authors[0],
       editora: v.publisher,
-      isbn: !isbn ? null : v.industryIdentifiers?.find(id => id.type.includes('ISBN'))?.identifier || null,
+      isbn: !isbn
+        ? null
+        : v.industryIdentifiers?.find((id) => id.type.includes('ISBN'))
+            ?.identifier || null,
     };
   }
 }
