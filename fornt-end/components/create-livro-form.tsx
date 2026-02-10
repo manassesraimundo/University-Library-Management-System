@@ -93,7 +93,7 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
     }
     if (scanResult.autores) {
       setNovoAutor(true);
-      setNomeNovoAutor(scanResult.autores);
+      setNomeNovoAutor(scanResult.autores[0]);
     }
   }, [scanResult.titulo, scanResult.editora, scanResult.isbn, scanResult.autor])
 

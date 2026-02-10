@@ -82,10 +82,10 @@ export default function MultasPage() {
   }, [carregarMultas]);
 
   useEffect(() => {
-      if (pago === 'processado')
-        setMultas(prossecado)
-      else
-        setMultas(atrasado)
+    if (pago === 'processado')
+      setMultas(prossecado)
+    else
+      setMultas(atrasado)
   }, [pago]);
 
   const handleQuitarMulta = async (id: number) => {
@@ -141,18 +141,18 @@ export default function MultasPage() {
             onChange={(e) => setBusca(e.target.value)}
           />
         </div>
-      </div>
 
-      <Select value={pago} onValueChange={setPago}>
-        <SelectTrigger className="w-[180px] cursor-pointer">
-          <Filter className="mr-2 h-4 w-4" />
-          <SelectValue placeholder="Etiqueta" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={"atrasado"}>Atrasado</SelectItem>
-          <SelectItem value={"processado"}>Processado</SelectItem>
-        </SelectContent>
-      </Select>
+        <Select value={pago} onValueChange={setPago}>
+          <SelectTrigger className="w-[180px] cursor-pointer">
+            <Filter className="mr-2 h-4 w-4" />
+            <SelectValue placeholder="Etiqueta" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={"atrasado"}>Atrasado</SelectItem>
+            <SelectItem value={"processado"}>Processado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="bg-white border rounded-xl overflow-hidden shadow-sm">
         <Table>

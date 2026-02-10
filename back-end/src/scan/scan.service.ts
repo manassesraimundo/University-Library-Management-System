@@ -38,7 +38,7 @@ export class ScanService {
       const prompt = `
         Analise a imagem desta capa de livro e extraia as seguintes informações em formato JSON:
         - titulo (título completo do livro)
-        - autores (lista de autores)
+        - autore 
         - editora (nome da editora)
         - isbn (se visível, caso contrário null)
         
@@ -94,7 +94,7 @@ export class ScanService {
     const v = data.items[0].volumeInfo;
     return {
       titulo: v.title,
-      autores: v.authors[0],
+      autores: v.authors,
       editora: v.publisher,
       isbn:
         v.industryIdentifiers?.find((id) => id.type.includes('ISBN'))
