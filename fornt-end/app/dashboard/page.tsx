@@ -6,6 +6,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { api } from "@/lib/api";
 import { Book, Bookmark, HandHelping, Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
 
 export default function DashboardPage() {
   const [totalLivro, setTotalLivro] = useState(0)
@@ -47,13 +48,14 @@ export default function DashboardPage() {
       </header>
 
       {/* CARDS DE MÉTRICAS */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-12">
         <MetricCard title="Total de Livros" value={totalLivro} description="Acervo total cadastrado" />
         <MetricCard title="Empréstimos Ativos" value={totalEmprestimosAtivos} description="Livros circulando" />
         <MetricCard title="Membros Ativos" value={totalMembro} description="Membros com acesso" />
         <MetricCard title="Pendências" value={totalEmprestimosAtraso} description="Livros em atraso" color="text-red-600" />
       </div>
 
+      <Label className="font-bold text-xl">Acesso Rápido</Label>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* ÁREA DE ACESSO RÁPIDO (No lugar do gráfico) */}
         <div className="col-span-4 grid grid-cols-2 gap-4">
