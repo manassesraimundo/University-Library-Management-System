@@ -30,6 +30,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { PerfilModal } from "./perfil-modal";
 import { Role } from "@/types/enums";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const items = [
   { title: "Início", url: "/dashboard", icon: Home },
@@ -77,8 +78,28 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-primary font-bold text-lg mb-4">
-            BIBLIO-TECH
+          <SidebarGroupLabel className="text-primary w-full font-bold text-lg flex flex-col items-start justify-center pt-10 pb-14">
+            <Link href={'/dashboard'}>
+              <div className="relative group transition-transform duration-300 hover:scale-105">
+                {/* Círculo de fundo suave para destacar o logo */}
+                <div className="absolute -inset-2 bg-primary/5 rounded-full blur-sm group-hover:bg-primary/10 transition-colors" />
+
+                <Image
+                  alt="logo"
+                  src="/logo.png"
+                  width={120} // Ajustado para um tamanho de ícone/logo equilibrado
+                  height={100}
+                  className="relative object-contain"
+                />
+              </div>
+
+              <div className="flex flex-col items-center">
+                <h2 className="text-primary font-black text-sm tracking-tighter leading-none text-end">
+                  BIBLIO<span className="text-slate-400 font-light">TECH</span>
+                </h2>
+                <div className="h-[1px] w-8 bg-primary/20 rounded-full mt-1" />
+              </div>
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
