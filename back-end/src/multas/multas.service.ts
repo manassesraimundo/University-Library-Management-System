@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MultasService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async getMultas(pago: boolean) {
     try {
@@ -13,35 +13,30 @@ export class MultasService {
           emprestimo: {
             include: {
               membro: { include: { usuario: { select: { nome: true } } } },
-              exemplar: { include: { livro: { select: { titulo: true } } } }
-            }
-          }
-        }
+              exemplar: { include: { livro: { select: { titulo: true } } } },
+            },
+          },
+        },
       });
-      return multas
-    } catch (erro) {
-
-    }
+      return multas;
+    } catch (erro) {}
   }
 
   async processar(multaId: number) {
     try {
       const multas = await this.prisma.multa.findUnique({
-        where: { id: multaId }
+        where: { id: multaId },
       });
 
-      if (!multas)
-        throw new NotFoundException()
+      if (!multas) throw new NotFoundException();
 
       await this.prisma.multa.update({
         where: { id: multaId },
-        data: { paga: true }
+        data: { paga: true },
       });
 
-      return { message: 'Multa processado com sucesso.' }
-    } catch (erro) {
-
-    }
+      return { message: 'Multa processado com sucesso.' };
+    } catch (erro) {}
   }
 
   async getMultasByMembro(matricula: string) {
@@ -52,15 +47,13 @@ export class MultasService {
           emprestimo: {
             include: {
               membro: { include: { usuario: { select: { nome: true } } } },
-              exemplar: { include: { livro: { select: { titulo: true } } } }
-            }
-          }
-        }
-      })
+              exemplar: { include: { livro: { select: { titulo: true } } } },
+            },
+          },
+        },
+      });
 
       return multas;
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 }

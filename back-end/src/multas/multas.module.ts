@@ -4,6 +4,6 @@ import { MultasService } from './multas.service';
 
 @Module({
   controllers: [MultasController],
-  providers: [MultasService]
+  providers: [MultasService],
 })
 export class MultasModule {}
