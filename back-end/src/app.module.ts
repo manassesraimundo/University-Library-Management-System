@@ -17,6 +17,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ScanModule } from './scan/scan.module';
+import { MultasModule } from './multas/multas.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ScanModule } from './scan/scan.module';
     ChatbotModule,
     AuthModule,
     ScanModule,
+    MultasModule,
   ],
   providers: [
     {

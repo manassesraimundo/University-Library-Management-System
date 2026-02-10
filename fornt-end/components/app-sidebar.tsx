@@ -10,6 +10,7 @@ import {
   Clock,
   NotebookIcon,
   Bookmark,
+  AlertTriangle
 } from "lucide-react";
 import {
   Sidebar,
@@ -41,6 +42,7 @@ const items = [
   { title: "Reservas", url: "/dashboard/reservas", icon: Bookmark },
   { title: "Funcionarios", url: "/dashboard/funcionarios", icon: Users },
   { title: "Membros", url: "/dashboard/membro", icon: Users },
+  { title: "Multas", url: "/dashboard/multas", icon: AlertTriangle },
   { title: "Relatório", url: "/dashboard/relatorio", icon: NotebookIcon },
   { title: "Configurações", url: "#", icon: Settings },
 ]
