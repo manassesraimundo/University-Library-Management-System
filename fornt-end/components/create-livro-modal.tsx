@@ -54,10 +54,10 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
           <Plus className="h-4 w-4" /> Novo Livro
         </Button>
       </DialogTrigger>
-      
+
       <DialogContent className="sm:max-w-[750px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 mt-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 mt-6">
             <div>
               <DialogTitle className="text-xl">Cadastrar Livro</DialogTitle>
               <DialogDescription>
@@ -68,7 +68,7 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
             {/* UI DE SCANNER MELHORADA */}
             <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-dashed border-slate-300">
               <div className="flex flex-col gap-1">
-                <Label className="sr-only">Capa do Livro</Label>
+                <p className="font-bold font-medium">OCR de Livros</p>
                 <div className="flex items-center gap-2">
                   <Input
                     type="file"
@@ -77,10 +77,10 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
                     className="w-[180px] h-8 text-[11px] bg-white"
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                   />
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="secondary"
-                    onClick={carregarImage} 
+                    onClick={carregarImage}
                     disabled={loading || !file}
                     className="h-8 gap-1 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-slate-300"
                   >
@@ -97,10 +97,10 @@ export function CreateLivroModal({ onLivroCriado, }: { onLivroCriado: () => void
           </div>
         </DialogHeader>
 
-        <CreateLivroForm 
-          closeModal={setOpen} 
-          onLivroCriado={onLivroCriado} 
-          scanResult={scanResult} 
+        <CreateLivroForm
+          closeModal={setOpen}
+          onLivroCriado={onLivroCriado}
+          scanResult={scanResult}
         />
       </DialogContent>
     </Dialog>
