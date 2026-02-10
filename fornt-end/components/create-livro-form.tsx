@@ -89,13 +89,12 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
       setEditora(scanResult.editora);
     }
     if (scanResult.isbn) {
-      setIsbn(scanResult.isbn);
+      setIsbn(formatarISBN(scanResult.isbn));
     }
     if (scanResult.autores) {
       setNovoAutor(true);
       setNomeNovoAutor(scanResult.autores);
     }
-
   }, [scanResult.titulo, scanResult.editora, scanResult.isbn, scanResult.autor])
 
   useEffect(() => {
@@ -103,7 +102,22 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    if (!nomeNovaCategoria && !catSel) {
+      toast.warning("Preecher os campos obricatórios.")
+      return ;
+    }
+
+    if (!nomeNovoAutor && !autorSel) {
+      toast.warning("Preecher os campos obricatórios.")
+      return ;
+    }
+
+    if (!titulo) {
+      toast.warning("Preecher os campos obricatórios.")
+      return ;
+    }
 
     const payload = {
       titulo: titulo,
@@ -113,7 +127,7 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
       nomeAutor: nomeNovoAutor,
       nomeCategoria: nomeNovaCategoria,
       editora,
-      isbn,
+      isbn: isbn.replaceAll("-", ""),
       status,
       etiqueta
     }
@@ -131,6 +145,18 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
       setMessage(error.response?.data?.message || "Erro ao salvar livro");
     }
   }
+
+  const formatarISBN = (value: string) => {
+    // Remove tudo que não é número
+    const digits = value.replace(/\D/g, "");
+    // Aplica a máscara: 978-3-16-148410-0
+    return digits
+      .replace(/^(\d{3})(\d)/, "$1-$2")
+      .replace(/-(\d{1})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2}-\d{6})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2}-\d{6}-\d{1}).*/, "-$1"); // Limita ao tamanho do ISBN-13
+  };
 
   return (
     <form className="grid gap-6 py-4">
@@ -168,9 +194,13 @@ export function CreateLivroForm({ closeModal, onLivroCriado, scanResult }: any) 
           <Label htmlFor="isbn" className="font-semibold mb-2">ISBN (opcional)</Label>
           <Input
             id="isbn"
-            placeholder="isbn" required
+            placeholder="978-0-00-000000-0" required
             value={isbn}
-            onChange={(t) => setIsbn(t.target.value)}
+            onChange={(e) => {
+              const valorFormatado = formatarISBN(e.target.value);
+              setIsbn(valorFormatado.replaceAll("-", ""));
+            }}
+            maxLength={17}
           />
         </div>
 

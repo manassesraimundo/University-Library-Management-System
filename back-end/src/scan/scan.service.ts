@@ -96,9 +96,7 @@ export class ScanService {
       titulo: v.title,
       autores: v.authors[0],
       editora: v.publisher,
-      isbn: !isbn
-        ? null
-        : v.industryIdentifiers?.find((id) => id.type.includes('ISBN'))
+      isbn: v.industryIdentifiers?.find((id) => id.type.includes('ISBN'))
             ?.identifier || null,
     };
   }
