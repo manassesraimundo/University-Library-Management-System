@@ -44,6 +44,18 @@ export function ViewLivroModal({ livroId }: { livroId: number }) {
     }
   }
 
+  const formatarISBN = (value: string) => {
+    // Remove tudo que não é número
+    const digits = value.replace(/\D/g, "");
+    // Aplica a máscara: 978-3-16-148410-0
+    return digits
+      .replace(/^(\d{3})(\d)/, "$1-$2")
+      .replace(/-(\d{1})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2}-\d{6})(\d)/, "-$1-$2")
+      .replace(/-(\d{1}-\d{2}-\d{6}-\d{1}).*/, "-$1"); // Limita ao tamanho do ISBN-13
+  };
+
   return (
     <Dialog onOpenChange={(open) => open && fetchLivroDetalhes()}>
       <DialogTrigger asChild>
@@ -130,7 +142,7 @@ export function ViewLivroModal({ livroId }: { livroId: number }) {
               {livro.isbn && (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Hash size={14} />
-                  <span>ISBN: {livro.isbn}</span>
+                  <span>ISBN: {formatarISBN(livro.isbn)}</span>
                 </div>
               )}
             </div>
