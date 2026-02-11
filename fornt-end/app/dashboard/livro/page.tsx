@@ -222,11 +222,11 @@ export default function LivrosPage() {
                   <ViewLivroModal livroId={livro.livroId || livro.id} />
 
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
+                    {/* <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 cursor-pointer">
                         <Trash2 className="h-4 w-4" />
                       </Button>
-                    </AlertDialogTrigger>
+                    </AlertDialogTrigger> */}
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
