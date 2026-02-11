@@ -170,7 +170,7 @@ export class MembrosService {
     const validateData = matricula.slice(0, 4);
     if (
       Number(validateData) < 2011 ||
-      Number(validateData) >= new Date().getFullYear()
+      Number(validateData) > new Date().getFullYear()
     )
       throw new BadRequestException('Ano da matrícula inválido.');
   }
