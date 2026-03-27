@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   Injectable,
@@ -9,6 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { Role } from 'src/generated/prisma/enums';
 import * as bcrypt from 'bcrypt';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @Injectable()
 export class UsuariosService {
@@ -176,6 +178,45 @@ export class UsuariosService {
       throw error instanceof HttpException
         ? error
         : new InternalServerErrorException('Erro ao buscar perfil do usuário');
+    }
+  }
+
+  async updateSenha(id: number, body: UpdateUsuarioDto) {
+    try {
+      const usuario = await this.prisma.usuario.findUnique({
+        where: { id }
+      });
+
+      if (!usuario)
+        throw new NotFoundException('Usuario nao encontrado.');
+
+      // verificar a senha antiga
+      const isMach = await bcrypt.compare(body.antigaSenha, usuario.senha as string);
+      
+      if (!isMach)
+        throw new BadRequestException('Senha increcta.');
+
+      // verificar a nova senha
+      if (body.novaSenha != body.confirmarSenha)
+        throw new BadRequestException();
+
+      // gerar hash para a nova senha
+      const salt = await bcrypt.genSalt(10);
+      const hashPass = await bcrypt.hash(body.novaSenha, salt);
+
+      await this.prisma.usuario.update({
+        where: { id },
+        data: {
+          senha: hashPass,
+        }
+      });
+
+      return { message: 'Senha alterado com sucesso!' }
+
+    } catch (error) {
+      throw error instanceof HttpException
+        ? error
+        : new InternalServerErrorException('Erro ao atualizar perfil do usuário');
     }
   }
 }

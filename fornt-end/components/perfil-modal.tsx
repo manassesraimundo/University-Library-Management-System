@@ -54,16 +54,25 @@ export function PerfilModal({ isOpen, onClose }: IPerfilModalProps) {
   const handleUpdate = async () => {
     setIsLoading(true)
     try {
-      const res = await api.patch(`/usuarios/${user?.id}`, formData)
+      const res = await api.patch(`/usuarios/perfil/update`, {
+        antigaSenha: formData.antiga,
+        novaSenha: formData.nova,
+        confirmarSenha: formData.confirmar,
+      })
 
-      toast.success("Perfil atualizado com sucesso!")
+      if (res.status === 200) {
+        toast.success("Perfil atualizado com sucesso!")
+        onClose()
+      }
 
-      onClose()
     } catch (error: any) {
       if (error.response?.status === 401)
         window.location.href = '/login';
       
       toast.error(error.response?.data?.message || "Erro ao atualizar perfil")
+
+      if (error.response?.status === 400)
+        return;
     } finally {
       setIsLoading(false)
     }
@@ -102,6 +111,7 @@ export function PerfilModal({ isOpen, onClose }: IPerfilModalProps) {
                 <User size={14} className="text-muted-foreground" /> Nome Completo
               </Label>
               <Input
+                disabled
                 id="nome"
                 value={formData.nome}
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
@@ -174,6 +184,7 @@ function FormSenha({ formData, setFormData }: IFormSenha) {
           Senha antiga
         </Label>
         <Input
+          type="password"
           id="antiga"
           value={formData.antiga}
           onChange={(e) => setFormData({ ...formData, antiga: e.target.value })}
@@ -184,6 +195,7 @@ function FormSenha({ formData, setFormData }: IFormSenha) {
           Nova senha
         </Label>
         <Input
+          type="password"
           id="nova"
           value={formData.nova}
           onChange={(e) => setFormData({ ...formData, nova: e.target.value })}
@@ -194,6 +206,7 @@ function FormSenha({ formData, setFormData }: IFormSenha) {
           Confirmar senha
         </Label>
         <Input
+          type="password"
           id="confirmar"
           value={formData.confirmar}
           onChange={(e) => setFormData({ ...formData, confirmar: e.target.value })}

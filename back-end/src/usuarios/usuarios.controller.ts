@@ -16,6 +16,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/decorators/roles.guard';
 import { Roles } from 'src/auth/decorators/roles';
 import type { Request } from 'express';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @Controller('usuarios')
 @UseGuards(AuthGuard, RolesGuard)
@@ -78,5 +79,18 @@ export class UsuariosController {
     const id = request['user'].sub;
     const usuario = await this.usuariosService.getUsuarioById(id);
     return usuario;
+  }
+
+  @Patch('/perfil/update')
+  @Roles('BIBLIOTECARIO')
+  async updateSenha(
+    @Req() request: Request, 
+    @Body() body: UpdateUsuarioDto
+  ) {
+    const id = request['user'].sub;
+
+    const re = await this.usuariosService.updateSenha(id, body);
+
+    return re;
   }
 }
