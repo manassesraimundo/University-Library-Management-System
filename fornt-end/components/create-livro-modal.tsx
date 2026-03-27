@@ -42,8 +42,13 @@ export function CreateLivroModal({ onLivroCriado }: { onLivroCriado: () => void 
     }
   };
 
+  function closeModal() {
+    setFile(null);
+    setOpen(!open);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={closeModal}>
       <DialogTrigger asChild>
         <Button className="gap-2 shadow-sm">
           <Plus className="h-4 w-4" /> Novo Livro
@@ -106,7 +111,7 @@ export function CreateLivroModal({ onLivroCriado }: { onLivroCriado: () => void 
         {/* ÁREA DO FORMULÁRIO */}
         <div className="p-6">
           <CreateLivroForm
-            closeModal={setOpen}
+            closeModal={closeModal}
             onLivroCriado={onLivroCriado}
             scanResult={scanResult}
           />
